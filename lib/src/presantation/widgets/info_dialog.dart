@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:qr/src/presantation/locale/strings.dart';
+
+class DialogAction {
+  final String text;
+  final VoidCallback onPressed;
+
+  DialogAction({
+    @required this.text,
+    @required this.onPressed,
+  })  : assert(text != null),
+        assert(onPressed != null);
+}
+
+class InfoDialog extends StatelessWidget {
+  final String info;
+  final List<DialogAction> actions;
+
+  const InfoDialog({
+    Key key,
+    @required this.info,
+    @required this.actions,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        info,
+      ),
+      actions: mapMaterialActions(),
+    );
+  }
+
+  List<FlatButton> mapMaterialActions() => actions
+      .map(
+        (action) => FlatButton(
+          child: Text(action.text),
+          onPressed: action.onPressed,
+        ),
+      )
+      .toList();
+}
+
+Future<void> showInfoDialog({
+  @required BuildContext context,
+  @required String errorMessage,
+  @required VoidCallback onPressed,
+}) async {
+  assert(context != null || errorMessage != null);
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return InfoDialog(
+        info: errorMessage,
+        actions: [
+          DialogAction(
+            text: QrLocale.ok,
+            onPressed: onPressed,
+          )
+        ],
+      );
+    },
+  );
+}

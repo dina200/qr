@@ -1,0 +1,61 @@
+[
+  {
+    "id": "QWERTY1234567890",
+    "name": "Phone",
+    "info": "Some info",
+    "status": 1,
+    "statistic": [
+      {
+        "userId": "NAME1234567890",
+        "taken": 1575972600000,
+        "returned": 1576836600000
+      },
+      {
+        "userId": "DARYA987654321",
+        "taken": 1576836600000,
+        "returned": 1577009400000
+      }
+    ]
+  },
+  {
+    "id": "ZXCVBN0987654321",
+    "name": "Keyboard",
+    "info": "Some info about the keyboard",
+    "status": 0
+  },
+  {
+    "id": "ASDFGH1234567890",
+    "name": "Mouse",
+    "info": "Some info about the mouse",
+    "status": 0,
+    "statistic": [
+      {
+        "userId": "DARYA987654321",
+        "taken": 1577009400000,
+        "returned": 1577010000000
+      },
+      {
+        "userId": "NAME1234567890",
+        "taken": 1577010000000,
+        "returned": 1578009400000
+      }
+    ]
+  },
+  {
+    "id": "POIUYT1234567890",
+    "name": "Laptop",
+    "info": "Some info about the laptop",
+    "status": 0,
+    "statistic": [
+      {
+        "userId": "DARYA987654321",
+        "taken": 1577009400000,
+        "returned": 1577010000000
+      },
+      {
+        "userId": "NAME1234567890",
+        "taken": 1577010000000
+      }
+    ]
+  }
+]

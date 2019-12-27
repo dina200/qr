@@ -1,0 +1,23 @@
+[
+  {
+    "id": "DARYA987654321",
+    "name": "Darya",
+    "surname": "Kolpakova",
+    "phone": "+380630633812",
+    "userStatus": 1
+  },
+  {
+    "id": "ADMIN1234567890",
+    "name": "Admin",
+    "surname": "Surname",
+    "phone": "+380986600000",
+    "userStatus": 2
+  },
+  {
+    "id": "NAME1234567890",
+    "name": "Name",
+    "surname": "Surname",
+    "phone": "+380986612255",
+    "userStatus": 3
+  }
+]
