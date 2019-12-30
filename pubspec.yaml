@@ -14,7 +14,7 @@ dependencies:
   permission_handler: '^3.0.0'
   font_awesome_flutter: ^8.5.0
   barcode_scan: ^1.0.0
-  international_phone_input: ^1.0.2
+  google_sign_in: ^4.1.1
 
 dev_dependencies:
   flutter_test:

@@ -19,7 +19,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Routes.auth, // if sign in => InventoriesPage()
+      initialRoute: Routes.auth, // todo: if sign in => InventoriesPage()
       routes: <String, WidgetBuilder>{
         Routes.inventories: (context) => InventoriesPage(),
         Routes.qrReader: (context) => QrReaderPage(),

@@ -11,3 +11,10 @@ class UserIsAlreadyRegisteredException implements Exception {
     return 'User is already registered';
   }
 }
+
+class GoogleLoginException implements Exception {
+  @override
+  String toString() {
+    return 'Google login exception';
+  }
+}

@@ -201,7 +201,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       payload.googleId,
     );
 
-    print(registrationPayload);
+    print(registrationPayload.name);
     //todo: sign up with google
   }
 
