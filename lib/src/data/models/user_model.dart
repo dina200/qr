@@ -7,7 +7,7 @@ class UserModel extends User {
       : super(
           id: json['id'] as String,
           name: json['name'] as String,
-          surname: json['surname'] as String,
+          position: json['position'] as String,
           phone: json['phone'] as String,
           status: UserStatus(json['userStatus'] as int),
         );
@@ -16,7 +16,7 @@ class UserModel extends User {
     return {
       'id': id,
       'name': name,
-      'surname': surname,
+      'position': position,
       'phone': phone,
       'userStatus': status.value,
     };
@@ -25,13 +25,13 @@ class UserModel extends User {
   UserModel({
     @required String id,
     @required String name,
-    @required String surname,
+    @required String position,
     @required String phone,
     @required UserStatus status,
   }) : super(
           id: id,
           name: name,
-          surname: surname,
+          position: position,
           phone: phone,
           status: status,
         );

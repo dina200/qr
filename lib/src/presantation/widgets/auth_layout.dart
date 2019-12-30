@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 import 'package:qr/src/presantation/widgets/no_scroll_behavior.dart';
 
-
 class AuthLayout extends StatelessWidget {
   final bool isLoading;
   final Widget child;
@@ -69,7 +68,7 @@ class AuthContainer extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints(
           maxWidth: 480.0,
-          maxHeight: 300.0,
+          maxHeight: 500.0,
         ),
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         child: child,

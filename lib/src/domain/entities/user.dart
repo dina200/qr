@@ -3,19 +3,19 @@ import 'package:meta/meta.dart';
 class User {
   final String id;
   final String name;
-  final String surname;
+  final String position;
   final String phone;
   final UserStatus status;
 
   User({
     @required this.id,
     @required this.name,
-    @required this.surname,
+    @required this.position,
     @required this.phone,
     @required this.status,
   })  : assert(id != null),
         assert(name != null),
-        assert(surname != null),
+        assert(position != null),
         assert(phone != null),
         assert(status != null);
 
@@ -25,7 +25,7 @@ class User {
       runtimeType == other.runtimeType &&
       id == other.id &&
       name == other.name &&
-      surname == other.surname &&
+      position == other.position &&
       phone == other.phone &&
       status == other.status;
 
@@ -33,7 +33,7 @@ class User {
   int get hashCode =>
       id.hashCode ^
       name.hashCode ^
-      surname.hashCode ^
+      position.hashCode ^
       phone.hashCode ^
       status.hashCode;
 }

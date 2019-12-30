@@ -1,10 +1,18 @@
-class QrLocale {
-  static final appName = 'QR helper App';
-  static final login = 'Login';
-  static final email = 'Email';
-  static final password = 'Password ';
-  static final sighIn = 'Sigh in';
-  static final sighUp = 'Sigh up';
-  static final ok = 'Ok';
-  static final google = 'Google';
-}
+const appName = 'QR Helper';
+const ok = 'Ok';
+const loginWithGoogle = 'Login with Google';
+const signUpViaGoogle = 'Sign up via Google';
+const or = 'or';
+const registration = 'Registration';
+const name = 'Name';
+const email = 'Email';
+const position = 'Posiotion';
+const phone = 'Phone';
+const phoneExample = '+380661234567';
+const createAccount = 'Create account';
+const userAlreadyRegistered = 'The user is already registered';
+const userProfile = 'User profile';
+const inventories = 'Inventories';
+const qrReader = 'QrReader';
+const settings = 'Settings';
+const quit = 'Quit';

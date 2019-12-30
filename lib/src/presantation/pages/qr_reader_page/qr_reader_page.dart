@@ -1,28 +1,33 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/qr_drawer.dart';
 
-class InventoryPage extends StatefulWidget {
+class QrReaderPage extends StatefulWidget {
   @override
-  _InventoryPageState createState() => _InventoryPageState();
+  _QrReaderPageState createState() => _QrReaderPageState();
 }
 
-class _InventoryPageState extends State<InventoryPage> {
+class _QrReaderPageState extends State<QrReaderPage> {
   String inventoryCode;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inventory Page'),
+        title: Text(qrLocale.qrReader),
       ),
       drawer: QrDrawer(),
       body: Center(
         child: Column(
           children: <Widget>[
-            RaisedButton(onPressed: scan, child: Text('Scan')),
+            RaisedButton(
+              onPressed: scan,
+              child: Text('Scan'),
+            ),
             Text(inventoryCode ?? ''),
           ],
         ),
@@ -34,9 +39,11 @@ class _InventoryPageState extends State<InventoryPage> {
     try {
       String barcode = await BarcodeScanner.scan();
       print(barcode);
-      if(barcode.startsWith('"id"'))
-      {setState(() => inventoryCode = barcode);}
-      else {
+      if (barcode.startsWith('QrHelper')) {
+        setState(() {
+          inventoryCode = barcode.replaceAll('QrHelper', '').trim();
+        });
+      } else {
         throw Exception();
       }
     } on PlatformException catch (e) {
@@ -49,11 +56,10 @@ class _InventoryPageState extends State<InventoryPage> {
       } else {
         throw e;
       }
-    } on FormatException {
+    } on FormatException catch (e) {
       showInfoDialog(
         context: context,
-        errorMessage:
-            'User returned using the "back"-button before scanning anything. Result',
+        errorMessage: '$e',
         onPressed: () => Navigator.of(context).pop(),
       );
     } catch (e) {

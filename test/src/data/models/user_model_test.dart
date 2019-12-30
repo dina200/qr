@@ -10,8 +10,8 @@ import '../../../fixtures/fixture_reader.dart';
 main() {
   final userModel = UserModel(
     id: 'NAME1234567890',
-    name: 'Name',
-    surname: 'Surname',
+    name: 'Name Surname',
+    position: 'position',
     status: UserStatus.user,
     phone: '+380986612255',
   );
@@ -44,8 +44,8 @@ main() {
         final result = userModel.toJson();
         final expectedUserJson = {
           "id": "NAME1234567890",
-          "name": "Name",
-          "surname": "Surname",
+          "name": "Name Surname",
+          "position" : "position",
           "phone": "+380986612255",
           "userStatus": 3
         };

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-final googleColor = Colors.redAccent;
+final googleColor = Color(0xFFDB4437);
 
 class SocialButton extends StatelessWidget {
   final IconData icon;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr/src/presantation/locale/strings.dart';
+
+import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 
 class DialogAction {
   final String text;
@@ -55,7 +56,7 @@ Future<void> showInfoDialog({
         info: errorMessage,
         actions: [
           DialogAction(
-            text: QrLocale.ok,
+            text: qrLocale.ok,
             onPressed: onPressed,
           )
         ],
