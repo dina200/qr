@@ -34,7 +34,6 @@ class RegistrationPagePresenter with ChangeNotifier {
 
       _fireStore.collection(firebaseEndpoints.users).document(userToken)
         ..setData(_getNewUser(userToken, googlePayload).toJson());
-
     } on StateError catch (e) {
       throw QrStateException(e.message);
     } on PlatformException catch (e) {
@@ -47,10 +46,12 @@ class RegistrationPagePresenter with ChangeNotifier {
     }
   }
 
-  UserModel _getNewUser(String userToken, GoogleRegistrationPayload googlePayload) {
+  UserModel _getNewUser(
+      String userToken, GoogleRegistrationPayload googlePayload) {
     return UserModel(
       id: userToken,
       name: googlePayload.name,
+      email: googlePayload.email,
       phone: googlePayload.phone,
       position: googlePayload.position,
       status: UserStatus.user,

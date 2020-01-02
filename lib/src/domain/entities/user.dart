@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 class User {
   final String id;
   final String name;
+  final String email;
   final String position;
   final String phone;
   final UserStatus status;
@@ -10,11 +11,13 @@ class User {
   User({
     @required this.id,
     @required this.name,
+    @required this.email,
     @required this.position,
     @required this.phone,
     @required this.status,
   })  : assert(id != null),
         assert(name != null),
+        assert(email != null),
         assert(position != null),
         assert(phone != null),
         assert(status != null);
@@ -25,6 +28,7 @@ class User {
       runtimeType == other.runtimeType &&
       id == other.id &&
       name == other.name &&
+      email == other.email &&
       position == other.position &&
       phone == other.phone &&
       status == other.status;
@@ -33,6 +37,7 @@ class User {
   int get hashCode =>
       id.hashCode ^
       name.hashCode ^
+      email.hashCode ^
       position.hashCode ^
       phone.hashCode ^
       status.hashCode;
