@@ -18,3 +18,25 @@ class GoogleLoginException implements Exception {
     return 'Google login exception';
   }
 }
+
+class QrPlatformException implements Exception {
+  final String code;
+
+  QrPlatformException(this.code);
+
+  @override
+  String toString() {
+    return 'QrPlatformException: $code';
+  }
+}
+
+class QrStateException implements Exception {
+  final String message;
+
+  QrStateException(this.message);
+
+  @override
+  String toString() {
+    return 'QrStateException: $message';
+  }
+}

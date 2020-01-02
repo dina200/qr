@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "63780789355",
+    "firebase_url": "https://qr-helper.firebaseio.com",
+    "project_id": "qr-helper",
+    "storage_bucket": "qr-helper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63780789355:android:6b5bf846dfcd5b3eaca52e",
+        "android_client_info": {
+          "package_name": "com.dina.qr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63780789355-69v5ajhg25o04a9tsqqg4t22a18044mu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs42u7jfy3cGsQgEoP9pLdL4T3XKe1dC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63780789355-69v5ajhg25o04a9tsqqg4t22a18044mu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

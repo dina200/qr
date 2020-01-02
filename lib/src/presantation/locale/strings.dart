@@ -16,3 +16,6 @@ const inventories = 'Inventories';
 const qrReader = 'QrReader';
 const settings = 'Settings';
 const quit = 'Quit';
+const checkConnection = 'Possibly, the device is not connected to internet';
+const userIsNotRegistered = 'Possibly, the user is not registered';
+const unknownError = 'Unknown Error';

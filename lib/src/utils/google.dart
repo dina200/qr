@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:qr/src/domain/entities/exceptions.dart';
+import 'package:qr/src/utils/exceptions.dart';
 
 Future<GoogleSignInAccount> getGoogleData() async {
   GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -19,4 +19,9 @@ Future<GoogleSignInAccount> getGoogleData() async {
   }
 
   throw GoogleLoginException();
+}
+
+Future<GoogleSignInAuthentication> getGoogleAuthData(
+    GoogleSignInAccount googleData) async {
+  return googleData.authentication;
 }

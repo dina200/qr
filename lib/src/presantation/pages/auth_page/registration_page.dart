@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:qr/src/domain/entities/exceptions.dart';
+import 'package:qr/src/utils/exceptions.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
-import 'package:qr/src/presantation/pages/auth_page/auth_payload.dart';
+import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/auth_button.dart';
 import 'package:qr/src/presantation/widgets/auth_layout.dart';

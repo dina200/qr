@@ -28,6 +28,7 @@ class InfoDialog extends StatelessWidget {
     return AlertDialog(
       title: Text(
         info,
+        style: Theme.of(context).textTheme.subtitle,
       ),
       actions: mapMaterialActions(),
     );
