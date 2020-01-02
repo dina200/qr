@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
-import 'package:qr/src/presantation/presenters/auth_presenters/auth_screen_presenter.dart';
+import 'package:qr/src/presantation/presenters/auth_presenters/auth_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/auth_layout.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
@@ -20,7 +20,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AuthScreenPresenter(),
+      create: (_) => AuthPagePresenter(),
       child: Builder(
         builder: _buildLayout,
       ),
@@ -28,7 +28,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildLayout(BuildContext context) {
-    final presenter = Provider.of<AuthScreenPresenter>(context);
+    final presenter = Provider.of<AuthPagePresenter>(context);
     return AuthLayout(
       isLoading: presenter.isLoading,
       child: AuthContainer(
@@ -58,7 +58,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Future<void> _login(AuthScreenPresenter presenter) async {
+  Future<void> _login(AuthPagePresenter presenter) async {
     try {
       final authPayload = await _googleSignIn(presenter);
       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -68,27 +68,15 @@ class _AuthPageState extends State<AuthPage> {
     } on GoogleLoginException catch (e) {
       print(e);
     } on QrStateException catch (e) {
-      showInfoDialog(
-        context: context,
-        errorMessage: '${qrLocale.userIsNotRegistered}: ${e.message}',
-        onPressed: () => Navigator.of(context).pop(),
-      );
+      _errorDialog('${qrLocale.stateException}: ${e.message}');
     } on QrPlatformException catch (e) {
-      showInfoDialog(
-        context: context,
-        errorMessage: '${qrLocale.checkConnection}: ${e.code}',
-        onPressed: () => Navigator.of(context).pop(),
-      );
+      _errorDialog('${qrLocale.platformException}: ${e.code}');
     } catch (e) {
-      showInfoDialog(
-        context: context,
-        errorMessage: '${qrLocale.unknownError}: ${e.runtimeType}',
-        onPressed: () => Navigator.of(context).pop(),
-      );
+      _errorDialog('${qrLocale.unknownError}: ${e.runtimeType}');
     }
   }
 
-  Future<void> _register(AuthScreenPresenter presenter) async {
+  Future<void> _register(AuthPagePresenter presenter) async {
     try {
       final authPayload = await _googleSignUp(presenter);
       Navigator.of(context).pushNamed(
@@ -98,25 +86,29 @@ class _AuthPageState extends State<AuthPage> {
     } on GoogleLoginException catch (e) {
       print(e);
     } on QrPlatformException catch (e) {
-      showInfoDialog(
-        context: context,
-        errorMessage: '${qrLocale.checkConnection}: ${e.code}',
-        onPressed: () => Navigator.of(context).pop(),
-      );
+      _errorDialog('${qrLocale.platformException}: ${e.code}');
     } catch (e) {
-      showInfoDialog(
-        context: context,
-        errorMessage: '${qrLocale.unknownError}: ${e.runtimeType}',
-        onPressed: () => Navigator.of(context).pop(),
-      );
+      _errorDialog('${qrLocale.unknownError}: ${e.runtimeType}');
     }
   }
 
-  Future<GooglePayload> _googleSignIn(AuthScreenPresenter presenter) async {
-    return await presenter.loginWithGoogle();
+  Future<GooglePayload> _googleSignIn(AuthPagePresenter presenter) async {
+    return await presenter.authGoogle(presenter.loginWithGoogle);
   }
 
-  Future<GooglePayload> _googleSignUp(AuthScreenPresenter presenter) async {
-    return await presenter.getGoogleCredential();
+  Future<GooglePayload> _googleSignUp(AuthPagePresenter presenter) async {
+    return await presenter.authGoogle();
+  }
+
+  Future<void> _errorDialog(String info) async {
+    await showInfoDialog(
+      context: context,
+      errorMessage: info,
+      onPressed: _returnToSignUpScreen,
+    );
+  }
+
+  void _returnToSignUpScreen() {
+    Navigator.of(context).pop();
   }
 }
