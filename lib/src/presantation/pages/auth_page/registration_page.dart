@@ -42,6 +42,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget _buildLayout(BuildContext context) {
     final presenter = Provider.of<RegistrationPagePresenter>(context);
     return AuthLayout(
+      isLoading: presenter.isLoading,
       child: _buildRegistrationForm(presenter),
     );
   }
@@ -161,7 +162,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       keyboardType: TextInputType.phone,
       validator: _validatePhone,
       focusNode: _phoneFieldFocusNode,
-      onFieldSubmitted: (_) => _register(presenter),
+      onFieldSubmitted: (_) async => await _register(presenter),
       onSaved: _onSavedPhone,
     );
   }
@@ -184,7 +185,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return AuthButton(
       title: qrLocale.createAccount,
       isButtonActive: _isCreateAccountButtonActive,
-      onPressed: () => _register(presenter),
+      onPressed: () async => await _register(presenter),
     );
   }
 

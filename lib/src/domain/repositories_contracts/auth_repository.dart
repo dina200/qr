@@ -17,6 +17,8 @@ abstract class LoginPayload {
 abstract class RegisterPayload {
   final String name;
   final String email;
+  final String position;
+  final String phone;
 
-  RegisterPayload(this.name, this.email);
+  RegisterPayload(this.name, this.email, this.position, this.phone);
 }

@@ -5,7 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
 import 'package:qr/src/utils/exceptions.dart';
-import 'package:qr/src/utils/google.dart';
+import 'package:qr/src/utils/google_sign_in.dart';
+import 'package:qr/src/utils/store_interactor.dart';
 
 class AuthPagePresenter with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,10 +16,14 @@ class AuthPagePresenter with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future<void> loginWithGoogle(GoogleSignInAccount googleData) async {
-    await _auth.signInWithEmailAndPassword(
+    final authResult = await _auth.signInWithEmailAndPassword(
       email: googleData.email,
       password: googleData.id,
     );
+
+    final userToken = authResult.user.uid;
+
+    await StoreInteractor.setToken(userToken);
   }
 
   Future<GooglePayload> authGoogle([Function loginWithGoogle]) async {

@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/routes.dart' as routes;
+import 'package:qr/src/presantation/widgets/drawer/qr_drawer_presenter.dart';
 import 'package:qr/src/presantation/widgets/no_scroll_behavior.dart';
 
 class QrDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => QrDrawerPresenter(),
+      child: Builder(
+        builder: buildDrawer,
+      ),
+    );
+  }
+
+  Widget buildDrawer(BuildContext context) {
+    final presenter = Provider.of<QrDrawerPresenter>(context);
     return Drawer(
       child: ScrollConfiguration(
         behavior: NoOverScrollBehavior(),
@@ -42,7 +54,10 @@ class QrDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.exit_to_app),
                 title: Text(qrLocale.quit),
-                onTap: () => _navigateTo(context, routes.auth),
+                onTap: () async {
+                  await presenter.logOut();
+                  await _navigateTo(context, routes.auth);
+                },
               ),
             ],
           ),
@@ -51,9 +66,9 @@ class QrDrawer extends StatelessWidget {
     );
   }
 
-  void _navigateTo(BuildContext context, String routeName) {
+  Future <void> _navigateTo(BuildContext context, String routeName) async {
     if (ModalRoute.of(context).settings.name != routeName) {
-      Navigator.of(context).pushNamedAndRemoveUntil(
+      await Navigator.of(context).pushNamedAndRemoveUntil(
         routeName,
         (_) => false,
       );

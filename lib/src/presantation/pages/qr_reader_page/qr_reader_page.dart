@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
-import 'package:qr/src/presantation/widgets/qr_drawer.dart';
+import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 
 class QrReaderPage extends StatefulWidget {
   @override

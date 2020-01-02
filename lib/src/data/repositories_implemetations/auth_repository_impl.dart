@@ -19,13 +19,6 @@ class AuthRepositoryImpl implements AuthRepository {
     // TODO: implement restorePassword
     return null;
   }
-
-}
-
-class LoginWithEmailPayload extends LoginPayload {
-  final String password;
-
-  LoginWithEmailPayload(String email, this.password) : super(email);
 }
 
 class LoginWithGooglePayload extends LoginPayload {
@@ -34,14 +27,15 @@ class LoginWithGooglePayload extends LoginPayload {
   LoginWithGooglePayload(String email, this.googleId) : super(email);
 }
 
-class RegisterWithEmailPayload extends RegisterPayload {
-  final String password;
-
-  RegisterWithEmailPayload(String name, String email, this.password) : super(name, email);
-}
-
 class RegisterWithGooglePayload extends RegisterPayload {
   final String googleId;
 
-  RegisterWithGooglePayload(String name, String email, this.googleId) : super(name, email);
+  RegisterWithGooglePayload(
+      String name, String email, String position, String phone, this.googleId)
+      : super(
+          name,
+          email,
+          position,
+          phone,
+        );
 }

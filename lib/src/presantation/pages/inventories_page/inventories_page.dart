@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
-import 'package:qr/src/presantation/widgets/qr_drawer.dart';
+import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 
 class InventoriesPage extends StatefulWidget {
   @override
