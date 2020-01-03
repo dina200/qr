@@ -62,7 +62,7 @@ class UserStatisticModel extends UserStatistic {
 
   static DateTime _fromTimestamp(int timestamp) {
     return timestamp != null
-        ? DateTime.fromMicrosecondsSinceEpoch(timestamp)
+        ? DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000)
         : null;
   }
 
@@ -70,11 +70,11 @@ class UserStatisticModel extends UserStatistic {
     return {
       'userId': userId,
       'taken': _toTimestamp(taken),
-      'returned': _toTimestamp(returned),
+      if(returned != null) 'returned': _toTimestamp(returned),
     };
   }
 
   int _toTimestamp(DateTime dateTime) {
-    return dateTime != null ? dateTime.millisecondsSinceEpoch : null;
+    return dateTime != null ? (dateTime.millisecondsSinceEpoch ~/ 1000) : null;
   }
 }

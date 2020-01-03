@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr/src/presantation/presenters/auth_presenters/registration_page_presenter.dart';
 
+import 'package:qr/src/presantation/presenters/auth_presenters/registration_page_presenter.dart';
 import 'package:qr/src/utils/exceptions.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';

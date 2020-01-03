@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/utils/firebase_endpoints.dart' as firebaseEndpoints;
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 
@@ -26,7 +27,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
           children: <Widget>[
             RaisedButton(
               onPressed: scan,
-              child: Text('Scan'),
+              child: Text(qrLocale.scan),
             ),
             Text(inventoryCode ?? ''),
           ],
@@ -39,9 +40,9 @@ class _QrReaderPageState extends State<QrReaderPage> {
     try {
       String barcode = await BarcodeScanner.scan();
       print(barcode);
-      if (barcode.startsWith('QrHelper')) {
+      if (barcode.startsWith(firebaseEndpoints.prefixInventoryId)) {
         setState(() {
-          inventoryCode = barcode.replaceAll('QrHelper', '').trim();
+          inventoryCode = barcode.replaceAll(firebaseEndpoints.prefixInventoryId, '').trim();
         });
       } else {
         throw Exception();

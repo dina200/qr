@@ -5,7 +5,7 @@ class Inventory {
   final String name;
   final String info;
   final InventoryStatus status;
-  List<UserStatistic> statistic;
+  final List<UserStatistic> statistic;
 
   Inventory({
     @required this.id,
@@ -21,16 +21,25 @@ class Inventory {
 
   @override
   bool operator ==(Object other) =>
-      other is Inventory &&
-      runtimeType == other.runtimeType &&
-      id == other.id &&
-      name == other.name &&
-      info == other.info &&
-      status == other.status;
+      identical(this, other) ||
+          other is Inventory &&
+              runtimeType == other.runtimeType &&
+              id == other.id &&
+              name == other.name &&
+              info == other.info &&
+              status == other.status;
 
   @override
   int get hashCode =>
-      id.hashCode ^ name.hashCode ^ info.hashCode ^ status.hashCode;
+      id.hashCode ^
+      name.hashCode ^
+      info.hashCode ^
+      status.hashCode;
+
+  @override
+  String toString() {
+    return 'Inventory{id: $id, name: $name, info: $info, status: $status, statistic: $statistic}';
+  }
 }
 
 class InventoryStatus {
@@ -71,6 +80,11 @@ class InventoryStatus {
 
   @override
   int get hashCode => value.hashCode;
+
+  @override
+  String toString() {
+    return 'InventoryStatus{value: $value}';
+  }
 }
 
 class UserStatistic {
@@ -84,4 +98,24 @@ class UserStatistic {
     this.returned,
   })  : assert(userId != null),
         assert(taken != null);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is UserStatistic &&
+              runtimeType == other.runtimeType &&
+              userId == other.userId &&
+              taken == other.taken &&
+              returned == other.returned;
+
+  @override
+  int get hashCode =>
+      userId.hashCode ^
+      taken.hashCode ^
+      returned.hashCode;
+
+  @override
+  String toString() {
+    return 'UserStatistic{userId: $userId, taken: $taken, returned: $returned}';
+  }
 }

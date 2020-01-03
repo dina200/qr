@@ -11,14 +11,15 @@ main() {
   final userModel = UserModel(
     id: 'NAME1234567890',
     name: 'Name Surname',
+    email: 'user@gmail.com',
     position: 'position',
-    status: UserStatus.user,
     phone: '+380986612255',
+    status: UserStatus.user,
   );
 
   test(
     'UserModel type',
-    () async {
+    () {
       expect(userModel, isA<UserModel>());
     },
   );
@@ -26,7 +27,7 @@ main() {
   group('fromJson', () {
     test(
       'get model from jsonList',
-      () async {
+      () {
         final listJson = json.decode(fixture('all_users.json'));
         final jsonModel =
             listJson.where(((obj) => obj['id'] == 'NAME1234567890')).first;
@@ -40,12 +41,13 @@ main() {
   group('toJson', () {
     test(
       'convert model to Json',
-          () async {
+      () {
         final result = userModel.toJson();
         final expectedUserJson = {
           "id": "NAME1234567890",
           "name": "Name Surname",
-          "position" : "position",
+          "email": "user@gmail.com",
+          "position": "position",
           "phone": "+380986612255",
           "userStatus": 3
         };

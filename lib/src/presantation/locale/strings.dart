@@ -19,3 +19,4 @@ const quit = 'Quit';
 const platformException = 'Platform Exception';
 const stateException = 'State Exception';
 const unknownError = 'Unknown Error';
+const scan = 'Scan';

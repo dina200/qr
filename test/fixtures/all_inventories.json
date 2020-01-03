@@ -7,13 +7,12 @@
     "statistic": [
       {
         "userId": "NAME1234567890",
-        "taken": 1575972600000,
-        "returned": 1576836600000
+        "taken": 1575972600,
+        "returned": 1576836600
       },
       {
         "userId": "DARYA987654321",
-        "taken": 1576836600000,
-        "returned": 1577009400000
+        "taken": 1576836600
       }
     ]
   },
@@ -31,13 +30,13 @@
     "statistic": [
       {
         "userId": "DARYA987654321",
-        "taken": 1577009400000,
-        "returned": 1577010000000
+        "taken": 1577009400,
+        "returned": 1577010000
       },
       {
         "userId": "NAME1234567890",
-        "taken": 1577010000000,
-        "returned": 1578009400000
+        "taken": 1577010000,
+        "returned": 1578009400
       }
     ]
   },
@@ -45,16 +44,16 @@
     "id": "POIUYT1234567890",
     "name": "Laptop",
     "info": "Some info about the laptop",
-    "status": 0,
+    "status": 2,
     "statistic": [
       {
         "userId": "DARYA987654321",
-        "taken": 1577009400000,
-        "returned": 1577010000000
+        "taken": 1577009400,
+        "returned": 1577010000
       },
       {
         "userId": "NAME1234567890",
-        "taken": 1577010000000
+        "taken": 1577010000
       }
     ]
   }
