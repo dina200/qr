@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:qr/src/data/repositories_implemetations/auth_repository_impl.dart';
 import 'package:qr/src/data/repositories_implemetations/user_repository_impl.dart';
 import 'package:qr/src/domain/repositories_contracts/auth_repository.dart';
-import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
 import 'package:qr/src/presantation/pages/auth_page/registration_page.dart';
 import 'package:qr/src/presantation/pages/empty_page/empty_page.dart';
@@ -23,9 +22,11 @@ Future<void> main() async {
 
   injector
     ..register<AuthRepository>(AuthRepositoryImpl())
-    ..register<UserRepository>(UserRepositoryImpl())
-    ..register<AdminRepository>(AdminRepositoryImpl())
-    ..register<SuperAdminRepository>(SuperAdminRepositoryImpl());
+    ..register<UserRepositoryFirebaseImpl>(UserRepositoryFirebaseImpl())
+    ..register<AdminRepositoryFirestoreImpl>(AdminRepositoryFirestoreImpl())
+    ..register<SuperAdminRepositoryFirestoreImpl>(SuperAdminRepositoryFirestoreImpl());
+
+  await injector.get<UserRepositoryFirebaseImpl>().init();
 
   runApp(MyApp());
 }

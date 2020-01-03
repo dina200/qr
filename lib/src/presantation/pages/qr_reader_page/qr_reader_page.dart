@@ -1,8 +1,10 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/presenters/qr_reader_presenter.dart';
 import 'package:qr/src/utils/firebase_endpoints.dart' as firebaseEndpoints;
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
@@ -17,6 +19,16 @@ class _QrReaderPageState extends State<QrReaderPage> {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => QrReaderPagePresenter(),
+      child: Builder(
+        builder: _buildLayout,
+      ),
+    );
+  }
+
+  Widget _buildLayout(BuildContext context) {
+    final presenter = Provider.of<QrReaderPagePresenter>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(qrLocale.qrReader),

@@ -76,7 +76,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on PlatformException catch (e) {
       throw QrPlatformException(e.code);
     } catch (e) {
-      print('HttpAuthRepo: registerWithGoogle ${e}');
+      print('HttpAuthRepo: registerWithGoogle $e');
       rethrow;
     }
   }

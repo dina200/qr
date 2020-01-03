@@ -1,93 +1,115 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:qr/src/data/models/inventory_model.dart';
+import 'package:qr/src/data/models/user_model.dart';
+import 'package:qr/src/utils/firebase_endpoints.dart' as firebaseEndpoints;
 import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/domain/entities/user.dart';
-import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
+import 'package:qr/src/utils/store_interactor.dart';
 
+class UserRepositoryFirebaseImpl {
+  String _userId;
+  final _fireStore = Firestore.instance;
 
-class UserRepositoryImpl implements UserRepository {
-  @override
-  Future<List<Inventory>> getHistory(String userId) {
-    // TODO: implement getHistory
-    return null;
+  Future<void> init() async {
+    _userId = await StoreInteractor.getToken();
   }
 
-  @override
-  Future<Inventory> getInventoryInfo(String inventoryId) {
-    // TODO: implement getInventoryInfo
-    return null;
+  Stream<User> get currentUser => _fireStore
+      .collection(firebaseEndpoints.users)
+      .document(_userId)
+      .snapshots()
+      .map(_getUserFromSnapshot);
+
+  User _getUserFromSnapshot(DocumentSnapshot snapshot) =>
+      UserModel.fromJson(snapshot.data);
+
+  Stream<Inventory> getInventoryInfo(String inventoryId) => _fireStore
+      .collection(firebaseEndpoints.inventories)
+      .document(inventoryId)
+      .snapshots()
+      .map(_getInventoryFromSnapshot);
+
+  Stream<List<Inventory>> getCurrentUserHistory() {
+    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
+        (snapshot) => _getInventoriesByUserIdFromSnapshot(snapshot, _userId));
   }
 
-  @override
-  Future<List<Inventory>> getTakenInventories(String userId) {
-    // TODO: implement getTakenInventories
-    return null;
+  List<Inventory> _getInventoriesByUserIdFromSnapshot(
+          QuerySnapshot snapshot, String userId) =>
+      snapshot.documents
+          .where((document) => jsonEncode(document.data).contains(userId))
+          .map(_getInventoryFromSnapshot)
+          .toList();
+
+  Inventory _getInventoryFromSnapshot(DocumentSnapshot snapshot) =>
+      InventoryModel.fromJson(_getCleanMap(snapshot.data));
+
+  Map<String, dynamic> _getCleanMap(Map<String, dynamic> dirtyMap) {
+    return jsonDecode(jsonEncode(dirtyMap));
   }
 
-  @override
   Future<void> returnInventory(String inventoryId) {
-    // TODO: implement returnInventory
     return null;
   }
 
-  @override
   Future<void> takeInventory(String inventoryId) {
-    // TODO: implement takeInventory
     return null;
   }
-
 }
 
-class AdminRepositoryImpl extends UserRepositoryImpl
-    implements AdminRepository {
-  @override
+class AdminRepositoryFirestoreImpl extends UserRepositoryFirebaseImpl {
+  Stream<User> getUserById(String userId) => _fireStore
+      .collection(firebaseEndpoints.users)
+      .document(userId)
+      .snapshots()
+      .map(_getUserFromSnapshot);
+
+  Stream<List<Inventory>> getHistoryByUserId(String userId) {
+    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
+        (snapshot) => _getInventoriesByUserIdFromSnapshot(snapshot, userId));
+  }
+
+  Stream<List<Inventory>> get allInventories => _fireStore
+      .collection(firebaseEndpoints.inventories)
+      .snapshots()
+      .map(_getAllInventoriesFromSnapshot);
+
+  List<Inventory> _getAllInventoriesFromSnapshot(QuerySnapshot snapshot) =>
+      snapshot.documents.map(_getInventoryFromSnapshot).toList();
+
+  Stream<List<User>> getAllUsers() {
+    return _fireStore
+        .collection(firebaseEndpoints.users)
+        .snapshots()
+        .map(_getAllUsersFromSnapshot);
+  }
+
+  List<User> _getAllUsersFromSnapshot(QuerySnapshot snapshot) =>
+      snapshot.documents.map(_getUserFromSnapshot).toList();
+
   Future<void> addNewInventoryToDatabase(Inventory inventory) {
-    // TODO: implement addNewInventoryToDatabase
     return null;
   }
 
-  @override
-  Future<List<Inventory>> getAllInventoriesInfo() {
-    // TODO: implement getAllInventoriesInfo
-    return null;
-  }
-
-  @override
-  Future<List<User>> getAllUsers() {
-    // TODO: implement getAllUsers
-    return null;
-  }
-
-  @override
-  Future<User> getUserInfo(String userId) {
-    // TODO: implement getUserInfo
-    return null;
-  }
-
-  @override
   Future<void> removeInventoryFromDatabase(String inventoryId) {
-    // TODO: implement removeInventoryFromDatabase
     return null;
   }
 
-  @override
   Future<void> setInventoryStatus(String inventoryId) {
-    // TODO: implement setInventoryStatus
     return null;
   }
-
 }
 
-class SuperAdminRepositoryImpl extends AdminRepositoryImpl
-    implements SuperAdminRepository {
-  @override
+class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl {
   Future<void> addUserToAdmins(String userId) {
-    // TODO: implement addUserToAdmins
     return null;
   }
 
-  @override
   Future<void> removeUserFromAdmins(String userId) {
-    // TODO: implement removeUserFromAdmins
     return null;
   }
-
 }
