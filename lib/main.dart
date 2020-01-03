@@ -1,14 +1,26 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import 'package:qr/src/data/repositories_implemetations/auth_repository_impl.dart';
+import 'package:qr/src/domain/repositories_contracts/auth_repository.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
 import 'package:qr/src/presantation/pages/auth_page/registration_page.dart';
 import 'package:qr/src/presantation/pages/empty_page/empty_page.dart';
 import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
 import 'package:qr/src/presantation/pages/qr_reader_page/qr_reader_page.dart';
 import 'package:qr/src/presantation/routes.dart' as Routes;
+import 'package:qr/src/utils/injector.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
+  injector.register<AuthRepository>(AuthRepositoryImpl());
+
   runApp(MyApp());
 }
 

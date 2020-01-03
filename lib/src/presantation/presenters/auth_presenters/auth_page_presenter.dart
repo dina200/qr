@@ -1,29 +1,26 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'package:qr/src/data/repositories_implemetations/auth_repository_impl.dart';
+import 'package:qr/src/domain/repositories_contracts/auth_repository.dart';
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
-import 'package:qr/src/utils/exceptions.dart';
 import 'package:qr/src/utils/google_sign_in.dart';
-import 'package:qr/src/utils/store_interactor.dart';
+import 'package:qr/src/utils/injector.dart';
+
 
 class AuthPagePresenter with ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _authRepo = injector.get<AuthRepository>();
 
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
   Future<void> loginWithGoogle(GoogleSignInAccount googleData) async {
-    final authResult = await _auth.signInWithEmailAndPassword(
-      email: googleData.email,
-      password: googleData.id,
+    final loginPayload = LoginWithGooglePayload(
+      googleData.email,
+      googleData.id,
     );
-
-    final userToken = authResult.user.uid;
-
-    await StoreInteractor.setToken(userToken);
+    await _authRepo.loginWith(loginPayload);
   }
 
   Future<GooglePayload> authGoogle([Function loginWithGoogle]) async {
@@ -38,10 +35,6 @@ class AuthPagePresenter with ChangeNotifier {
       }
 
       return _getGooglePayload(googleData);
-    } on StateError catch (e) {
-      throw QrStateException(e.message);
-    } on PlatformException catch (e) {
-      throw QrPlatformException(e.code);
     } catch (e) {
       rethrow;
     } finally {

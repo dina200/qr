@@ -1,9 +1,7 @@
-import 'package:qr/src/domain/entities/user.dart';
-
 abstract class AuthRepository {
-  Future<User> loginWith(LoginPayload loginPayload);
+  Future<void> loginWith(LoginPayload loginPayload);
 
-  Future<User> registerWith(RegisterPayload registerPayload);
+  Future<void> registerWith(RegisterPayload registerPayload);
 
   Future<void> restorePassword(String email);
 }
