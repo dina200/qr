@@ -24,9 +24,6 @@ class UserRepositoryFirebaseImpl {
       .snapshots()
       .map(_getUserFromSnapshot);
 
-  User _getUserFromSnapshot(DocumentSnapshot snapshot) =>
-      UserModel.fromJson(snapshot.data);
-
   Stream<Inventory> getInventoryInfo(String inventoryId) => _fireStore
       .collection(firebaseEndpoints.inventories)
       .document(inventoryId)
@@ -38,9 +35,26 @@ class UserRepositoryFirebaseImpl {
         (snapshot) => _getInventoriesByUserIdFromSnapshot(snapshot, _userId));
   }
 
+  Stream<List<Inventory>> getCurrentUserTakenInventories() {
+    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
+        (snapshot) =>
+            _getTakenInventoriesByUserIdFromSnapshot(snapshot, _userId));
+  }
+
+  User _getUserFromSnapshot(DocumentSnapshot snapshot) =>
+      UserModel.fromJson(snapshot.data);
+
   List<Inventory> _getInventoriesByUserIdFromSnapshot(
           QuerySnapshot snapshot, String userId) =>
       snapshot.documents
+          .where((document) => jsonEncode(document.data).contains(userId))
+          .map(_getInventoryFromSnapshot)
+          .toList();
+
+  List<Inventory> _getTakenInventoriesByUserIdFromSnapshot(
+          QuerySnapshot snapshot, String userId) =>
+      snapshot.documents
+          .where((document) => document.data['status'] == 1)
           .where((document) => jsonEncode(document.data).contains(userId))
           .map(_getInventoryFromSnapshot)
           .toList();
@@ -52,16 +66,23 @@ class UserRepositoryFirebaseImpl {
     return jsonDecode(jsonEncode(dirtyMap));
   }
 
-  Future<void> returnInventory(String inventoryId) {
-    return null;
+  Future<void> returnInventory(String inventoryId) async {
+
   }
 
-  Future<void> takeInventory(String inventoryId) {
+  Future<void> takeInventory(String inventoryId) async {
     return null;
   }
 }
 
 class AdminRepositoryFirestoreImpl extends UserRepositoryFirebaseImpl {
+  Stream<List<User>> getAllUsers() {
+    return _fireStore
+        .collection(firebaseEndpoints.users)
+        .snapshots()
+        .map(_getAllUsersFromSnapshot);
+  }
+
   Stream<User> getUserById(String userId) => _fireStore
       .collection(firebaseEndpoints.users)
       .document(userId)
@@ -73,43 +94,52 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirebaseImpl {
         (snapshot) => _getInventoriesByUserIdFromSnapshot(snapshot, userId));
   }
 
+  Stream<List<Inventory>> getTakenInventoriesByUserId(String userId) {
+    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
+        (snapshot) =>
+            _getTakenInventoriesByUserIdFromSnapshot(snapshot, userId));
+  }
+
   Stream<List<Inventory>> get allInventories => _fireStore
       .collection(firebaseEndpoints.inventories)
       .snapshots()
       .map(_getAllInventoriesFromSnapshot);
 
-  List<Inventory> _getAllInventoriesFromSnapshot(QuerySnapshot snapshot) =>
-      snapshot.documents.map(_getInventoryFromSnapshot).toList();
-
-  Stream<List<User>> getAllUsers() {
-    return _fireStore
-        .collection(firebaseEndpoints.users)
-        .snapshots()
-        .map(_getAllUsersFromSnapshot);
-  }
-
   List<User> _getAllUsersFromSnapshot(QuerySnapshot snapshot) =>
       snapshot.documents.map(_getUserFromSnapshot).toList();
 
-  Future<void> addNewInventoryToDatabase(Inventory inventory) {
-    return null;
+  List<Inventory> _getAllInventoriesFromSnapshot(QuerySnapshot snapshot) =>
+      snapshot.documents.map(_getInventoryFromSnapshot).toList();
+
+  Future<void> addNewInventoryToDatabase(Inventory inventory) async {
+    await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventory.id)
+        .setData((inventory as InventoryModel).toJson());
   }
 
-  Future<void> removeInventoryFromDatabase(String inventoryId) {
-    return null;
+  Future<void> removeInventoryFromDatabase(String inventoryId) async {
+    await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventoryId)
+        .delete();
   }
 
-  Future<void> setInventoryStatus(String inventoryId) {
-    return null;
+  Future<void> setInventoryStatus(
+      String inventoryId, InventoryStatus status) async {
+    await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventoryId)
+        .setData({firebaseEndpoints.status: status.value});
   }
 }
 
 class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl {
-  Future<void> addUserToAdmins(String userId) {
+  Stream<void> addUserToAdmins(String userId) {
     return null;
   }
 
-  Future<void> removeUserFromAdmins(String userId) {
+  Stream<void> removeUserFromAdmins(String userId) {
     return null;
   }
 }

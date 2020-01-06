@@ -8,28 +8,28 @@ abstract class UserRepository {
 
   Future<List<Inventory>> getHistory(String userId);
 
-  Future<void> takeInventory(String inventoryId);//todo: test
+  Future<void> takeInventory(String inventoryId);
 
-  Future<void> returnInventory(String inventoryId);//todo: test
+  Future<void> returnInventory(String inventoryId);
 }
 
 abstract class AdminRepository extends UserRepository {
-  Future<List<User>> getAllUsers();//todo: test
+  Future<List<User>> getAllUsers();
 
-  Future<User> getUserInfo(String userId);//todo: test
+  Future<User> getUserInfo(String userId);
 
-  Future<List<Inventory>> getAllInventoriesInfo();//todo: test
+  Future<List<Inventory>> getAllInventoriesInfo();
 
-  Future<void> addNewInventoryToDatabase(Inventory inventory);//todo: test
+  Future<void> addNewInventoryToDatabase(Inventory inventory);
 
-  Future<void> removeInventoryFromDatabase(String inventoryId);//todo: test
+  Future<void> removeInventoryFromDatabase(String inventoryId);
 
-  Future<void> setInventoryStatus(String inventoryId);//todo: test
+  Future<void> setInventoryStatus(String inventoryId);
 }
 
 ///Only for SuperAdmin
 abstract class SuperAdminRepository extends AdminRepository {
-  Future<void> addUserToAdmins(String userId);//todo: test
+  Future<void> addUserToAdmins(String userId);
 
-  Future<void> removeUserFromAdmins(String userId);//todo: test
+  Future<void> removeUserFromAdmins(String userId);
 }
