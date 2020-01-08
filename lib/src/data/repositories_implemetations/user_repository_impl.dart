@@ -115,10 +115,8 @@ class UserRepositoryFirestoreImpl extends UserRepository {
         .document(inventoryId)
         .get();
 
-    final lastDataStatistic =
-        _getInventoryFromSnapshot(snapshot).statistic.last;
-
-    if (lastDataStatistic.status == InventoryStatus.free) {
+    final inventory = _getInventoryFromSnapshot(snapshot);
+    if (inventory.status == InventoryStatus.free) {
       await _fireStore
           .collection(firebaseEndpoints.inventories)
           .document(inventoryId)
@@ -132,8 +130,6 @@ class UserRepositoryFirestoreImpl extends UserRepository {
           ).toJson()
         ]),
       });
-    } else if (lastDataStatistic.status != InventoryStatus.free) {
-      throw InventoryNotFree();
     } else {
       throw InventoryStatusException();
     }

@@ -45,29 +45,49 @@ class QrReaderPagePresenter with ChangeNotifier {
   }
 
   Future<void> getInventoryInfo(String inventoryId) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       _inventory = await _userRepo.getInventoryInfo(inventoryId);
       notifyListeners();
     } catch (e) {
       print(e);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> takeInventory(String inventoryId) async {
+  void clearInventoryInfo() {
+    _inventory = null;
+    notifyListeners();
+  }
+
+  Future<void> takeInventory() async {
+    _isLoading = true;
+    notifyListeners();
     try {
-      await _userRepo.takeInventory(inventoryId);
+      await _userRepo.takeInventory(inventory.id);
       notifyListeners();
     } catch (e) {
       rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> returnInventory(String inventoryId) async {
+  Future<void> returnInventory() async {
+    _isLoading = true;
+    notifyListeners();
     try {
-      await _userRepo.returnInventory(inventoryId);
+      await _userRepo.returnInventory(inventory.id);
       notifyListeners();
     } catch (e) {
       rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

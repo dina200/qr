@@ -103,7 +103,7 @@ class InventoryStatusException implements Exception {
 
   @override
   String toString() {
-    return 'Inventory: something went wrong';
+    return 'Inventory: something went wrong. Maybe, the inventory is not free ';
   }
 }
 

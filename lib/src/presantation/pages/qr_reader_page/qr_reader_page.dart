@@ -8,6 +8,7 @@ import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/qr_reader_presenter.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
+import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
 class QrReaderPage extends StatefulWidget {
   @override
@@ -37,27 +38,82 @@ class _QrReaderPageState extends State<QrReaderPage> {
         title: Text(qrLocale.qrReader),
       ),
       drawer: QrDrawer(),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Text(_presenter.inventory != null
-                ? _presenter.inventory.toString()
-                : ''),
-            RaisedButton(
-              onPressed: scan,
-              child: Text(qrLocale.scan),
-            ),
-            RaisedButton(
-              onPressed: testReturnAndTakeInventory,
-              child: Text('TEST'),
-            ),
-          ],
+      body: LoadingLayout(
+        isLoading: _presenter.isLoading,
+        child: Container(
+          alignment: Alignment.center,
+          child: Wrap(
+            direction: Axis.vertical,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 16.0,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: scanTest,
+                child: Text(qrLocale.scan),
+              ),
+              if (_presenter.inventory != null)
+                Table(
+                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                  border:
+                      TableBorder.all(color: Theme.of(context).dividerColor),
+                  columnWidths: {
+                    0: IntrinsicColumnWidth(),
+                    1: FixedColumnWidth(200.0)
+                  },
+                  children: [
+                    _buildTableRow(qrLocale.id, _presenter.inventory.id),
+                    _buildTableRow(
+                        qrLocale.name.toLowerCase(), _presenter.inventory.name),
+                    _buildTableRow(qrLocale.info, _presenter.inventory.info),
+                    _buildTableRow(qrLocale.status,
+                        '${_presenter.inventory.status.status}'),
+                  ],
+                ),
+              if (_presenter.inventory != null) _buildActionButton(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> testReturnAndTakeInventory() async {
+  TableRow _buildTableRow(String name, String value) {
+    return TableRow(
+      children: [
+        _buildTableRowPadding(Text(name)),
+        _buildTableRowPadding(Text(value)),
+      ],
+    );
+  }
+
+  Widget _buildTableRowPadding(Widget child) {
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        child: child);
+  }
+
+  Widget _buildActionButton() {
+    final inventory = _presenter.inventory;
+    if (inventory.status == InventoryStatus.lost) {
+      return Text(qrLocale.lostInventory);
+    } else if (inventory.status == InventoryStatus.taken &&
+        inventory.statistic.last.userId != _presenter.user.id) {
+      return Text(qrLocale.takenInventory);
+    }
+
+    String nameButton = '';
+    if (inventory.status == InventoryStatus.taken) {
+      nameButton = qrLocale.retrieve;
+    } else if (inventory.status == InventoryStatus.free) {
+      nameButton = qrLocale.take;
+    }
+    return RaisedButton(
+      onPressed: _takeOrReturnInventory,
+      child: Text(nameButton),
+    );
+  }
+
+  Future<void> _takeOrReturnInventory() async {
     final inventory = _presenter.inventory;
 
     if (inventory != null) {
@@ -65,14 +121,14 @@ class _QrReaderPageState extends State<QrReaderPage> {
         showChoiceDialog(
           context: context,
           message: qrLocale.returnInventory,
-          onOk: () async => await _return(inventory),
+          onOk: () async => await _return(),
           onCancel: _returnToSignUpScreen,
         );
       } else if (inventory.status == InventoryStatus.free) {
         showChoiceDialog(
           context: context,
           message: qrLocale.takeInventory,
-          onOk: () async => await _take(inventory),
+          onOk: () async => await _take(),
           onCancel: _returnToSignUpScreen,
         );
       } else if (inventory.status == InventoryStatus.lost) {
@@ -85,22 +141,36 @@ class _QrReaderPageState extends State<QrReaderPage> {
     }
   }
 
-  Future<void> _return(Inventory inventory) async {
+  Future<void> _take() async {
     try {
-      await _presenter.returnInventory(inventory.id);
+      await _presenter.takeInventory();
+      _presenter.clearInventoryInfo();
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(qrLocale.successfullyTaken),
+        ),
+      );
     } catch (e) {
       print(e.toString());
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text(e.toString()),
-      ));
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
     } finally {
       _returnToSignUpScreen();
     }
   }
 
-  Future<void> _take(Inventory inventory) async {
+  Future<void> _return() async {
     try {
-      await _presenter.takeInventory(inventory.id);
+      await _presenter.returnInventory();
+      _presenter.clearInventoryInfo();
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(qrLocale.successfullyReturned),
+        ),
+      );
     } catch (e) {
       print(e.toString());
       _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -153,103 +223,33 @@ class _QrReaderPageState extends State<QrReaderPage> {
     Navigator.of(context).pop();
   }
 
-//  Future<void> removeStat() async {
-//    await _presenter.removeInventoryStatistic('DqXZhRKV1fPhMkBoA9qO');
-//  }
-//
-//  Future<void> addUserToAdmin() async {
-//    await _presenter.addUserToAdmins('BfsZ8OoOQ9Ob6RU9gDsx4OCQVsM2');
-//  }
-//
-//  Future<void> removeUserFromAdmin() async {
-//    await _presenter.removeUserFromAdmins('BfsZ8OoOQ9Ob6RU9gDsx4OCQVsM2');
-//  }
+  Future<void> scanTest() async {
+    try {
+      String inventoryId = 'DqXZhRKV1fPhMkBoA9qO';
 
-//  Future<void> changeInvStat() async {
-//    await _presenter.setInventoryStatus(
-//
-//       'rFkPWZEmku9Phhjrn4ln', InventoryStatus.lost,
-//    );
-//  }
-
-//  Future<void> removeInv() async {
-//    await _presenter.removeInventoryFromDatabase(
-//       'ITwdG5lWoiIjQwWmmdzF',
-//    );
-//  }
-
-//  Future<void> addInv() async {
-//    await _presenter.addNewInventoryToDatabase(
-//        id: 'ITwdG5lWoiIjQwWmmdzF',
-//        name: 'Button',
-//        info: 'NEW BUTTON',
-//    );
-//  }
-
-//  Future<void> testUserHistory() async {
-////    await _presenter.getUserHistory('r7V3zNSeSYPUKAtL5mfcMXqwz8H2');
-//    await _presenter.getTakenInventoriesByUser('r7V3zNSeSYPUKAtL5mfcMXqwz8H2');
-//    await _presenter.getAllInventoriesInfo();
-//    print(_presenter.inventories);
-//  }
-
-//  Future<void> testUser() async {
-//    try {
-//      await _presenter.getUserInfo('BfsZ8OoOQ9Ob6RU9gDsx4OCQVsM2');
-//      print(_presenter.anotherUser);
-//    } catch (e) {
-//      _scaffoldKey.currentState.showSnackBar(SnackBar(
-//        content: Text(e.toString()),
-//      ));
-//    }
-//  }
-
-//  Future<void> testUsers() async {
-//  await _presenter.getAllUser();
-//    print(_presenter.users);
-//  }
-
-//  Future<void> testInvs() async {
-////   await _presenter.getCurrentUserHistory();
-//   await _presenter.getCurrentUserTakenInventories();
-//
-//    print(_presenter.inventories);
-//  }
-
-//  Future<void> testUser() async {
-//    final user = _presenter.user;
-//
-//    print(user);
-//  }
-
-//  Future scanTest() async {
-//    try {
-//      String inventoryId = 'DqXZhRKV1fPhMkBoA9qO';
-//
-//      await _presenter.getInventoryInfo(inventoryId);
-//    } on PlatformException catch (e) {
-//      if (e.code == BarcodeScanner.CameraAccessDenied) {
-//        showErrorDialog(
-//          context: context,
-//          errorMessage: 'The user did not grant the camera permission!',
-//          onPressed: _returnToSignUpScreen,
-//        );
-//      } else {
-//        throw e;
-//      }
-//    } on FormatException catch (e) {
-//      showErrorDialog(
-//        context: context,
-//        errorMessage: '$e',
-//        onPressed: _returnToSignUpScreen,
-//      );
-//    } catch (e) {
-//      showErrorDialog(
-//        context: context,
-//        errorMessage: 'Unknown error: $e',
-//        onPressed: _returnToSignUpScreen,
-//      );
-//    }
-//  }
-//
+      await _presenter.getInventoryInfo(inventoryId);
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        showErrorDialog(
+          context: context,
+          errorMessage: 'The user did not grant the camera permission!',
+          onPressed: _returnToSignUpScreen,
+        );
+      } else {
+        throw e;
+      }
+    } on FormatException catch (e) {
+      showErrorDialog(
+        context: context,
+        errorMessage: '$e',
+        onPressed: _returnToSignUpScreen,
+      );
+    } catch (e) {
+      showErrorDialog(
+        context: context,
+        errorMessage: 'Unknown error: $e',
+        onPressed: _returnToSignUpScreen,
+      );
+    }
+  }
 }

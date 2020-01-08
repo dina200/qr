@@ -39,8 +39,9 @@ class Inventory {
 
 class InventoryStatus {
   final int value;
+  final String status;
 
-  InventoryStatus._(this.value);
+  InventoryStatus._(this.value, this.status);
 
   factory InventoryStatus(int status) {
     switch (status) {
@@ -55,15 +56,15 @@ class InventoryStatus {
   }
 
   static InventoryStatus get free {
-    return InventoryStatus._(0);
+    return InventoryStatus._(0, 'free');
   }
 
   static InventoryStatus get taken {
-    return InventoryStatus._(1);
+    return InventoryStatus._(1, 'taken');
   }
 
   static InventoryStatus get lost {
-    return InventoryStatus._(2);
+    return InventoryStatus._(2, 'lost');
   }
 
   @override
