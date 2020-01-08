@@ -19,16 +19,17 @@ main() {
     id: 'QWERTY1234567890',
     name: 'Phone',
     info: 'Some info',
-    status: InventoryStatus.taken,
+    status: InventoryStatus.lost,
     statistic: [
       UserStatisticModel(
         userId: "NAME1234567890",
-        taken: DateTime.fromMillisecondsSinceEpoch(1575972600000),
-        returned: DateTime.fromMillisecondsSinceEpoch(1576836600000),
+        status: InventoryStatus.taken,
+        dateTime: DateTime.fromMillisecondsSinceEpoch(1576836600000),
       ),
       UserStatisticModel(
-        userId: "DARYA987654321",
-        taken: DateTime.fromMillisecondsSinceEpoch(1576836600000),
+        userId: "NAME1234567890",
+        status: InventoryStatus.lost,
+        dateTime: DateTime.fromMillisecondsSinceEpoch(1576836600000),
       ),
     ],
   );
@@ -61,8 +62,6 @@ main() {
         final jsonModel =
             listJson.where(((obj) => obj['id'] == 'QWERTY1234567890')).first;
         final result = InventoryModel.fromJson(jsonModel);
-        print(result);
-        print(inventoryModel);
         expect(result, equals(inventoryModel));
       },
     );
@@ -93,16 +92,17 @@ main() {
           "id": "QWERTY1234567890",
           "name": "Phone",
           "info": "Some info",
-          "status": 1,
+          "status": 2,
           "statistic": [
             {
               "userId": "NAME1234567890",
-              "taken": 1575972600,
-              "returned": 1576836600
+              "status": 1,
+              "dateTime": 1576836600,
             },
             {
-              "userId": "DARYA987654321",
-              "taken": 1576836600,
+              "userId": "NAME1234567890",
+              "status": 2,
+              "dateTime": 1576836600,
             }
           ],
         };

@@ -20,6 +20,7 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formStateKey = GlobalKey<FormState>();
 
+  RegistrationPagePresenter _presenter;
   FocusNode _positionFieldFocusNode = FocusNode();
   FocusNode _phoneFieldFocusNode = FocusNode();
 
@@ -40,14 +41,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget _buildLayout(BuildContext context) {
-    final presenter = Provider.of<RegistrationPagePresenter>(context);
+    _presenter = Provider.of<RegistrationPagePresenter>(context);
     return AuthLayout(
-      isLoading: presenter.isLoading,
-      child: _buildRegistrationForm(presenter),
+      isLoading: _presenter.isLoading,
+      child: _buildRegistrationForm(),
     );
   }
 
-  Widget _buildRegistrationForm(RegistrationPagePresenter presenter) {
+  Widget _buildRegistrationForm() {
     return Theme(
       data: Theme.of(context).copyWith(
         inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
@@ -68,9 +69,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   _buildNameFormField(),
                   _buildEmailFormField(),
                   _buildPositionFormField(),
-                  _buildPhoneFormField(presenter),
+                  _buildPhoneFormField(),
                   SizedBox(height: 32.0),
-                  _buildCreateAccountButton(presenter),
+                  _buildCreateAccountButton(),
                 ],
               ),
             ),
@@ -153,7 +154,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  Widget _buildPhoneFormField(RegistrationPagePresenter presenter) {
+  Widget _buildPhoneFormField() {
     return WithoutErrorTextFormField(
       decoration: InputDecoration(
         labelText: qrLocale.phone,
@@ -162,7 +163,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       keyboardType: TextInputType.phone,
       validator: _validatePhone,
       focusNode: _phoneFieldFocusNode,
-      onFieldSubmitted: (_) async => await _register(presenter),
+      onFieldSubmitted: (_) async => await _register(),
       onSaved: _onSavedPhone,
     );
   }
@@ -181,19 +182,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
-  Widget _buildCreateAccountButton(RegistrationPagePresenter presenter) {
+  Widget _buildCreateAccountButton() {
     return AuthButton(
       title: qrLocale.createAccount,
       isButtonActive: _isCreateAccountButtonActive,
-      onPressed: () async => await _register(presenter),
+      onPressed: _register,
     );
   }
 
-  Future _register(RegistrationPagePresenter presenter) async {
+  Future<void> _register() async {
     if (_formStateKey.currentState.validate()) {
       _formStateKey.currentState.save();
       try {
-        await _signUpViaGoogle(presenter);
+        await _signUpViaGoogle();
         _createRoute();
       } on QrStateException catch (e) {
         _errorDialog('${qrLocale.stateException}: ${e.message}');
@@ -205,7 +206,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
-  Future<void> _signUpViaGoogle(RegistrationPagePresenter presenter) async {
+  Future<void> _signUpViaGoogle() async {
     final GooglePayload payload = ModalRoute.of(context).settings.arguments;
 
     final registrationPayload = GoogleRegistrationPayload(
@@ -216,7 +217,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       payload.googleId,
     );
 
-    await presenter.register(registrationPayload);
+    await _presenter.register(registrationPayload);
   }
 
   void _createRoute() {
@@ -227,7 +228,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Future<void> _errorDialog(String info) async {
-    await showInfoDialog(
+    await showErrorDialog(
       context: context,
       errorMessage: info,
       onPressed: _returnToSignUpScreen,

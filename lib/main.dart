@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:qr/src/data/repositories_implemetations/auth_repository_impl.dart';
 import 'package:qr/src/data/repositories_implemetations/user_repository_impl.dart';
 import 'package:qr/src/domain/repositories_contracts/auth_repository.dart';
+import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
 import 'package:qr/src/presantation/pages/auth_page/registration_page.dart';
 import 'package:qr/src/presantation/pages/empty_page/empty_page.dart';
@@ -22,11 +23,9 @@ Future<void> main() async {
 
   injector
     ..register<AuthRepository>(AuthRepositoryImpl())
-    ..register<UserRepositoryFirebaseImpl>(UserRepositoryFirebaseImpl())
-    ..register<AdminRepositoryFirestoreImpl>(AdminRepositoryFirestoreImpl())
-    ..register<SuperAdminRepositoryFirestoreImpl>(SuperAdminRepositoryFirestoreImpl());
+    ..register<UserRepository>(UserRepositoryFirestoreImpl());
 
-  await injector.get<UserRepositoryFirebaseImpl>().init();
+  await injector.get<UserRepository>().init();
 
   runApp(MyApp());
 }
@@ -42,7 +41,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Routes.qrReader,
       home: _handleWindowDisplay(),
       routes: <String, WidgetBuilder>{
         Routes.auth: (context) => AuthPage(),

@@ -44,7 +44,7 @@ class InfoDialog extends StatelessWidget {
       .toList();
 }
 
-Future<void> showInfoDialog({
+Future<void> showErrorDialog({
   @required BuildContext context,
   @required String errorMessage,
   @required VoidCallback onPressed,
@@ -60,6 +60,33 @@ Future<void> showInfoDialog({
             text: qrLocale.ok,
             onPressed: onPressed,
           )
+        ],
+      );
+    },
+  );
+}
+
+Future<void> showChoiceDialog({
+  @required BuildContext context,
+  @required String message,
+  @required VoidCallback onOk,
+  @required VoidCallback onCancel,
+}) async {
+  assert(context != null || message != null);
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return InfoDialog(
+        info: message,
+        actions: [
+          DialogAction(
+            text: qrLocale.cancel,
+            onPressed: onCancel,
+          ),
+          DialogAction(
+            text: qrLocale.ok,
+            onPressed: onOk,
+          ),
         ],
       );
     },

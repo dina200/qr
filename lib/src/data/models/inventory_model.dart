@@ -45,19 +45,19 @@ class InventoryModel extends Inventory {
 class UserStatisticModel extends UserStatistic {
   UserStatisticModel({
     @required String userId,
-    @required DateTime taken,
-    DateTime returned,
+    @required InventoryStatus status,
+    @required DateTime dateTime,
   }) : super(
           userId: userId,
-          taken: taken,
-          returned: returned,
+          status: status,
+          dateTime: dateTime,
         );
 
   UserStatisticModel.fromJson(Map<String, dynamic> json)
       : super(
           userId: json['userId'] as String,
-          taken: _fromTimestamp(json['taken'] as int),
-          returned: _fromTimestamp(json['returned'] as int),
+          status: InventoryStatus(json['status'] as int),
+          dateTime: _fromTimestamp(json['dateTime'] as int),
         );
 
   static DateTime _fromTimestamp(int timestamp) {
@@ -69,12 +69,12 @@ class UserStatisticModel extends UserStatistic {
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,
-      'taken': _toTimestamp(taken),
-      if(returned != null) 'returned': _toTimestamp(returned),
+      'status': status.value,
+      'dateTime': _toTimestamp(dateTime),
     };
   }
 
   int _toTimestamp(DateTime dateTime) {
-    return dateTime != null ? (dateTime.millisecondsSinceEpoch ~/ 1000) : null;
+    return dateTime != null ? (dateTime.millisecondsSinceEpoch) : null;
   }
 }

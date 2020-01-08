@@ -35,11 +35,6 @@ class Inventory {
       name.hashCode ^
       info.hashCode ^
       status.hashCode;
-
-  @override
-  String toString() {
-    return 'Inventory{id: $id, name: $name, info: $info, status: $status, statistic: $statistic}';
-  }
 }
 
 class InventoryStatus {
@@ -80,24 +75,20 @@ class InventoryStatus {
 
   @override
   int get hashCode => value.hashCode;
-
-  @override
-  String toString() {
-    return 'InventoryStatus{value: $value}';
-  }
 }
 
 class UserStatistic {
   final String userId;
-  final DateTime taken;
-  final DateTime returned;
+  final InventoryStatus status;
+  final DateTime dateTime;
 
   UserStatistic({
     @required this.userId,
-    @required this.taken,
-    this.returned,
+    @required this.status,
+    @required this.dateTime,
   })  : assert(userId != null),
-        assert(taken != null);
+        assert(status != null),
+        assert(dateTime != null);
 
   @override
   bool operator ==(Object other) =>
@@ -105,17 +96,13 @@ class UserStatistic {
           other is UserStatistic &&
               runtimeType == other.runtimeType &&
               userId == other.userId &&
-              taken == other.taken &&
-              returned == other.returned;
+              status == other.status &&
+              dateTime == other.dateTime;
 
   @override
   int get hashCode =>
       userId.hashCode ^
-      taken.hashCode ^
-      returned.hashCode;
+      status.hashCode ^
+      dateTime.hashCode;
 
-  @override
-  String toString() {
-    return 'UserStatistic{userId: $userId, taken: $taken, returned: $returned}';
-  }
 }

@@ -17,6 +17,8 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
+  AuthPagePresenter _presenter;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -28,9 +30,9 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildLayout(BuildContext context) {
-    final presenter = Provider.of<AuthPagePresenter>(context);
+    _presenter = Provider.of<AuthPagePresenter>(context);
     return AuthLayout(
-      isLoading: presenter.isLoading,
+      isLoading: _presenter.isLoading,
       child: AuthContainer(
         child: Wrap(
           alignment: WrapAlignment.center,
@@ -42,7 +44,7 @@ class _AuthPageState extends State<AuthPage> {
             ),
             SocialButton.google(
               title: qrLocale.loginWithGoogle,
-              onPressed: () => _login(presenter),
+              onPressed: _login,
             ),
             Text(
               qrLocale.or.toLowerCase(),
@@ -50,7 +52,7 @@ class _AuthPageState extends State<AuthPage> {
             ),
             SocialButton.google(
               title: qrLocale.signUpViaGoogle,
-              onPressed: () => _register(presenter),
+              onPressed: _register,
             ),
           ],
         ),
@@ -58,9 +60,9 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Future<void> _login(AuthPagePresenter presenter) async {
+  Future<void> _login() async {
     try {
-      final authPayload = await _googleSignIn(presenter);
+      await _googleSignIn(_presenter);
       Navigator.of(context).pushNamedAndRemoveUntil(
         routes.inventories,
         (_) => false,
@@ -76,9 +78,9 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
-  Future<void> _register(AuthPagePresenter presenter) async {
+  Future<void> _register() async {
     try {
-      final authPayload = await _googleSignUp(presenter);
+      final authPayload = await _googleSignUp(_presenter);
       Navigator.of(context).pushNamed(
         routes.registration,
         arguments: authPayload,
@@ -101,7 +103,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future<void> _errorDialog(String info) async {
-    await showInfoDialog(
+    await showErrorDialog(
       context: context,
       errorMessage: info,
       onPressed: _returnToSignUpScreen,

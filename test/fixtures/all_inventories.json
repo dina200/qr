@@ -3,16 +3,17 @@
     "id": "QWERTY1234567890",
     "name": "Phone",
     "info": "Some info",
-    "status": 1,
+    "status": 2,
     "statistic": [
       {
         "userId": "NAME1234567890",
-        "taken": 1575972600,
-        "returned": 1576836600
+        "status": 1,
+        "dateTime": 1576836600
       },
       {
-        "userId": "DARYA987654321",
-        "taken": 1576836600
+        "userId": "NAME1234567890",
+        "status": 2,
+        "dateTime": 1576836600
       }
     ]
   },
@@ -30,13 +31,8 @@
     "statistic": [
       {
         "userId": "DARYA987654321",
-        "taken": 1577009400,
-        "returned": 1577010000
-      },
-      {
-        "userId": "NAME1234567890",
-        "taken": 1577010000,
-        "returned": 1578009400
+        "status": 0,
+        "dateTime": 1578009400
       }
     ]
   },
@@ -48,12 +44,13 @@
     "statistic": [
       {
         "userId": "DARYA987654321",
-        "taken": 1577009400,
-        "returned": 1577010000
+        "status": 1,
+        "dateTime": 1577010000
       },
       {
         "userId": "NAME1234567890",
-        "taken": 1577010000
+        "status": 2,
+        "dateTime": 1577010000
       }
     ]
   }

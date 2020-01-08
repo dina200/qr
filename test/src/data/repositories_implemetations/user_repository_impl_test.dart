@@ -14,13 +14,8 @@ main() {
       statistic: [
         UserStatistic(
           userId: "DARYA987654321",
-          taken: DateTime.fromMillisecondsSinceEpoch(1577009400000),
-          returned: DateTime.fromMillisecondsSinceEpoch(1577010000000),
-        ),
-        UserStatistic(
-          userId: "NAME1234567890",
-          taken: DateTime.fromMillisecondsSinceEpoch(1577010000000),
-          returned: DateTime.fromMillisecondsSinceEpoch(1578009400000),
+          status: InventoryStatus.free,
+          dateTime: DateTime.fromMillisecondsSinceEpoch(1578009400000),
         ),
       ]);
 

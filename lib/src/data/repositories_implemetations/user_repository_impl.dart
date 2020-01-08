@@ -5,105 +5,269 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:qr/src/data/models/inventory_model.dart';
 import 'package:qr/src/data/models/user_model.dart';
+import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
+import 'package:qr/src/utils/exceptions.dart';
 import 'package:qr/src/utils/firebase_endpoints.dart' as firebaseEndpoints;
 import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/domain/entities/user.dart';
+import 'package:qr/src/utils/injector.dart';
 import 'package:qr/src/utils/store_interactor.dart';
 
-class UserRepositoryFirebaseImpl {
+class UserRepositoryFirestoreImpl extends UserRepository {
   String _userId;
   final _fireStore = Firestore.instance;
 
   Future<void> init() async {
     _userId = await StoreInteractor.getToken();
+    if (_userId != null) {
+      final user = await getCurrentUser();
+
+      if (user.status == UserStatus.admin) {
+        injector.register<AdminRepository>(AdminRepositoryFirestoreImpl());
+
+        await injector.get<AdminRepository>().init();
+      }
+      if (user.status == UserStatus.superAdmin) {
+        injector.register<SuperAdminRepository>(
+            SuperAdminRepositoryFirestoreImpl());
+
+        await injector.get<SuperAdminRepository>().init();
+      }
+    }
   }
 
-  Stream<User> get currentUser => _fireStore
-      .collection(firebaseEndpoints.users)
-      .document(_userId)
-      .snapshots()
-      .map(_getUserFromSnapshot);
-
-  Stream<Inventory> getInventoryInfo(String inventoryId) => _fireStore
-      .collection(firebaseEndpoints.inventories)
-      .document(inventoryId)
-      .snapshots()
-      .map(_getInventoryFromSnapshot);
-
-  Stream<List<Inventory>> getCurrentUserHistory() {
-    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
-        (snapshot) => _getInventoriesByUserIdFromSnapshot(snapshot, _userId));
+  @override
+  Future<User> getCurrentUser() async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.users)
+        .document(_userId)
+        .get();
+    return _getUserFromSnapshot(snapshot);
   }
 
-  Stream<List<Inventory>> getCurrentUserTakenInventories() {
-    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
-        (snapshot) =>
-            _getTakenInventoriesByUserIdFromSnapshot(snapshot, _userId));
+  @override
+  Future<Inventory> getInventoryInfo(String inventoryId) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventoryId)
+        .get();
+    return _getInventoryFromSnapshot(snapshot);
   }
 
-  User _getUserFromSnapshot(DocumentSnapshot snapshot) =>
-      UserModel.fromJson(snapshot.data);
+  @override
+  Future<List<Inventory>> getCurrentUserHistory() async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .getDocuments();
+    return _getInventoriesHistoryByUserIdFromSnapshot(snapshot, _userId);
+  }
 
-  List<Inventory> _getInventoriesByUserIdFromSnapshot(
-          QuerySnapshot snapshot, String userId) =>
-      snapshot.documents
-          .where((document) => jsonEncode(document.data).contains(userId))
-          .map(_getInventoryFromSnapshot)
-          .toList();
+  @override
+  Future<List<Inventory>> getCurrentUserTakenInventories() async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .getDocuments();
+    return _getTakenInventoriesByUserIdFromSnapshot(snapshot, _userId);
+  }
+
+  @override
+  Future<void> returnInventory(String inventoryId) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventoryId)
+        .get();
+
+    final lastDataStatistic =
+        _getInventoryFromSnapshot(snapshot).statistic.last;
+
+    if (lastDataStatistic.userId == _userId &&
+        lastDataStatistic.status == InventoryStatus.taken) {
+      await _fireStore
+          .collection(firebaseEndpoints.inventories)
+          .document(inventoryId)
+          .updateData({
+        firebaseEndpoints.status: InventoryStatus.free.value,
+        firebaseEndpoints.statistic: FieldValue.arrayUnion([
+          UserStatisticModel(
+            userId: _userId,
+            status: InventoryStatus.free,
+            dateTime: DateTime.now(),
+          ).toJson()
+        ]),
+      });
+    } else if (lastDataStatistic.userId != _userId) {
+      throw InventoryUsedByAnotherUser(await getCurrentUser());
+    } else if (lastDataStatistic.status != InventoryStatus.taken) {
+      throw InventoryNotTakenByTheUser();
+    } else {
+      throw InventoryStatusException();
+    }
+  }
+
+  @override
+  Future<void> takeInventory(String inventoryId) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventoryId)
+        .get();
+
+    final lastDataStatistic =
+        _getInventoryFromSnapshot(snapshot).statistic.last;
+
+    if (lastDataStatistic.status == InventoryStatus.free) {
+      await _fireStore
+          .collection(firebaseEndpoints.inventories)
+          .document(inventoryId)
+          .updateData({
+        firebaseEndpoints.status: InventoryStatus.taken.value,
+        firebaseEndpoints.statistic: FieldValue.arrayUnion([
+          UserStatisticModel(
+            userId: _userId,
+            status: InventoryStatus.taken,
+            dateTime: DateTime.now(),
+          ).toJson()
+        ]),
+      });
+    } else if (lastDataStatistic.status != InventoryStatus.free) {
+      throw InventoryNotFree();
+    } else {
+      throw InventoryStatusException();
+    }
+  }
+
+  User _getUserFromSnapshot(DocumentSnapshot snapshot) {
+    if (snapshot.exists) {
+      return UserModel.fromJson(snapshot.data);
+    } else {
+      throw UserNotExist();
+    }
+  }
+
+  List<Inventory> _getInventoriesHistoryByUserIdFromSnapshot(
+      QuerySnapshot snapshot, String userId) {
+    return snapshot.documents
+        .where((document) => jsonEncode(document.data).contains(userId))
+        .map(_getInventoryFromSnapshot)
+        .toList();
+  }
 
   List<Inventory> _getTakenInventoriesByUserIdFromSnapshot(
-          QuerySnapshot snapshot, String userId) =>
-      snapshot.documents
-          .where((document) => document.data['status'] == 1)
-          .where((document) => jsonEncode(document.data).contains(userId))
-          .map(_getInventoryFromSnapshot)
-          .toList();
+      QuerySnapshot snapshot, String userId) {
+    return snapshot.documents
+        .where((document) => document.data['status'] == 1)
+        .where((document) => jsonEncode(document.data).contains(userId))
+        .map(_getInventoryFromSnapshot)
+        .toList();
+  }
 
-  Inventory _getInventoryFromSnapshot(DocumentSnapshot snapshot) =>
-      InventoryModel.fromJson(_getCleanMap(snapshot.data));
+  Inventory _getInventoryFromSnapshot(DocumentSnapshot snapshot) {
+    return InventoryModel.fromJson(_getCleanMap(snapshot.data));
+  }
 
   Map<String, dynamic> _getCleanMap(Map<String, dynamic> dirtyMap) {
     return jsonDecode(jsonEncode(dirtyMap));
   }
-
-  Future<void> returnInventory(String inventoryId) async {
-
-  }
-
-  Future<void> takeInventory(String inventoryId) async {
-    return null;
-  }
 }
 
-class AdminRepositoryFirestoreImpl extends UserRepositoryFirebaseImpl {
-  Stream<List<User>> getAllUsers() {
-    return _fireStore
+class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
+    implements AdminRepository {
+  @override
+  Future<void> init() async {
+    _userId = await StoreInteractor.getToken();
+  }
+
+  @override
+  Future<List<User>> getAllUsers() async {
+    final snapshot =
+        await _fireStore.collection(firebaseEndpoints.users).getDocuments();
+    return _getAllUsersFromSnapshot(snapshot);
+  }
+
+  @override
+  Future<User> getUserInfo(String userId) async {
+    final snapshot = await _fireStore
         .collection(firebaseEndpoints.users)
-        .snapshots()
-        .map(_getAllUsersFromSnapshot);
+        .document(userId)
+        .get();
+    return _getUserFromSnapshot(snapshot);
   }
 
-  Stream<User> getUserById(String userId) => _fireStore
-      .collection(firebaseEndpoints.users)
-      .document(userId)
-      .snapshots()
-      .map(_getUserFromSnapshot);
-
-  Stream<List<Inventory>> getHistoryByUserId(String userId) {
-    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
-        (snapshot) => _getInventoriesByUserIdFromSnapshot(snapshot, userId));
+  @override
+  Future<List<Inventory>> getUserHistory(String userId) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .getDocuments();
+    return _getInventoriesHistoryByUserIdFromSnapshot(snapshot, userId);
   }
 
-  Stream<List<Inventory>> getTakenInventoriesByUserId(String userId) {
-    return _fireStore.collection(firebaseEndpoints.inventories).snapshots().map(
-        (snapshot) =>
-            _getTakenInventoriesByUserIdFromSnapshot(snapshot, userId));
+  @override
+  Future<List<Inventory>> getTakenInventoriesByUser(String userId) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .getDocuments();
+    return _getTakenInventoriesByUserIdFromSnapshot(snapshot, userId);
   }
 
-  Stream<List<Inventory>> get allInventories => _fireStore
-      .collection(firebaseEndpoints.inventories)
-      .snapshots()
-      .map(_getAllInventoriesFromSnapshot);
+  @override
+  Future<List<Inventory>> getAllInventoriesInfo() async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .getDocuments();
+    return _getAllInventoriesFromSnapshot(snapshot);
+  }
+
+  Future<void> addNewInventoryToDatabase(
+      String id, String name, String info) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(id)
+        .get();
+
+    final inventory = Inventory(
+      id: id,
+      name: name,
+      info: info,
+      status: InventoryStatus.free,
+    );
+
+    if (snapshot.data == null) {
+      await _fireStore
+          .collection(firebaseEndpoints.inventories)
+          .document(inventory.id)
+          .setData(_inventoryModelFromInventoryEntity(inventory).toJson());
+    } else {
+      throw InventoryAlreadyExist();
+    }
+  }
+
+  Future<void> removeInventoryFromDatabase(String inventoryId) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventoryId)
+        .get();
+
+    if (snapshot.data != null) {
+      await _fireStore
+          .collection(firebaseEndpoints.inventories)
+          .document(inventoryId)
+          .delete();
+    } else {
+      throw InventoryNotExist();
+    }
+  }
+
+  @override
+  Future<void> setInventoryStatus(
+      String inventoryId, InventoryStatus status) async {
+    try {
+      await _fireStore
+          .collection(firebaseEndpoints.inventories)
+          .document(inventoryId)
+          .updateData({firebaseEndpoints.status: status.value});
+    } catch (e) {
+      throw InventoryNotExist();
+    }
+  }
 
   List<User> _getAllUsersFromSnapshot(QuerySnapshot snapshot) =>
       snapshot.documents.map(_getUserFromSnapshot).toList();
@@ -111,35 +275,73 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirebaseImpl {
   List<Inventory> _getAllInventoriesFromSnapshot(QuerySnapshot snapshot) =>
       snapshot.documents.map(_getInventoryFromSnapshot).toList();
 
-  Future<void> addNewInventoryToDatabase(Inventory inventory) async {
-    await _fireStore
-        .collection(firebaseEndpoints.inventories)
-        .document(inventory.id)
-        .setData((inventory as InventoryModel).toJson());
-  }
-
-  Future<void> removeInventoryFromDatabase(String inventoryId) async {
-    await _fireStore
-        .collection(firebaseEndpoints.inventories)
-        .document(inventoryId)
-        .delete();
-  }
-
-  Future<void> setInventoryStatus(
-      String inventoryId, InventoryStatus status) async {
-    await _fireStore
-        .collection(firebaseEndpoints.inventories)
-        .document(inventoryId)
-        .setData({firebaseEndpoints.status: status.value});
+  InventoryModel _inventoryModelFromInventoryEntity(Inventory inventory) {
+    return InventoryModel(
+        id: inventory.id,
+        info: inventory.info,
+        name: inventory.name,
+        status: inventory.status,
+        statistic: inventory.statistic
+            .map(
+              (stat) => UserStatistic(
+                userId: stat.userId,
+                status: stat.status,
+                dateTime: stat.dateTime,
+              ),
+            )
+            .toList());
   }
 }
 
-class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl {
-  Stream<void> addUserToAdmins(String userId) {
-    return null;
+class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl
+    implements SuperAdminRepository {
+  @override
+  Future<void> init() async {
+    _userId = await StoreInteractor.getToken();
   }
 
-  Stream<void> removeUserFromAdmins(String userId) {
-    return null;
+  Future<void> addUserToAdmins(String userId) async {
+    try {
+      await _fireStore
+          .collection(firebaseEndpoints.users)
+          .document(userId)
+          .updateData({firebaseEndpoints.userStatus: UserStatus.admin.value});
+    } catch (e) {
+      throw UserNotExist();
+    }
+  }
+
+  Future<void> removeUserFromAdmins(String userId) async {
+    try {
+      final currentUser = await getCurrentUser();
+      if(currentUser.id == userId) {
+        throw UserStatusCanNotBeChange();
+      }
+      await _fireStore
+          .collection(firebaseEndpoints.users)
+          .document(userId)
+          .updateData({firebaseEndpoints.userStatus: UserStatus.user.value});
+    } on UserStatusCanNotBeChange {
+      throw UserStatusCanNotBeChange();
+    } catch (e) {
+      throw UserNotExist();
+    }
+  }
+
+  @override
+  Future<void> removeInventoryStatistic(String inventoryId) async {
+    final snapshot = await _fireStore
+        .collection(firebaseEndpoints.inventories)
+        .document(inventoryId)
+        .get();
+
+    if (snapshot.data != null) {
+      await _fireStore
+          .collection(firebaseEndpoints.inventories)
+          .document(inventoryId)
+          .updateData({firebaseEndpoints.statistic: []});
+    } else {
+      throw InventoryNotExist();
+    }
   }
 }

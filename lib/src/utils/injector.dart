@@ -8,6 +8,10 @@ class Injector {
   T get<T>() {
     return _singletoneMap[T];
   }
+
+  void removeEntity<T>() {
+    return _singletoneMap.remove(T);
+  }
 }
 
 final injector = Injector();

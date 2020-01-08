@@ -26,6 +26,9 @@ class QrDrawer extends StatelessWidget {
           dense: true,
           child: ListView(
             children: <Widget>[
+              DrawerHeader(child: Text(
+                presenter.user.name
+              )),
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(qrLocale.userProfile),

@@ -15,8 +15,20 @@ class UserRepositoryMock implements UserRepository {
   }
 
   @override
-  Future<List<Inventory>> getHistory(String userId) async {
-    // TODO: implement getHistory
+  Future<User> getCurrentUser() {
+    // TODO: implement getCurrentUser
+    return null;
+  }
+
+  @override
+  Future<List<Inventory>> getCurrentUserHistory() {
+    // TODO: implement getCurrentUserHistory
+    return null;
+  }
+
+  @override
+  Future<List<Inventory>> getCurrentUserTakenInventories() {
+    // TODO: implement getCurrentUserTakenInventories
     return null;
   }
 
@@ -28,20 +40,20 @@ class UserRepositoryMock implements UserRepository {
   }
 
   @override
-  Future<List<Inventory>> getTakenInventories(String userId) async {
-    // TODO: implement getTakenInventories
-    return null;
-  }
-
-  @override
-  Future<void> returnInventory(String inventoryId) async {
+  Future<void> returnInventory(String inventoryId) {
     // TODO: implement returnInventory
     return null;
   }
 
   @override
-  Future<void> takeInventory(String inventoryId) async {
+  Future<void> takeInventory(String inventoryId) {
     // TODO: implement takeInventory
+    return null;
+  }
+
+  @override
+  Future<void> init() {
+    // TODO: implement init
     return null;
   }
 }
@@ -49,38 +61,54 @@ class UserRepositoryMock implements UserRepository {
 class AdminRepositoryMock extends UserRepositoryMock
     implements AdminRepository {
   @override
-  Future<void> addNewInventoryToDatabase(Inventory inventory) async {
+  Future<void> addNewInventoryToDatabase(
+    String id,
+    String name,
+    String info,
+  ) {
     // TODO: implement addNewInventoryToDatabase
     return null;
   }
 
   @override
-  Future<List<Inventory>> getAllInventoriesInfo() async {
+  Future<List<Inventory>> getAllInventoriesInfo() {
     // TODO: implement getAllInventoriesInfo
     return null;
   }
 
   @override
-  Future<List<User>> getAllUsers() async {
+  Future<List<User>> getAllUsers() {
     // TODO: implement getAllUsers
     return null;
   }
 
   @override
-  Future<User> getUserInfo(String userId) async {
+  Future<List<Inventory>> getUserHistory(String userId) {
+    // TODO: implement getUserHistory
+    return null;
+  }
+
+  @override
+  Future<User> getUserInfo(String userId) {
     // TODO: implement getUserInfo
     return null;
   }
 
   @override
-  Future<void> removeInventoryFromDatabase(String inventoryId) async {
+  Future<void> removeInventoryFromDatabase(String inventoryId) {
     // TODO: implement removeInventoryFromDatabase
     return null;
   }
 
   @override
-  Future<void> setInventoryStatus(String inventoryId) async {
+  Future<void> setInventoryStatus(String inventoryId, InventoryStatus status) {
     // TODO: implement setInventoryStatus
+    return null;
+  }
+
+  @override
+  Future<List<Inventory>> getTakenInventoriesByUser(String userId) {
+    // TODO: implement getTakenInventoriesByUserId
     return null;
   }
 }
@@ -96,6 +124,12 @@ class SuperAdminRepositoryMock extends AdminRepositoryMock
   @override
   Future<void> removeUserFromAdmins(String userId) async {
     // TODO: implement removeUserFromAdmins
+    return null;
+  }
+
+  @override
+  Future<void> removeInventoryStatistic(String inventoryId) {
+    // TODO: implement removeInventoryStatistic
     return null;
   }
 }
