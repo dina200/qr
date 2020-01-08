@@ -4,7 +4,7 @@ import 'package:qr/src/domain/entities/user.dart';
 abstract class UserRepository {
   Future<void> init();
 
-  Future<User> getCurrentUser();
+  User get currentUser;
 
   Future<Inventory> getInventoryInfo(String inventoryId);
 

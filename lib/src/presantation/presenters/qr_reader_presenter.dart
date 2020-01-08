@@ -7,8 +7,6 @@ import 'package:qr/src/utils/injector.dart';
 
 class QrReaderPagePresenter with ChangeNotifier {
   final _userRepo = injector.get<UserRepository>();
-  final _adminRepo = injector.get<AdminRepository>();
-  final _superAdminRepo = injector.get<SuperAdminRepository>();
 
   User _user;
   User _anotherUser;
@@ -39,7 +37,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> _getCurrentUser() async {
     try {
-      _user = await _userRepo.getCurrentUser();
+      _user = _userRepo.currentUser;
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -95,7 +93,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> getAllUser() async {
     try {
-      _users = await _superAdminRepo.getAllUsers();
+      _users = await (_userRepo as AdminRepository).getAllUsers();
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -104,7 +102,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> getUserInfo(String userId) async {
     try {
-      _anotherUser = await _superAdminRepo.getUserInfo(userId);
+      _anotherUser = await (_userRepo as AdminRepository).getUserInfo(userId);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -113,7 +111,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> getUserHistory(String userId) async {
     try {
-      _inventories = await _superAdminRepo.getUserHistory(userId);
+      _inventories = await (_userRepo as AdminRepository).getUserHistory(userId);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -122,7 +120,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> getTakenInventoriesByUser(String userId) async {
     try {
-      _inventories = await _superAdminRepo.getTakenInventoriesByUser(userId);
+      _inventories = await (_userRepo as AdminRepository).getTakenInventoriesByUser(userId);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -131,7 +129,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> getAllInventoriesInfo() async {
     try {
-      _inventories = await _superAdminRepo.getAllInventoriesInfo();
+      _inventories = await (_userRepo as AdminRepository).getAllInventoriesInfo();
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -144,7 +142,7 @@ class QrReaderPagePresenter with ChangeNotifier {
     @required String info,
   }) async {
     try {
-      await _superAdminRepo.addNewInventoryToDatabase(id, name, info);
+      await (_userRepo as AdminRepository).addNewInventoryToDatabase(id, name, info);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -153,7 +151,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> removeInventoryFromDatabase(String inventoryId) async {
     try {
-      await _superAdminRepo.removeInventoryFromDatabase(inventoryId);
+      await (_userRepo as AdminRepository).removeInventoryFromDatabase(inventoryId);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -163,7 +161,7 @@ class QrReaderPagePresenter with ChangeNotifier {
   Future<void> setInventoryStatus(
       String inventoryId, InventoryStatus status) async {
     try {
-      await _superAdminRepo.setInventoryStatus(inventoryId, status);
+      await (_userRepo as AdminRepository).setInventoryStatus(inventoryId, status);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -174,7 +172,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> addUserToAdmins(String userId) async {
     try {
-      await _superAdminRepo.addUserToAdmins(userId);
+      await (_userRepo as SuperAdminRepository).addUserToAdmins(userId);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -183,7 +181,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> removeUserFromAdmins(String userId) async {
     try {
-      await _superAdminRepo.removeUserFromAdmins(userId);
+      await (_userRepo as SuperAdminRepository).removeUserFromAdmins(userId);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -192,7 +190,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   Future<void> removeInventoryStatistic(String inventoryId) async {
     try {
-      await _superAdminRepo.removeInventoryStatistic(inventoryId);
+      await (_userRepo as SuperAdminRepository).removeInventoryStatistic(inventoryId);
       notifyListeners();
     } catch (e) {
       rethrow;

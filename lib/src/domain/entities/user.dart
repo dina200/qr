@@ -45,8 +45,9 @@ class User {
 
 class UserStatus {
   final int value;
+  final String status;
 
-  UserStatus._(this.value);
+  UserStatus._(this.value, this.status);
 
   factory UserStatus(int status) {
     switch (status) {
@@ -61,15 +62,15 @@ class UserStatus {
   }
 
   static UserStatus get superAdmin {
-    return UserStatus._(1);
+    return UserStatus._(1, 'super admin');
   }
 
   static UserStatus get admin {
-    return UserStatus._(2);
+    return UserStatus._(2, 'admin');
   }
 
   static UserStatus get user {
-    return UserStatus._(3);
+    return UserStatus._(3, 'user');
   }
 
   @override

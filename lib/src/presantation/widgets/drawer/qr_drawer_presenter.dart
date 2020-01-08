@@ -10,27 +10,17 @@ class QrDrawerPresenter with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _userRepo = injector.get<UserRepository>();
 
-  User _user;
+  bool _isLoading = false;
 
-  User get user => _user;
+  bool get isLoading => _isLoading;
 
-  QrDrawerPresenter() {
-    _init();
-  }
-
-  Future<void> _init() async {
-    _user = await _userRepo.getCurrentUser();
-    notifyListeners();
-  }
+  User get user => _userRepo.currentUser;
 
   Future<void> logOut() async {
     try {
       await _auth.signOut();
       await StoreInteractor.clear();
-      injector
-        ..removeEntity<UserRepository>()
-        ..removeEntity<AdminRepository>()
-        ..removeEntity<SuperAdminRepository>();
+      injector.removeEntity<UserRepository>();
     } catch (e) {
       print('QrDrawerPresenter: $e');
       rethrow;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:qr/src/domain/entities/user.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer_presenter.dart';
@@ -19,6 +20,7 @@ class QrDrawer extends StatelessWidget {
 
   Widget buildDrawer(BuildContext context) {
     final presenter = Provider.of<QrDrawerPresenter>(context);
+    final user = presenter.user;
     return Drawer(
       child: ScrollConfiguration(
         behavior: NoOverScrollBehavior(),
@@ -26,9 +28,8 @@ class QrDrawer extends StatelessWidget {
           dense: true,
           child: ListView(
             children: <Widget>[
-              DrawerHeader(child: Text(
-                presenter.user.name
-              )),
+              _buildDrawerHeader(context, user),
+              Divider(height: 0.0),
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(qrLocale.userProfile),
@@ -69,7 +70,25 @@ class QrDrawer extends StatelessWidget {
     );
   }
 
-  Future <void> _navigateTo(BuildContext context, String routeName) async {
+  Widget _buildDrawerHeader(BuildContext context, User user) {
+    return DrawerHeader(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: RichText(
+          text: TextSpan(
+            style: DefaultTextStyle.of(context).style,
+            children: [
+              TextSpan(text: user.name, style: Theme.of(context).textTheme.subtitle),
+              TextSpan(text: '\n\n'),
+              TextSpan(text: '${qrLocale.position.toLowerCase()}: ${user.position}'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _navigateTo(BuildContext context, String routeName) async {
     if (ModalRoute.of(context).settings.name != routeName) {
       await Navigator.of(context).pushNamedAndRemoveUntil(
         routeName,

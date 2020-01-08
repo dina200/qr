@@ -14,36 +14,40 @@ import 'package:qr/src/utils/injector.dart';
 import 'package:qr/src/utils/store_interactor.dart';
 
 class UserRepositoryFirestoreImpl extends UserRepository {
-  String _userId;
+  User _user;
+
   final _fireStore = Firestore.instance;
 
   Future<void> init() async {
-    _userId = await StoreInteractor.getToken();
-    if (_userId != null) {
-      final user = await getCurrentUser();
+    final userId = await StoreInteractor.getToken();
+    if (userId != null) {
+      _user = await _initUser();
 
-      if (user.status == UserStatus.admin) {
-        injector.register<AdminRepository>(AdminRepositoryFirestoreImpl());
-
-        await injector.get<AdminRepository>().init();
+      if (_user.status == UserStatus.admin) {
+        injector.register<UserRepository>(AdminRepositoryFirestoreImpl());
+        await injector.get<UserRepository>().init();
       }
-      if (user.status == UserStatus.superAdmin) {
-        injector.register<SuperAdminRepository>(
-            SuperAdminRepositoryFirestoreImpl());
-
-        await injector.get<SuperAdminRepository>().init();
+      if (_user.status == UserStatus.superAdmin) {
+        injector.register<UserRepository>(SuperAdminRepositoryFirestoreImpl());
+        await injector.get<UserRepository>().init();
       }
     }
   }
 
-  @override
-  Future<User> getCurrentUser() async {
-    final snapshot = await _fireStore
-        .collection(firebaseEndpoints.users)
-        .document(_userId)
-        .get();
-    return _getUserFromSnapshot(snapshot);
+  Future<User> _initUser() async {
+    final userId = await StoreInteractor.getToken();
+    if (userId != null) {
+      final snapshot = await _fireStore
+          .collection(firebaseEndpoints.users)
+          .document(userId)
+          .get();
+      return _getUserFromSnapshot(snapshot);
+    }
+    throw ArgumentError();
   }
+
+  @override
+  User get currentUser => _user;
 
   @override
   Future<Inventory> getInventoryInfo(String inventoryId) async {
@@ -59,7 +63,7 @@ class UserRepositoryFirestoreImpl extends UserRepository {
     final snapshot = await _fireStore
         .collection(firebaseEndpoints.inventories)
         .getDocuments();
-    return _getInventoriesHistoryByUserIdFromSnapshot(snapshot, _userId);
+    return _getInventoriesHistoryByUserIdFromSnapshot(snapshot, _user.id);
   }
 
   @override
@@ -67,7 +71,7 @@ class UserRepositoryFirestoreImpl extends UserRepository {
     final snapshot = await _fireStore
         .collection(firebaseEndpoints.inventories)
         .getDocuments();
-    return _getTakenInventoriesByUserIdFromSnapshot(snapshot, _userId);
+    return _getTakenInventoriesByUserIdFromSnapshot(snapshot, _user.id);
   }
 
   @override
@@ -80,7 +84,7 @@ class UserRepositoryFirestoreImpl extends UserRepository {
     final lastDataStatistic =
         _getInventoryFromSnapshot(snapshot).statistic.last;
 
-    if (lastDataStatistic.userId == _userId &&
+    if (lastDataStatistic.userId == _user.id &&
         lastDataStatistic.status == InventoryStatus.taken) {
       await _fireStore
           .collection(firebaseEndpoints.inventories)
@@ -89,14 +93,14 @@ class UserRepositoryFirestoreImpl extends UserRepository {
         firebaseEndpoints.status: InventoryStatus.free.value,
         firebaseEndpoints.statistic: FieldValue.arrayUnion([
           UserStatisticModel(
-            userId: _userId,
+            userId: _user.id,
             status: InventoryStatus.free,
             dateTime: DateTime.now(),
           ).toJson()
         ]),
       });
-    } else if (lastDataStatistic.userId != _userId) {
-      throw InventoryUsedByAnotherUser(await getCurrentUser());
+    } else if (lastDataStatistic.userId != _user.id) {
+      throw InventoryUsedByAnotherUser(_user);
     } else if (lastDataStatistic.status != InventoryStatus.taken) {
       throw InventoryNotTakenByTheUser();
     } else {
@@ -122,7 +126,7 @@ class UserRepositoryFirestoreImpl extends UserRepository {
         firebaseEndpoints.status: InventoryStatus.taken.value,
         firebaseEndpoints.statistic: FieldValue.arrayUnion([
           UserStatisticModel(
-            userId: _userId,
+            userId: _user.id,
             status: InventoryStatus.taken,
             dateTime: DateTime.now(),
           ).toJson()
@@ -173,7 +177,7 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
     implements AdminRepository {
   @override
   Future<void> init() async {
-    _userId = await StoreInteractor.getToken();
+    _user = await _initUser();
   }
 
   @override
@@ -297,7 +301,7 @@ class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl
     implements SuperAdminRepository {
   @override
   Future<void> init() async {
-    _userId = await StoreInteractor.getToken();
+    _user = await _initUser();
   }
 
   Future<void> addUserToAdmins(String userId) async {
@@ -313,8 +317,7 @@ class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl
 
   Future<void> removeUserFromAdmins(String userId) async {
     try {
-      final currentUser = await getCurrentUser();
-      if(currentUser.id == userId) {
+      if (_user.id == userId) {
         throw UserStatusCanNotBeChange();
       }
       await _fireStore

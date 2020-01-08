@@ -15,7 +15,7 @@ class UserRepositoryMock implements UserRepository {
   }
 
   @override
-  Future<User> getCurrentUser() {
+  User get currentUser {
     // TODO: implement getCurrentUser
     return null;
   }
