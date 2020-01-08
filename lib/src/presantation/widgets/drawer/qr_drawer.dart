@@ -47,13 +47,6 @@ class QrDrawer extends StatelessWidget {
                 title: Text(qrLocale.qrReader),
                 onTap: () => _navigateTo(context, routes.qrReader),
               ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text(qrLocale.settings),
-                onTap: () {
-                  //todo: navigate to settings
-                },
-              ),
               Divider(height: 0.0),
               ListTile(
                 leading: Icon(Icons.exit_to_app),

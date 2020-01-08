@@ -181,6 +181,10 @@ class _QrReaderPageState extends State<QrReaderPage> {
     }
   }
 
+  void _returnToSignUpScreen() {
+    Navigator.of(context).pop();
+  }
+
   Future scan() async {
     try {
       String barcode = await BarcodeScanner.scan();
@@ -217,10 +221,6 @@ class _QrReaderPageState extends State<QrReaderPage> {
         onPressed: _returnToSignUpScreen,
       );
     }
-  }
-
-  void _returnToSignUpScreen() {
-    Navigator.of(context).pop();
   }
 
   Future<void> scanTest() async {

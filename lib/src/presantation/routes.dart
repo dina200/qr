@@ -5,5 +5,4 @@ const inventories = '/inventories';
 const user = '/user';
 const admin = '/admin';
 const superAdmin = '/superAdmin';
-const settings = '/settings';
 const inventory = '/inventory';
