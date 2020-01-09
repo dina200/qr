@@ -62,15 +62,15 @@ class UserStatus {
   }
 
   static UserStatus get superAdmin {
-    return UserStatus._(1, 'super admin');
+    return UserStatus._(1, 'Super admin');
   }
 
   static UserStatus get admin {
-    return UserStatus._(2, 'admin');
+    return UserStatus._(2, 'Admin');
   }
 
   static UserStatus get user {
-    return UserStatus._(3, 'user');
+    return UserStatus._(3, 'User');
   }
 
   @override

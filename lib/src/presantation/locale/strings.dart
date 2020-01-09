@@ -40,3 +40,5 @@ const userAlreadyRegistered = 'The user is already registered';
 const wrongCredits = 'The user is not registered';
 const checkConnection = 'Please, check connection';
 const superAdminSettings = 'Super admin\'s settings';
+const rules = 'Rules';
+const edit = 'Edit';
