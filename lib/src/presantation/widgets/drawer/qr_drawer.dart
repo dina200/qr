@@ -30,7 +30,6 @@ class QrDrawer extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               _buildDrawerHeader(context, user),
-              Divider(height: 0.0),
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(qrLocale.userProfile),

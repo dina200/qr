@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/presantation/presenters/auth_presenters/registration_page_presenter.dart';
@@ -84,6 +85,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget _buildTitle() {
     return Text(
       qrLocale.registration,
+      style: Theme.of(context).textTheme.title,
     );
   }
 
@@ -197,11 +199,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         await _signUpViaGoogle();
         _createRoute();
       } on QrStateException catch (e) {
-        _errorDialog('${qrLocale.stateException}: ${e.message}');
-      } on QrPlatformException catch (e) {
-        _errorDialog('${qrLocale.platformException}: ${e.code}');
+        await _errorDialog('${qrLocale.stateException}: ${e.message}');
+      } on UserIsAlreadyRegisteredException {
+        await _errorDialog(qrLocale.userAlreadyRegistered);
+      } on PlatformException {
+        await _errorDialog(qrLocale.checkConnection);
       } catch (e) {
-        print('Unknown error $e');
+        await _errorDialog('${qrLocale.unknownError}: ${e.runtimeType}');
       }
     }
   }

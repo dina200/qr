@@ -1,9 +1,16 @@
 import 'package:qr/src/domain/entities/user.dart';
 
-class WrongEmailOrPasswordException implements Exception {
+class ConnectionException implements Exception {
   @override
   String toString() {
-    return 'Wrong email or рassword';
+    return 'Connection exception';
+  }
+}
+
+class WrongCreditException implements Exception {
+  @override
+  String toString() {
+    return 'Wrong creditials';
   }
 }
 
@@ -18,17 +25,6 @@ class GoogleLoginException implements Exception {
   @override
   String toString() {
     return 'Google login exception';
-  }
-}
-
-class QrPlatformException implements Exception {
-  final String code;
-
-  QrPlatformException(this.code);
-
-  @override
-  String toString() {
-    return 'QrPlatformException: $code';
   }
 }
 

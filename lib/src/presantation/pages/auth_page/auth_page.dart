@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
@@ -70,11 +71,13 @@ class _AuthPageState extends State<AuthPage> {
     } on GoogleLoginException catch (e) {
       print(e);
     } on QrStateException catch (e) {
-      _errorDialog('${qrLocale.stateException}: ${e.message}');
-    } on QrPlatformException catch (e) {
-      _errorDialog('${qrLocale.platformException}: ${e.code}');
+      await _errorDialog('${qrLocale.stateException}: ${e.message}');
+    } on WrongCreditException {
+      await _errorDialog(qrLocale.wrongCredits);
+    } on PlatformException {
+      await _errorDialog(qrLocale.checkConnection);
     } catch (e) {
-      _errorDialog('${qrLocale.unknownError}: ${e.runtimeType}');
+      await _errorDialog('${qrLocale.unknownError}: ${e.runtimeType}');
     }
   }
 
@@ -87,10 +90,10 @@ class _AuthPageState extends State<AuthPage> {
       );
     } on GoogleLoginException catch (e) {
       print(e);
-    } on QrPlatformException catch (e) {
-      _errorDialog('${qrLocale.platformException}: ${e.code}');
+    } on PlatformException {
+      await _errorDialog(qrLocale.checkConnection);
     } catch (e) {
-      _errorDialog('${qrLocale.unknownError}: ${e.runtimeType}');
+      await _errorDialog('${qrLocale.unknownError}: ${e.runtimeType}');
     }
   }
 

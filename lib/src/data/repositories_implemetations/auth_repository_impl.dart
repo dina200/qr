@@ -50,7 +50,10 @@ class AuthRepositoryImpl implements AuthRepository {
     } on StateError catch (e) {
       throw QrStateException(e.message);
     } on PlatformException catch (e) {
-      throw QrPlatformException(e.code);
+      if(e.code == 'ERROR_USER_NOT_FOUND'){
+        throw WrongCreditException();
+      }
+      rethrow;
     } catch (e) {
       print('HttpAuthRepo: loginWithGoogle $e');
       rethrow;
@@ -74,7 +77,10 @@ class AuthRepositoryImpl implements AuthRepository {
     } on StateError catch (e) {
       throw QrStateException(e.message);
     } on PlatformException catch (e) {
-      throw QrPlatformException(e.code);
+      if(e.code == 'ERROR_EMAIL_ALREADY_IN_USE'){
+        throw UserIsAlreadyRegisteredException();
+      }
+      rethrow;
     } catch (e) {
       print('HttpAuthRepo: registerWithGoogle $e');
       rethrow;
