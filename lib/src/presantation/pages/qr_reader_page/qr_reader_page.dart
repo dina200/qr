@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
-import 'package:qr/src/presantation/presenters/qr_reader_presenter.dart';
+import 'package:qr/src/presantation/presenters/qr_reader_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
@@ -38,42 +38,50 @@ class _QrReaderPageState extends State<QrReaderPage> {
         title: Text(qrLocale.qrReader),
       ),
       drawer: QrDrawer(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: scanTest,
+        label: Text(qrLocale.scan.toUpperCase()),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: LoadingLayout(
         isLoading: _presenter.isLoading,
         child: Container(
           alignment: Alignment.center,
-          child: Wrap(
-            direction: Axis.vertical,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 16.0,
-            children: <Widget>[
-              RaisedButton(
-                onPressed: scanTest,
-                child: Text(qrLocale.scan),
-              ),
-              if (_presenter.inventory != null)
-                Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                  border:
-                      TableBorder.all(color: Theme.of(context).dividerColor),
-                  columnWidths: {
-                    0: IntrinsicColumnWidth(),
-                    1: FixedColumnWidth(200.0)
-                  },
-                  children: [
-                    _buildTableRow(qrLocale.id, _presenter.inventory.id),
-                    _buildTableRow(
-                        qrLocale.name.toLowerCase(), _presenter.inventory.name),
-                    _buildTableRow(qrLocale.info, _presenter.inventory.info),
-                    _buildTableRow(qrLocale.status,
-                        '${_presenter.inventory.status.status}'),
-                  ],
-                ),
-              if (_presenter.inventory != null) _buildActionButton(),
-            ],
-          ),
+          child: _presenter.inventory != null
+              ? _buildInventoryInfoTable()
+              : _buildInfoWidget(),
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoWidget() {
+    return Text(
+      qrLocale.pressScanButton,
+    );
+  }
+
+  Widget _buildInventoryInfoTable() {
+    return Wrap(
+      direction: Axis.vertical,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 16.0,
+      children: <Widget>[
+        Table(
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          border: TableBorder.all(color: Theme.of(context).dividerColor),
+          columnWidths: {0: IntrinsicColumnWidth(), 1: FixedColumnWidth(200.0)},
+          children: [
+            _buildTableRow(qrLocale.id, _presenter.inventory.id),
+            _buildTableRow(
+                qrLocale.name.toLowerCase(), _presenter.inventory.name),
+            _buildTableRow(qrLocale.info, _presenter.inventory.info),
+            _buildTableRow(
+                qrLocale.status, '${_presenter.inventory.status.status}'),
+          ],
+        ),
+        _buildActionButton(),
+      ],
     );
   }
 
@@ -142,6 +150,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
   }
 
   Future<void> _take() async {
+    _returnToSignUpScreen();
     try {
       await _presenter.takeInventory();
       _presenter.clearInventoryInfo();
@@ -157,12 +166,11 @@ class _QrReaderPageState extends State<QrReaderPage> {
           content: Text(e.toString()),
         ),
       );
-    } finally {
-      _returnToSignUpScreen();
     }
   }
 
   Future<void> _return() async {
+    _returnToSignUpScreen();
     try {
       await _presenter.returnInventory();
       _presenter.clearInventoryInfo();
@@ -176,8 +184,6 @@ class _QrReaderPageState extends State<QrReaderPage> {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(e.toString()),
       ));
-    } finally {
-      _returnToSignUpScreen();
     }
   }
 

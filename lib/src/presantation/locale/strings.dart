@@ -32,3 +32,7 @@ const retrieve = 'Return';
 const take = 'Take';
 const successfullyTaken = 'The inventory successfully taken';
 const successfullyReturned = 'The inventory successfully returned';
+const noAnyInformationAboutInventories = 'There is no any information about inventories';
+const taken = 'taken';
+const history = 'history';
+const pressScanButton = 'Please, press "Scan" button to open camera';

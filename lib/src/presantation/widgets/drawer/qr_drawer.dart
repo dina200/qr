@@ -38,14 +38,14 @@ class QrDrawer extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.assignment),
-                title: Text(qrLocale.inventories),
-                onTap: () => _navigateTo(context, routes.inventories),
-              ),
-              ListTile(
                 leading: Icon(Icons.center_focus_strong),
                 title: Text(qrLocale.qrReader),
                 onTap: () => _navigateTo(context, routes.qrReader),
+              ),
+              ListTile(
+                leading: Icon(Icons.assignment),
+                title: Text(qrLocale.inventories),
+                onTap: () => _navigateTo(context, routes.inventories),
               ),
               Divider(height: 0.0),
               ListTile(
@@ -87,6 +87,8 @@ class QrDrawer extends StatelessWidget {
         routeName,
         (_) => false,
       );
+    } else {
+      Navigator.of(context).pop();
     }
   }
 }

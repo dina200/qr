@@ -27,7 +27,7 @@ class UserRepositoryFirestoreImpl extends UserRepository {
         injector.register<UserRepository>(AdminRepositoryFirestoreImpl());
         await injector.get<UserRepository>().init();
       }
-      if (_user.status == UserStatus.superAdmin) {
+      else if (_user.status == UserStatus.superAdmin) {
         injector.register<UserRepository>(SuperAdminRepositoryFirestoreImpl());
         await injector.get<UserRepository>().init();
       }
@@ -46,8 +46,17 @@ class UserRepositoryFirestoreImpl extends UserRepository {
     throw ArgumentError();
   }
 
+  final _nullUser = User(
+      id: '',
+      name: '',
+      position: '',
+      phone: '',
+      email: '',
+      status: UserStatus.user
+  );
+
   @override
-  User get currentUser => _user;
+  User get currentUser => _user ?? _nullUser;
 
   @override
   Future<Inventory> getInventoryInfo(String inventoryId) async {

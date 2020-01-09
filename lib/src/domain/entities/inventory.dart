@@ -1,5 +1,10 @@
 import 'package:meta/meta.dart';
 
+enum InventoryFilter {
+  history,
+  taken,
+}
+
 class Inventory {
   final String id;
   final String name;
