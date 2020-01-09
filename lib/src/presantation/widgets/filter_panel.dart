@@ -80,8 +80,8 @@ class _ButtonFilter extends StatelessWidget {
       child: MaterialButton(
         shape: ContinuousRectangleBorder(
           side: BorderSide(
-            width: 1.0,
-            color: selected ? Colors.black : Colors.transparent,
+            width: 2.0,
+            color: selected ? Theme.of(context).primaryColorDark : Colors.transparent,
           ),
         ),
         child: Text(title),

@@ -56,10 +56,17 @@ class _InventoriesState extends State<InventoriesPage> {
       child: ListView.separated(
         itemCount: inventories.length,
         itemBuilder: (context, index) {
+          String whenTaken = '';
+          if (_presenter.selectedFilter == InventoryFilter.taken) {
+            whenTaken = '\n${inventories[index].statistic.last.date}';
+          }
           return ListTile(
             title: Text(inventories[index].name),
             subtitle: Text('${qrLocale.id} : ${inventories[index].id}'),
-            trailing: Text(inventories[index].status.status),
+            trailing: Text(
+              '${inventories[index].status.status}$whenTaken',
+              textAlign: TextAlign.end,
+            ),
           );
         },
         separatorBuilder: (context, index) => Divider(height: 0.0),

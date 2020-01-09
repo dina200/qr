@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:intl/intl.dart';
 
 enum InventoryFilter {
   history,
@@ -110,5 +111,10 @@ class UserStatistic {
       userId.hashCode ^
       status.hashCode ^
       dateTime.hashCode;
+
+  String get date {
+    return DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
+  }
+
 
 }
