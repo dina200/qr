@@ -36,3 +36,4 @@ const noAnyInformationAboutInventories = 'There is no any information about inve
 const taken = 'taken';
 const history = 'history';
 const pressScanButton = 'Please, press "Scan" button to open camera';
+const areYouSureWantToLogout = 'Are you sure want to logout?';

@@ -66,14 +66,14 @@ Future<void> showErrorDialog({
   );
 }
 
-Future<void> showChoiceDialog({
+Future<bool> showChoiceDialog({
   @required BuildContext context,
   @required String message,
   @required VoidCallback onOk,
   @required VoidCallback onCancel,
 }) async {
   assert(context != null || message != null);
-  await showDialog(
+  return await showDialog(
     context: context,
     builder: (context) {
       return InfoDialog(
@@ -90,5 +90,5 @@ Future<void> showChoiceDialog({
         ],
       );
     },
-  );
+  ) ?? false;
 }

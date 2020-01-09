@@ -5,6 +5,7 @@ import 'package:qr/src/domain/entities/user.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer_presenter.dart';
+import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/no_scroll_behavior.dart';
 
 class QrDrawer extends StatelessWidget {
@@ -51,10 +52,7 @@ class QrDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.exit_to_app),
                 title: Text(qrLocale.quit),
-                onTap: () async {
-                  await presenter.logOut();
-                  await _navigateTo(context, routes.auth);
-                },
+                onTap: () async => await _logOut(context, presenter),
               ),
             ],
           ),
@@ -89,6 +87,21 @@ class QrDrawer extends StatelessWidget {
       );
     } else {
       Navigator.of(context).pop();
+    }
+  }
+
+
+  Future<void> _logOut(BuildContext context, QrDrawerPresenter presenter) async {
+    final isLogout = await showChoiceDialog(
+      context: context,
+      message: qrLocale.areYouSureWantToLogout,
+      onOk: () => Navigator.of(context).pop<bool>(true),
+      onCancel: () => Navigator.of(context).pop<bool>(false),
+    );
+
+    if (isLogout) {
+      await presenter.logOut();
+      await _navigateTo(context, routes.auth);
     }
   }
 }

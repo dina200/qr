@@ -44,7 +44,7 @@ class _InventoriesState extends State<InventoriesPage> {
             ),
             if (inventories != null && inventories.isNotEmpty)
               _buildInventoriesList(inventories),
-            if (inventories.isEmpty) _buildInfoWidget(),
+            if (inventories?.isEmpty ?? false) _buildInfoWidget(),
           ],
         ),
       ),
