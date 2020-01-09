@@ -33,9 +33,7 @@ class QrDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(qrLocale.userProfile),
-                onTap: () {
-                  //todo: navigate to user profile
-                },
+                onTap: () => _navigateTo(context, routes.userProfile),
               ),
               ListTile(
                 leading: Icon(Icons.center_focus_strong),
@@ -47,7 +45,14 @@ class QrDrawer extends StatelessWidget {
                 title: Text(qrLocale.inventories),
                 onTap: () => _navigateTo(context, routes.inventories),
               ),
-              Divider(height: 0.0),
+              if (user.status != UserStatus.user) Divider(),
+              if (user.status != UserStatus.user)
+                ListTile(
+                  leading: Icon(Icons.supervisor_account),
+                  title: Text(qrLocale.adminSettings),
+                  onTap: () => _navigateTo(context, routes.adminSettings),
+                ),
+              Divider(),
               ListTile(
                 leading: Icon(Icons.exit_to_app),
                 title: Text(qrLocale.quit),
@@ -68,9 +73,11 @@ class QrDrawer extends StatelessWidget {
           text: TextSpan(
             style: DefaultTextStyle.of(context).style,
             children: [
-              TextSpan(text: user.name, style: Theme.of(context).textTheme.subtitle),
+              TextSpan(
+                  text: user.name, style: Theme.of(context).textTheme.subtitle),
               TextSpan(text: '\n\n'),
-              TextSpan(text: '${qrLocale.position.toLowerCase()}: ${user.position}'),
+              TextSpan(
+                  text: '${qrLocale.position.toLowerCase()}: ${user.position}'),
             ],
           ),
         ),
@@ -89,8 +96,10 @@ class QrDrawer extends StatelessWidget {
     }
   }
 
-
-  Future<void> _logOut(BuildContext context, QrDrawerPresenter presenter) async {
+  Future<void> _logOut(
+    BuildContext context,
+    QrDrawerPresenter presenter,
+  ) async {
     final isLogout = await showChoiceDialog(
       context: context,
       message: qrLocale.areYouSureWantToLogout,
