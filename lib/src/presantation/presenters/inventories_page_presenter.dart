@@ -29,6 +29,7 @@ class InventoriesPagePresenter with ChangeNotifier {
 
   Future<void> fetchInventories(InventoryFilter filter) async {
     _selectedFilter = filter;
+    _inventories = null;
     notifyListeners();
     switch (filter) {
       case InventoryFilter.history:
