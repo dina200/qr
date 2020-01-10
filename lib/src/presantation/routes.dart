@@ -3,5 +3,5 @@ const registration = '/registration';
 const qrReader = '/qrReader';
 const inventories = '/inventories';
 const userProfile = '/userProfile';
-const adminSettings = '/adminSettings';
+const adminSettings = '/adminCapabilities';
 const superAdminSettings = '/superAdminSettings';

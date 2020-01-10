@@ -16,6 +16,8 @@ class QrDrawerPresenter with ChangeNotifier {
 
   User get user => _userRepo.currentUser;
 
+  bool get isSimpleUser => _userRepo.currentUser.status == UserStatus.user;
+
   Future<void> logOut() async {
     try {
       await _auth.signOut();

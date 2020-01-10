@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/user.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
-import 'package:qr/src/presantation/pages/admin_page/admin_settings_page.dart';
+import 'package:qr/src/presantation/pages/admin_page/admin_page.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
 import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
 import 'package:qr/src/presantation/pages/qr_reader_page/qr_reader_page.dart';
@@ -49,12 +49,12 @@ class QrDrawer extends StatelessWidget {
                 title: Text(qrLocale.inventories),
                 onTap: () => _navigateTo(context, InventoriesPage.buildPageRoute()),
               ),
-              if (user.status != UserStatus.user) Divider(),
-              if (user.status != UserStatus.user)
+              if (!presenter.isSimpleUser) Divider(),
+              if (!presenter.isSimpleUser)
                 ListTile(
                   leading: Icon(Icons.supervisor_account),
-                  title: Text(qrLocale.adminSettings),
-                  onTap: () => _navigateTo(context, AdminSettingsPage.buildPageRoute()),
+                  title: Text(qrLocale.adminCapabilities),
+                  onTap: () => _navigateTo(context, AdminPage.buildPageRoute()),
                 ),
               Divider(),
               ListTile(
