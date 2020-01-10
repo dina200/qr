@@ -36,6 +36,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    _presenter = Provider.of<UserProfilePagePresenter>(context);
     return LoadingLayout(
       isLoading: _presenter.isLoading,
       child: Scaffold(
