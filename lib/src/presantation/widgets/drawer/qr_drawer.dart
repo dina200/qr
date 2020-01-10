@@ -3,7 +3,11 @@ import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/user.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
-import 'package:qr/src/presantation/routes.dart' as routes;
+import 'package:qr/src/presantation/pages/admin_page/admin_settings_page.dart';
+import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
+import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
+import 'package:qr/src/presantation/pages/qr_reader_page/qr_reader_page.dart';
+import 'package:qr/src/presantation/pages/user_profile_page/user_profile_page.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer_presenter.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/no_scroll_behavior.dart';
@@ -33,24 +37,24 @@ class QrDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text(qrLocale.userProfile),
-                onTap: () => _navigateTo(context, routes.userProfile),
+                onTap: () => _navigateTo(context, UserProfilePage.buildPageRoute()),
               ),
               ListTile(
                 leading: Icon(Icons.center_focus_strong),
                 title: Text(qrLocale.qrReader),
-                onTap: () => _navigateTo(context, routes.qrReader),
+                onTap: () => _navigateTo(context, QrReaderPage.buildPageRoute()),
               ),
               ListTile(
                 leading: Icon(Icons.assignment),
                 title: Text(qrLocale.inventories),
-                onTap: () => _navigateTo(context, routes.inventories),
+                onTap: () => _navigateTo(context, InventoriesPage.buildPageRoute()),
               ),
               if (user.status != UserStatus.user) Divider(),
               if (user.status != UserStatus.user)
                 ListTile(
                   leading: Icon(Icons.supervisor_account),
                   title: Text(qrLocale.adminSettings),
-                  onTap: () => _navigateTo(context, routes.adminSettings),
+                  onTap: () => _navigateTo(context, AdminSettingsPage.buildPageRoute()),
                 ),
               Divider(),
               ListTile(
@@ -85,22 +89,11 @@ class QrDrawer extends StatelessWidget {
     );
   }
 
-  Future<void> _navigateTo(BuildContext context, String routeName) async {
-    if (ModalRoute.of(context).settings.name != routeName) {
-      await Navigator.of(context).pushNamedAndRemoveUntil(
-        routeName,
-        (_) => false,
-      );
-    } else {
-      Navigator.of(context).pop();
-    }
-  }
-
   Future<void> _logOut(
     BuildContext context,
     QrDrawerPresenter presenter,
   ) async {
-    final isLogout = await showChoiceDialog(
+    final isLogout = await _showChoiceDialog(
       context: context,
       message: qrLocale.areYouSureWantToLogout,
       onOk: () => Navigator.of(context).pop<bool>(true),
@@ -109,7 +102,46 @@ class QrDrawer extends StatelessWidget {
 
     if (isLogout) {
       await presenter.logOut();
-      await _navigateTo(context, routes.auth);
+      await _navigateTo(context, AuthPage.buildPageRoute());
     }
+  }
+
+  Future<void> _navigateTo(BuildContext context, Route route) async {
+    if (ModalRoute.of(context).settings.name != route.settings.name) {
+      await Navigator.of(context).pushAndRemoveUntil(
+        route,
+        (_) => false,
+      );
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<bool> _showChoiceDialog({
+    @required BuildContext context,
+    @required String message,
+    @required VoidCallback onOk,
+    @required VoidCallback onCancel,
+  }) async {
+    assert(context != null || message != null);
+    return await showDialog(
+          context: context,
+          builder: (context) {
+            return InfoDialog(
+              info: message,
+              actions: [
+                DialogAction(
+                  text: qrLocale.cancel,
+                  onPressed: onCancel,
+                ),
+                DialogAction(
+                  text: qrLocale.ok,
+                  onPressed: onOk,
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 }

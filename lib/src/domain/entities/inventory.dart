@@ -1,5 +1,5 @@
-import 'package:meta/meta.dart';
 import 'package:intl/intl.dart';
+import 'package:meta/meta.dart';
 
 enum InventoryFilter {
   history,
@@ -115,6 +115,4 @@ class UserStatistic {
   String get date {
     return DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
   }
-
-
 }

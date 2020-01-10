@@ -6,14 +6,8 @@ import 'package:qr/src/data/repositories_implemetations/auth_repository_impl.dar
 import 'package:qr/src/data/repositories_implemetations/user_repository_impl.dart';
 import 'package:qr/src/domain/repositories_contracts/auth_repository.dart';
 import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
-import 'package:qr/src/presantation/pages/admin_page/admin_settings_page.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
-import 'package:qr/src/presantation/pages/auth_page/registration_page.dart';
-import 'package:qr/src/presantation/pages/empty_page/empty_page.dart';
 import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
-import 'package:qr/src/presantation/pages/qr_reader_page/qr_reader_page.dart';
-import 'package:qr/src/presantation/pages/user_profile_page/user_profile_page.dart';
-import 'package:qr/src/presantation/routes.dart' as Routes;
 import 'package:qr/src/utils/injector.dart';
 
 Future<void> main() async {
@@ -25,20 +19,25 @@ Future<void> main() async {
 
   injector
     ..register<AuthRepository>(AuthRepositoryImpl())
-    ..register<UserRepository>(UserRepositoryFirestoreImpl());
+    ..register<UserRepositoryFactory>(UserRepositoryFirestoreFactory());
 
-  await injector.get<UserRepository>().init();
+  await injector.get<UserRepositoryFactory>().registerUserRepository();
 
-  runApp(MyApp());
+  final currentUser = await FirebaseAuth.instance.currentUser();
+
+  runApp(MyApp(isLoggedIn: currentUser != null));
 }
 
 class MyApp extends StatefulWidget {
+  final bool isLoggedIn;
+
+  const MyApp({Key key, this.isLoggedIn}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final _fireBaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -48,32 +47,14 @@ class _MyAppState extends State<MyApp> {
         accentColor: Colors.deepPurpleAccent[100],
         primaryColorDark: Colors.deepPurple[800],
       ),
-      home: _handleWindowDisplay(),
-      routes: <String, WidgetBuilder>{
-        Routes.auth: (context) => AuthPage(),
-        Routes.registration: (context) => RegistrationScreen(),
-        Routes.userProfile: (context) => UserProfilePage(),
-        Routes.inventories: (context) => InventoriesPage(),
-        Routes.qrReader: (context) => QrReaderPage(),
-        Routes.adminSettings: (context) => AdminSettingsPage(),
-      },
+      onGenerateRoute: _onGenerateRoute,
     );
   }
 
-  Widget _handleWindowDisplay() {
-    return StreamBuilder(
-      stream: _fireBaseAuth.onAuthStateChanged,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return EmptyPage();
-        } else {
-          if (snapshot.hasData) {
-            return InventoriesPage();
-          } else {
-            return AuthPage();
-          }
-        }
-      },
-    );
+  Route _onGenerateRoute(RouteSettings settings) {
+    if (widget.isLoggedIn) {
+      return InventoriesPage.buildPageRoute();
+    }
+    return AuthPage.buildPageRoute();
   }
 }

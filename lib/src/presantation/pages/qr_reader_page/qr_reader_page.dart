@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
+import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/qr_reader_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
@@ -11,27 +12,34 @@ import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
 class QrReaderPage extends StatefulWidget {
+  static const nameRoute = routes.qrReader;
+
+  static PageRoute<QrReaderPage> buildPageRoute() {
+    return MaterialPageRoute<QrReaderPage>(
+      builder: _builder,
+      settings: RouteSettings(name: nameRoute),
+    );
+  }
+
+  static Widget _builder(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => QrReaderPagePresenter(),
+      child: QrReaderPage(),
+    );
+  }
+
   @override
   _QrReaderPageState createState() => _QrReaderPageState();
 }
 
 class _QrReaderPageState extends State<QrReaderPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   QrReaderPagePresenter _presenter;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => QrReaderPagePresenter(),
-      child: Builder(
-        builder: _buildLayout,
-      ),
-    );
-  }
-
-  Widget _buildLayout(BuildContext context) {
     _presenter = Provider.of<QrReaderPagePresenter>(context);
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -75,7 +83,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
             _buildTableRow(qrLocale.id, _presenter.inventory.id),
             _buildTableRow(
                 qrLocale.name.toLowerCase(), _presenter.inventory.name),
-            _buildTableRow(qrLocale.info, _presenter.inventory.info),
+            _buildTableRow(qrLocale.description, _presenter.inventory.info),
             _buildTableRow(
                 qrLocale.status, '${_presenter.inventory.status.status}'),
           ],
@@ -126,27 +134,55 @@ class _QrReaderPageState extends State<QrReaderPage> {
 
     if (inventory != null) {
       if (inventory.status == InventoryStatus.taken) {
-        showChoiceDialog(
+        _showChoiceDialog(
           context: context,
           message: qrLocale.returnInventory,
           onOk: () async => await _return(),
           onCancel: _returnToSignUpScreen,
         );
       } else if (inventory.status == InventoryStatus.free) {
-        showChoiceDialog(
+        _showChoiceDialog(
           context: context,
           message: qrLocale.takeInventory,
           onOk: () async => await _take(),
           onCancel: _returnToSignUpScreen,
         );
       } else if (inventory.status == InventoryStatus.lost) {
-        showErrorDialog(
+        _showErrorDialog(
           context: context,
           errorMessage: qrLocale.lostInventory,
           onPressed: _returnToSignUpScreen,
         );
       }
     }
+  }
+
+  Future<bool> _showChoiceDialog({
+    @required BuildContext context,
+    @required String message,
+    @required VoidCallback onOk,
+    @required VoidCallback onCancel,
+  }) async {
+    assert(context != null || message != null);
+    return await showDialog(
+          context: context,
+          builder: (context) {
+            return InfoDialog(
+              info: message,
+              actions: [
+                DialogAction(
+                  text: qrLocale.cancel,
+                  onPressed: onCancel,
+                ),
+                DialogAction(
+                  text: qrLocale.ok,
+                  onPressed: onOk,
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 
   Future<void> _take() async {
@@ -206,7 +242,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
-        showErrorDialog(
+        _showErrorDialog(
           context: context,
           errorMessage: 'The user did not grant the camera permission!',
           onPressed: _returnToSignUpScreen,
@@ -215,13 +251,13 @@ class _QrReaderPageState extends State<QrReaderPage> {
         throw e;
       }
     } on FormatException catch (e) {
-      showErrorDialog(
+      _showErrorDialog(
         context: context,
         errorMessage: '$e',
         onPressed: _returnToSignUpScreen,
       );
     } catch (e) {
-      showErrorDialog(
+      _showErrorDialog(
         context: context,
         errorMessage: 'Unknown error: $e',
         onPressed: _returnToSignUpScreen,
@@ -236,7 +272,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
       await _presenter.getInventoryInfo(inventoryId);
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
-        showErrorDialog(
+        _showErrorDialog(
           context: context,
           errorMessage: 'The user did not grant the camera permission!',
           onPressed: _returnToSignUpScreen,
@@ -245,17 +281,39 @@ class _QrReaderPageState extends State<QrReaderPage> {
         throw e;
       }
     } on FormatException catch (e) {
-      showErrorDialog(
+      _showErrorDialog(
         context: context,
         errorMessage: '$e',
         onPressed: _returnToSignUpScreen,
       );
     } catch (e) {
-      showErrorDialog(
+      _showErrorDialog(
         context: context,
         errorMessage: 'Unknown error: $e',
         onPressed: _returnToSignUpScreen,
       );
     }
+  }
+
+  Future<void> _showErrorDialog({
+    @required BuildContext context,
+    @required String errorMessage,
+    @required VoidCallback onPressed,
+  }) async {
+    assert(context != null || errorMessage != null);
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return InfoDialog(
+          info: errorMessage,
+          actions: [
+            DialogAction(
+              text: qrLocale.ok,
+              onPressed: onPressed,
+            )
+          ],
+        );
+      },
+    );
   }
 }

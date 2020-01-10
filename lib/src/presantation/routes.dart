@@ -4,3 +4,4 @@ const qrReader = '/qrReader';
 const inventories = '/inventories';
 const userProfile = '/userProfile';
 const adminSettings = '/adminSettings';
+const superAdminSettings = '/superAdminSettings';

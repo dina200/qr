@@ -6,7 +6,7 @@ import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/utils/injector.dart';
 
 class InventoriesPagePresenter with ChangeNotifier {
-  final _userRepo = injector.get<UserRepository>();
+  final UserRepository _userRepo;
 
   InventoryFilter _selectedFilter = InventoryFilter.taken;
   bool _isLoading = false;
@@ -21,18 +21,10 @@ class InventoriesPagePresenter with ChangeNotifier {
 
   List<Inventory> get inventories => _inventories;
 
-  InventoriesPagePresenter() {
-    _getCurrentUser();
+  InventoriesPagePresenter() : _userRepo = injector.get<UserRepository>() {
+    _user = _userRepo.currentUser;
+    notifyListeners();
     fetchInventories(_selectedFilter);
-  }
-
-  void _getCurrentUser() {
-    try {
-      _user = _userRepo.currentUser;
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
   }
 
   Future<void> fetchInventories(InventoryFilter filter) async {

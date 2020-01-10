@@ -2,12 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/presenters/user_profile_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 import 'package:qr/src/presantation/widgets/without_error_text_form_field.dart';
 
 class UserProfilePage extends StatefulWidget {
+  static const nameRoute = routes.userProfile;
+
+  static PageRoute<UserProfilePage> buildPageRoute() {
+    return MaterialPageRoute<UserProfilePage>(
+      builder: _builder,
+      settings: RouteSettings(name: nameRoute),
+    );
+  }
+
+  static Widget _builder(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => UserProfilePagePresenter(),
+      child: UserProfilePage(),
+    );
+  }
+
   @override
   _UserProfilePageState createState() => _UserProfilePageState();
 }
@@ -19,16 +36,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => UserProfilePagePresenter(),
-      child: Builder(
-        builder: _buildLayout,
-      ),
-    );
-  }
-
-  Widget _buildLayout(BuildContext context) {
-    _presenter = Provider.of<UserProfilePagePresenter>(context);
     return LoadingLayout(
       isLoading: _presenter.isLoading,
       child: Scaffold(
@@ -37,7 +44,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           label: Text(qrLocale.edit.toUpperCase()),
-          onPressed: (){
+          onPressed: () {
             //todo: to turn on editable mode
           },
         ),

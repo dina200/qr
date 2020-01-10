@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 class WithoutErrorTextFormField extends FormField<String> {
   final bool _showErrorText = false;

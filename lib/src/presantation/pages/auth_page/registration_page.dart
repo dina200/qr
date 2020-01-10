@@ -3,17 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'package:qr/src/presantation/presenters/auth_presenters/registration_page_presenter.dart';
-import 'package:qr/src/utils/exceptions.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
+import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
+import 'package:qr/src/presantation/presenters/auth_presenters/registration_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/auth_button.dart';
 import 'package:qr/src/presantation/widgets/auth_layout.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/without_error_text_form_field.dart';
+import 'package:qr/src/utils/exceptions.dart';
 
 class RegistrationScreen extends StatefulWidget {
+  static const nameRoute = routes.registration;
+
+  static PageRoute<InventoriesPage> buildPageRoute(
+      GooglePayload googlePayload) {
+    return MaterialPageRoute<InventoriesPage>(
+      builder: (context) => _builder(context, googlePayload),
+      settings: RouteSettings(name: nameRoute),
+    );
+  }
+
+  static Widget _builder(BuildContext context, GooglePayload googlePayload) {
+    return ChangeNotifierProvider(
+      create: (_) => RegistrationPagePresenter(),
+      child: RegistrationScreen(googlePayload: googlePayload),
+    );
+  }
+
+  final GooglePayload googlePayload;
+
+  const RegistrationScreen({Key key, this.googlePayload}) : super(key: key);
+
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
@@ -22,6 +45,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formStateKey = GlobalKey<FormState>();
 
   RegistrationPagePresenter _presenter;
+
   FocusNode _positionFieldFocusNode = FocusNode();
   FocusNode _phoneFieldFocusNode = FocusNode();
 
@@ -33,50 +57,38 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RegistrationPagePresenter(),
-      child: Builder(
-        builder: _buildLayout,
-      ),
-    );
-  }
-
-  Widget _buildLayout(BuildContext context) {
-    _presenter = Provider.of<RegistrationPagePresenter>(context);
+    _presenter =
+        Provider.of<RegistrationPagePresenter>(context);
     return AuthLayout(
       isLoading: _presenter.isLoading,
-      child: _buildRegistrationForm(),
-    );
-  }
-
-  Widget _buildRegistrationForm() {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
-              isDense: true,
-            ),
-      ),
-      child: AuthContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _buildTitle(),
-            SizedBox(height: 32.0),
-            Form(
-              key: _formStateKey,
-              onChanged: _onFormChanged,
-              child: Column(
-                children: <Widget>[
-                  _buildNameFormField(),
-                  _buildEmailFormField(),
-                  _buildPositionFormField(),
-                  _buildPhoneFormField(),
-                  SizedBox(height: 32.0),
-                  _buildCreateAccountButton(),
-                ],
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
+                isDense: true,
               ),
-            ),
-          ],
+        ),
+        child: AuthContainer(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildTitle(),
+              SizedBox(height: 32.0),
+              Form(
+                key: _formStateKey,
+                onChanged: _onFormChanged,
+                child: Column(
+                  children: <Widget>[
+                    _buildNameFormField(),
+                    _buildEmailFormField(),
+                    _buildPositionFormField(),
+                    _buildPhoneFormField(),
+                    SizedBox(height: 32.0),
+                    _buildCreateAccountButton(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -99,7 +111,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget _buildNameFormField() {
-    final GooglePayload payload = ModalRoute.of(context).settings.arguments;
+    final GooglePayload payload = widget.googlePayload;
 
     return WithoutErrorTextFormField(
       decoration: InputDecoration(labelText: qrLocale.name),
@@ -147,7 +159,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget _buildEmailFormField() {
-    final GooglePayload payload = ModalRoute.of(context).settings.arguments;
+    final GooglePayload payload = widget.googlePayload;
 
     return WithoutErrorTextFormField(
       decoration: InputDecoration(labelText: qrLocale.email),
@@ -201,7 +213,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       } on QrStateException catch (e) {
         await _errorDialog('${qrLocale.stateException}: ${e.message}');
       } on UserIsAlreadyRegisteredException {
-        await _errorDialog(qrLocale.userAlreadyRegistered);
+        await _userIsExistErrorDialog();
       } on PlatformException {
         await _errorDialog(qrLocale.checkConnection);
       } catch (e) {
@@ -211,7 +223,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Future<void> _signUpViaGoogle() async {
-    final GooglePayload payload = ModalRoute.of(context).settings.arguments;
+    final GooglePayload payload = widget.googlePayload;
 
     final registrationPayload = GoogleRegistrationPayload(
       _name,
@@ -225,14 +237,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _createRoute() {
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      routes.inventories,
+    Navigator.of(context).pushAndRemoveUntil(
+      InventoriesPage.buildPageRoute(),
       (_) => false,
     );
   }
 
   Future<void> _errorDialog(String info) async {
-    await showErrorDialog(
+    await _showErrorDialog(
       context: context,
       errorMessage: info,
       onPressed: _returnToSignUpScreen,
@@ -241,6 +253,43 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void _returnToSignUpScreen() {
     Navigator.of(context).pop();
+  }
+
+  Future<void> _userIsExistErrorDialog() async {
+    await _showErrorDialog(
+      context: context,
+      errorMessage: qrLocale.userAlreadyRegistered,
+      onPressed: _returnToLoginScreen,
+    );
+  }
+
+  void _returnToLoginScreen() {
+    Navigator.of(context).pushAndRemoveUntil(
+      AuthPage.buildPageRoute(),
+      (_) => false,
+    );
+  }
+
+  Future<void> _showErrorDialog({
+    @required BuildContext context,
+    @required String errorMessage,
+    @required VoidCallback onPressed,
+  }) async {
+    assert(context != null || errorMessage != null);
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return InfoDialog(
+          info: errorMessage,
+          actions: [
+            DialogAction(
+              text: qrLocale.ok,
+              onPressed: onPressed,
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override

@@ -50,12 +50,6 @@ class UserRepositoryMock implements UserRepository {
     // TODO: implement takeInventory
     return null;
   }
-
-  @override
-  Future<void> init() {
-    // TODO: implement init
-    return null;
-  }
 }
 
 class AdminRepositoryMock extends UserRepositoryMock

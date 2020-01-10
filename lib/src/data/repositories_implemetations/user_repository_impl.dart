@@ -13,28 +13,34 @@ import 'package:qr/src/domain/entities/user.dart';
 import 'package:qr/src/utils/injector.dart';
 import 'package:qr/src/utils/store_interactor.dart';
 
-class UserRepositoryFirestoreImpl extends UserRepository {
-  User _user;
-
-  final _fireStore = Firestore.instance;
-
-  Future<void> init() async {
-    final userId = await StoreInteractor.getToken();
-    if (userId != null) {
-      _user = await _initUser();
-
-      if (_user.status == UserStatus.admin) {
-        injector.register<UserRepository>(AdminRepositoryFirestoreImpl());
-        await injector.get<UserRepository>().init();
+class UserRepositoryFirestoreFactory extends UserRepositoryFactory {
+  @override
+  Future<void> registerUserRepository() async {
+    try {
+      User user = await _initUser();
+      if (user != null) {
+        switch (user.status.value) {
+          case 3:
+            injector.register<UserRepository>(UserRepositoryFirestoreImpl(user));
+            break;
+          case 2:
+            injector.register<UserRepository>(AdminRepositoryFirestoreImpl(user));
+            break;
+          case 1:
+            injector.register<UserRepository>(SuperAdminRepositoryFirestoreImpl(user));
+            break;
+          default:
+            throw ArgumentError();
+        }
       }
-      else if (_user.status == UserStatus.superAdmin) {
-        injector.register<UserRepository>(SuperAdminRepositoryFirestoreImpl());
-        await injector.get<UserRepository>().init();
-      }
+    } catch (e) {
+      print('UserRepositoryFirestoreFactory, getUserRepository: $e');
+      rethrow;
     }
   }
 
   Future<User> _initUser() async {
+    final Firestore _fireStore = Firestore.instance;
     final userId = await StoreInteractor.getToken();
     if (userId != null) {
       final snapshot = await _fireStore
@@ -43,20 +49,27 @@ class UserRepositoryFirestoreImpl extends UserRepository {
           .get();
       return _getUserFromSnapshot(snapshot);
     }
-    throw ArgumentError();
+    return null;
   }
 
-  final _nullUser = User(
-      id: '',
-      name: '',
-      position: '',
-      phone: '',
-      email: '',
-      status: UserStatus.user
-  );
+  User _getUserFromSnapshot(DocumentSnapshot snapshot) {
+    if (snapshot.exists) {
+      return UserModel.fromJson(snapshot.data);
+    } else {
+      throw UserNotExist();
+    }
+  }
+}
+
+class UserRepositoryFirestoreImpl extends UserRepository {
+  final User _user;
+
+  UserRepositoryFirestoreImpl(this._user) : assert(_user != null);
+
+  final _fireStore = Firestore.instance;
 
   @override
-  User get currentUser => _user ?? _nullUser;
+  User get currentUser => _user;
 
   @override
   Future<Inventory> getInventoryInfo(String inventoryId) async {
@@ -180,10 +193,7 @@ class UserRepositoryFirestoreImpl extends UserRepository {
 
 class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
     implements AdminRepository {
-  @override
-  Future<void> init() async {
-    _user = await _initUser();
-  }
+  AdminRepositoryFirestoreImpl(User user) : super(user);
 
   @override
   Future<List<User>> getAllUsers() async {
@@ -304,10 +314,7 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
 
 class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl
     implements SuperAdminRepository {
-  @override
-  Future<void> init() async {
-    _user = await _initUser();
-  }
+  SuperAdminRepositoryFirestoreImpl(User user) : super(user);
 
   Future<void> addUserToAdmins(String userId) async {
     try {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:qr/src/data/repositories_implemetations/auth_repository_impl.dart';
-import 'package:qr/src/data/repositories_implemetations/user_repository_impl.dart';
 import 'package:qr/src/domain/repositories_contracts/auth_repository.dart';
 import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
@@ -28,8 +27,8 @@ class RegistrationPagePresenter with ChangeNotifier {
       );
 
       await _authRepo.registerWith(registerPayload);
-      injector.register<UserRepository>(UserRepositoryFirestoreImpl());
-      await injector.get<UserRepository>().init();
+
+      await injector.get<UserRepositoryFactory>().registerUserRepository();
     } catch (e) {
       rethrow;
     } finally {

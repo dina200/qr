@@ -50,7 +50,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on StateError catch (e) {
       throw QrStateException(e.message);
     } on PlatformException catch (e) {
-      if(e.code == 'ERROR_USER_NOT_FOUND'){
+      if (e.code == 'ERROR_USER_NOT_FOUND') {
         throw WrongCreditException();
       }
       rethrow;
@@ -77,7 +77,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on StateError catch (e) {
       throw QrStateException(e.message);
     } on PlatformException catch (e) {
-      if(e.code == 'ERROR_EMAIL_ALREADY_IN_USE'){
+      if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
         throw UserIsAlreadyRegisteredException();
       }
       rethrow;
