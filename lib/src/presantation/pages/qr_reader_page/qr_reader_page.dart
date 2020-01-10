@@ -36,6 +36,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   QrReaderPagePresenter _presenter;
+  String _barcode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
       ),
       drawer: QrDrawer(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: scanTest,
+        onPressed: scan,
         label: Text(qrLocale.scan.toUpperCase()),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -64,8 +65,19 @@ class _QrReaderPageState extends State<QrReaderPage> {
   }
 
   Widget _buildInfoWidget() {
-    return Text(
-      qrLocale.pressScanButton,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        if (_barcode.isNotEmpty)
+          Text(
+            '${qrLocale.unknownInfo} :\n $_barcode',
+            textAlign: TextAlign.center,
+          ),
+        if (_barcode.isNotEmpty) SizedBox(height: 16.0),
+        Text(
+          qrLocale.pressScanButton,
+        ),
+      ],
     );
   }
 
@@ -230,68 +242,28 @@ class _QrReaderPageState extends State<QrReaderPage> {
   Future scan() async {
     try {
       String barcode = await BarcodeScanner.scan();
-      print(barcode);
-      var firebaseEndpoints;
-      if (barcode.startsWith(firebaseEndpoints.prefixInventoryId)) {
-        final inventoryId =
-            barcode.replaceAll(firebaseEndpoints.prefixInventoryId, '').trim();
 
-        await _presenter.getInventoryInfo(inventoryId);
-      } else {
-        throw Exception();
+      await _presenter.getInventoryInfo(barcode.trim());
+
+      if (_barcode.isNotEmpty) {
+        setState(() {
+          _barcode = _presenter.inventory == null ? barcode : '';
+        });
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         _showErrorDialog(
           context: context,
-          errorMessage: 'The user did not grant the camera permission!',
+          errorMessage: qrLocale.notGrantCameraPermission,
           onPressed: _returnToSignUpScreen,
         );
       } else {
         throw e;
       }
     } on FormatException catch (e) {
-      _showErrorDialog(
-        context: context,
-        errorMessage: '$e',
-        onPressed: _returnToSignUpScreen,
-      );
+      print('QrReaderPage, FormatException: $e');
     } catch (e) {
-      _showErrorDialog(
-        context: context,
-        errorMessage: 'Unknown error: $e',
-        onPressed: _returnToSignUpScreen,
-      );
-    }
-  }
-
-  Future<void> scanTest() async {
-    try {
-      String inventoryId = 'DqXZhRKV1fPhMkBoA9qO';
-
-      await _presenter.getInventoryInfo(inventoryId);
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
-        _showErrorDialog(
-          context: context,
-          errorMessage: 'The user did not grant the camera permission!',
-          onPressed: _returnToSignUpScreen,
-        );
-      } else {
-        throw e;
-      }
-    } on FormatException catch (e) {
-      _showErrorDialog(
-        context: context,
-        errorMessage: '$e',
-        onPressed: _returnToSignUpScreen,
-      );
-    } catch (e) {
-      _showErrorDialog(
-        context: context,
-        errorMessage: 'Unknown error: $e',
-        onPressed: _returnToSignUpScreen,
-      );
+      print('QrReaderPage, Unknown error: $e');
     }
   }
 
@@ -316,4 +288,33 @@ class _QrReaderPageState extends State<QrReaderPage> {
       },
     );
   }
+
+//  Future<void> scanTest() async {
+//    try {
+//      String inventoryId = 'DqXZhRKV1fPhMkBoA9qO';//
+//      await _presenter.getInventoryInfo(inventoryId);
+//    } on PlatformException catch (e) {
+//      if (e.code == BarcodeScanner.CameraAccessDenied) {
+//        _showErrorDialog(
+//          context: context,
+//          errorMessage: 'The user did not grant the camera permission!',
+//          onPressed: _returnToSignUpScreen,
+//        );
+//      } else {
+//        throw e;
+//      }
+//    } on FormatException catch (e) {
+//      _showErrorDialog(
+//        context: context,
+//        errorMessage: '$e',
+//        onPressed: _returnToSignUpScreen,
+//      );
+//    } catch (e) {
+//      _showErrorDialog(
+//        context: context,
+//        errorMessage: 'Unknown error: $e',
+//        onPressed: _returnToSignUpScreen,
+//      );
+//    }
+//  }
 }

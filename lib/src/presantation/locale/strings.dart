@@ -48,3 +48,5 @@ const removeInventorStatistic = 'Remove an inventory statistic';
 const users = 'Users';
 const allInventories = 'All inventories';
 const addNewInventoryToDB = 'Add a new inventory to DB';
+const unknownInfo = 'Unknown info';
+const notGrantCameraPermission = 'The user did not grant the camera permission!';
