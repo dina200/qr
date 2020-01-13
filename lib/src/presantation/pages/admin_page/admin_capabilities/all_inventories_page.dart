@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
+import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/admin_inventory_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/all_inventories_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
@@ -86,7 +87,7 @@ class _AllInventoriesState extends State<AllInventoriesPage> {
   }
 
   void _openInventoryPage(Inventory inventory) {
-    //todo: open inventory page with all statistic
+    Navigator.of(context).push(AdminInventoryPage.buildPageRoute(inventory));
   }
 
   Widget _buildInfoWidgetAboutEmptyList() {
