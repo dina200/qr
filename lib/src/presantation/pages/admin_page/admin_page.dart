@@ -5,6 +5,7 @@ import 'package:qr/src/presantation/presenters/admin_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
+import 'package:qr/src/presantation/widgets/title_tile.dart';
 
 class AdminPage extends StatefulWidget {
   static const nameRoute = routes.adminSettings;
@@ -33,19 +34,7 @@ class _AdminPageState extends State<AdminPage> {
     final _presenter = Provider.of<AdminPagePresenter>(context);
 
     final _superUserListTiles = [
-      Container(
-        color: Theme.of(context).primaryColorDark,
-        child: ListTile(
-          dense: true,
-          title: Text(
-            qrLocale.superUserCapabilities,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.subtitle.copyWith(
-              color: Colors.white
-            ),
-          ),
-        ),
-      ),
+      TitleTile(title: qrLocale.superUserCapabilities),
       ListTile(
         leading: Icon(Icons.exposure_plus_1),
         title: Text(qrLocale.addUserToAdmins),

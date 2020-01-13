@@ -9,6 +9,7 @@ import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/qr_reader_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
+import 'package:qr/src/presantation/widgets/inventory_table.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
 class QrReaderPage extends StatefulWidget {
@@ -48,8 +49,8 @@ class _QrReaderPageState extends State<QrReaderPage> {
       ),
       drawer: QrDrawer(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: scan,
         label: Text(qrLocale.scan.toUpperCase()),
+        onPressed: scan,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: LoadingLayout(
@@ -87,37 +88,10 @@ class _QrReaderPageState extends State<QrReaderPage> {
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 16.0,
       children: <Widget>[
-        Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          border: TableBorder.all(color: Theme.of(context).dividerColor),
-          columnWidths: {0: IntrinsicColumnWidth(), 1: FixedColumnWidth(200.0)},
-          children: [
-            _buildTableRow(qrLocale.id, _presenter.inventory.id),
-            _buildTableRow(
-                qrLocale.name.toLowerCase(), _presenter.inventory.name),
-            _buildTableRow(qrLocale.description, _presenter.inventory.info),
-            _buildTableRow(
-                qrLocale.status, '${_presenter.inventory.status.status}'),
-          ],
-        ),
+        InventoryTable(inventory: _presenter.inventory),
         _buildActionButton(),
       ],
     );
-  }
-
-  TableRow _buildTableRow(String name, String value) {
-    return TableRow(
-      children: [
-        _buildTableRowPadding(Text(name)),
-        _buildTableRowPadding(Text(value)),
-      ],
-    );
-  }
-
-  Widget _buildTableRowPadding(Widget child) {
-    return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        child: child);
   }
 
   Widget _buildActionButton() {

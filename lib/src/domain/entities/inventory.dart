@@ -112,7 +112,16 @@ class UserStatistic {
       status.hashCode ^
       dateTime.hashCode;
 
-  String get date {
+  String get dateFormatted {
     return DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
+  }
+
+  static int reverseSort (UserStatistic a, UserStatistic b) {
+    if(a.dateTime.isAfter(b.dateTime)) {
+      return -1;
+    } else if (a.dateTime.isBefore(b.dateTime)) {
+      return 1;
+    }
+    return 0;
   }
 }
