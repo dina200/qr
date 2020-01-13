@@ -55,7 +55,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       rethrow;
     } catch (e) {
-      print('HttpAuthRepo: loginWithGoogle $e');
+      print('HttpAuthRepo, loginWithGoogle: $e');
       rethrow;
     }
   }
@@ -82,7 +82,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       rethrow;
     } catch (e) {
-      print('HttpAuthRepo: registerWithGoogle $e');
+      print('HttpAuthRepo, registerWithGoogle: $e');
       rethrow;
     }
   }

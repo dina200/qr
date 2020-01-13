@@ -182,7 +182,6 @@ class _QrReaderPageState extends State<QrReaderPage> {
         ),
       );
     } catch (e) {
-      print(e.toString());
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text(e.toString()),
@@ -202,7 +201,6 @@ class _QrReaderPageState extends State<QrReaderPage> {
         ),
       );
     } catch (e) {
-      print(e.toString());
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(e.toString()),
       ));

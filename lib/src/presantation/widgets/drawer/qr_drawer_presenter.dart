@@ -24,7 +24,7 @@ class QrDrawerPresenter with ChangeNotifier {
       await StoreInteractor.clear();
       injector.removeEntity<UserRepository>();
     } catch (e) {
-      print('QrDrawerPresenter: $e');
+      print('QrDrawerPresenter, logOut: $e');
       rethrow;
     }
   }

@@ -38,7 +38,7 @@ class QrReaderPagePresenter with ChangeNotifier {
       _inventory = await _userRepo.getInventoryInfo(inventoryId);
       notifyListeners();
     } catch (e) {
-      print(e);
+      rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
