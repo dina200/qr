@@ -68,7 +68,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
   Widget _buildStatisticTileSliver() {
     return SliverToBoxAdapter(
       child: TitleTile(
-        title: qrLocale.userStatistic,
+        title: qrLocale.statistic,
       ),
     );
   }
