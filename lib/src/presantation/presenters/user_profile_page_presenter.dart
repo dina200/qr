@@ -7,11 +7,19 @@ import 'package:qr/src/utils/injector.dart';
 class UserProfilePagePresenter with ChangeNotifier {
   final UserRepository _userRepo;
 
+  User _user;
   bool _isLoading = false;
+  bool _isCurrentUser;
 
-  User get user => _userRepo.currentUser;
+  User get user => _user;
 
   bool get isLoading => _isLoading;
 
-  UserProfilePagePresenter() : _userRepo = injector.get<UserRepository>();
+  bool get isCurrentUser => _isCurrentUser;
+
+  UserProfilePagePresenter(User user)
+      : _userRepo = injector.get<UserRepository>() {
+    _isCurrentUser = user == null;
+    _user = user ?? _userRepo.currentUser;
+  }
 }

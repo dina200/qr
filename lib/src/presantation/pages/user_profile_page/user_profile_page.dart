@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:qr/src/domain/entities/user.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/presenters/user_profile_page_presenter.dart';
@@ -11,16 +12,16 @@ import 'package:qr/src/presantation/widgets/without_error_text_form_field.dart';
 class UserProfilePage extends StatefulWidget {
   static const nameRoute = routes.userProfile;
 
-  static PageRoute<UserProfilePage> buildPageRoute() {
+  static PageRoute<UserProfilePage> buildPageRoute([User user]) {
     return MaterialPageRoute<UserProfilePage>(
-      builder: _builder,
+      builder: (context) => _builder(context, user),
       settings: RouteSettings(name: nameRoute),
     );
   }
 
-  static Widget _builder(BuildContext context) {
+  static Widget _builder(BuildContext context, User user) {
     return ChangeNotifierProvider(
-      create: (_) => UserProfilePagePresenter(),
+      create: (_) => UserProfilePagePresenter(user),
       child: UserProfilePage(),
     );
   }
@@ -41,7 +42,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       isLoading: _presenter.isLoading,
       child: Scaffold(
         appBar: AppBar(title: Text(qrLocale.userProfile)),
-        drawer: QrDrawer(),
+        drawer: _presenter.isCurrentUser ? QrDrawer() : null,
         extendBody: true,
         body: Center(
           child: Container(

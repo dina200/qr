@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:qr/src/presantation/presenters/admin_page_presenter.dart';
+import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/users_page.dart';
+import 'package:qr/src/presantation/presenters/admin_page_presenters/admin_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
@@ -56,7 +57,7 @@ class _AdminPageState extends State<AdminPage> {
       ListTile(
         leading: Icon(Icons.people),
         title: Text(qrLocale.users),
-        onTap: () {},
+        onTap: () => _navigateTo(UsersPage.buildPageRoute()),
       ),
       ListTile(
         leading: Icon(Icons.assignment),
@@ -88,5 +89,9 @@ class _AdminPageState extends State<AdminPage> {
           },
           separatorBuilder: (context, index) => Divider(height: 0.0)),
     );
+  }
+
+  Future<void> _navigateTo(Route route) async {
+    await Navigator.of(context).push(route);
   }
 }

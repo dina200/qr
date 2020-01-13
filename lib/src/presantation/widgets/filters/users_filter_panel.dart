@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:qr/src/domain/entities/user.dart';
 
-import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 
-class FilterPanel extends StatelessWidget {
-  final InventoryFilter selectedFilter;
-  final ValueChanged<InventoryFilter> onPressed;
+class UsersFilterPanel extends StatelessWidget {
+  final UserFilter selectedFilter;
+  final ValueChanged<UserFilter> onPressed;
 
-  const FilterPanel({
+  const UsersFilterPanel({
     Key key,
     @required this.selectedFilter,
     @required this.onPressed,
@@ -38,15 +38,21 @@ class FilterPanel extends StatelessWidget {
         child: Row(
           children: <Widget>[
             _ButtonFilter(
-              filter: InventoryFilter.taken,
-              title: qrLocale.taken,
-              selected: selectedFilter == InventoryFilter.taken,
+              filter: UserFilter.all,
+              title: qrLocale.all,
+              selected: selectedFilter == UserFilter.all,
               onPressed: onPressed,
             ),
             _ButtonFilter(
-              filter: InventoryFilter.history,
-              title: qrLocale.history,
-              selected: selectedFilter == InventoryFilter.history,
+              filter: UserFilter.users,
+              title: qrLocale.users,
+              selected: selectedFilter == UserFilter.users,
+              onPressed: onPressed,
+            ),
+            _ButtonFilter(
+              filter: UserFilter.admins,
+              title: qrLocale.admins,
+              selected: selectedFilter == UserFilter.admins,
               onPressed: onPressed,
             ),
           ],
@@ -57,9 +63,9 @@ class FilterPanel extends StatelessWidget {
 }
 
 class _ButtonFilter extends StatelessWidget {
-  final InventoryFilter filter;
+  final UserFilter filter;
   final String title;
-  final ValueChanged<InventoryFilter> onPressed;
+  final ValueChanged<UserFilter> onPressed;
   final bool selected;
 
   const _ButtonFilter({
@@ -81,7 +87,9 @@ class _ButtonFilter extends StatelessWidget {
         shape: ContinuousRectangleBorder(
           side: BorderSide(
             width: 2.0,
-            color: selected ? Theme.of(context).primaryColorDark : Colors.transparent,
+            color: selected
+                ? Theme.of(context).primaryColorDark
+                : Colors.transparent,
           ),
         ),
         child: Text(title),

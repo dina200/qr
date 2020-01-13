@@ -6,3 +6,4 @@ const inventory = '/inventory';
 const userProfile = '/userProfile';
 const adminSettings = '/adminCapabilities';
 const superAdminSettings = '/superAdminSettings';
+const users = '/users';

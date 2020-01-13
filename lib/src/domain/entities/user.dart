@@ -1,5 +1,11 @@
 import 'package:meta/meta.dart';
 
+enum UserFilter {
+  all,
+  users,
+  admins,
+}
+
 class User {
   final String id;
   final String name;

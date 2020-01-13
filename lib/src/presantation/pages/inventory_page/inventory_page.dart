@@ -20,14 +20,10 @@ class InventoryPage extends StatefulWidget {
 
   static Widget _builder(BuildContext context, Inventory inventory) {
     return ChangeNotifierProvider(
-      create: (_) => InventoryPagePresenter(),
-      child: InventoryPage(inventory: inventory),
+      create: (_) => InventoryPagePresenter(inventory),
+      child: InventoryPage(),
     );
   }
-
-  final Inventory inventory;
-
-  const InventoryPage({Key key, this.inventory}) : super(key: key);
 
   @override
   _InventoryState createState() => _InventoryState();
@@ -42,7 +38,7 @@ class _InventoryState extends State<InventoryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.inventory.name),
+        title: Text(_presenter.inventory.name),
       ),
       body: CustomScrollView(
         slivers: <Widget>[
@@ -58,7 +54,7 @@ class _InventoryState extends State<InventoryPage> {
     return SliverToBoxAdapter(
       child: Center(
         child: InventoryTable(
-          inventory: widget.inventory,
+          inventory: _presenter.inventory,
         ),
       ),
     );
@@ -73,7 +69,7 @@ class _InventoryState extends State<InventoryPage> {
   }
 
   Widget _buildStatisticSliverList() {
-    final statistic = _presenter.getUserStatistic(widget.inventory);
+    final statistic = _presenter.getUserStatistic(_presenter.inventory);
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         final stat = statistic[index];

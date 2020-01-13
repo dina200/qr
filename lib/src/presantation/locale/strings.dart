@@ -54,3 +54,5 @@ const unknownInfo = 'Unknown info';
 const notGrantCameraPermission = 'The user did not grant the camera permission!';
 const userStatistic = 'User\'s Statistic';
 const checkYourPersonalData = 'Check your personal data. You will not able to change them in the future';
+const all = 'All';
+const admins = 'Admins';

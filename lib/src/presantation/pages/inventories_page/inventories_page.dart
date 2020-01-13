@@ -7,7 +7,7 @@ import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/inventories_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
-import 'package:qr/src/presantation/widgets/filter_panel.dart';
+import 'package:qr/src/presantation/widgets/filters/user_inventory_filter_panel.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
 class InventoriesPage extends StatefulWidget {
@@ -47,7 +47,7 @@ class _InventoriesState extends State<InventoriesPage> {
         isLoading: _presenter.isLoading,
         child: Column(
           children: <Widget>[
-            FilterPanel(
+            UserInventoryFilterPanel(
               onPressed: _onPressedFilter,
               selectedFilter: _presenter.selectedFilter,
             ),

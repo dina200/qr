@@ -9,7 +9,9 @@ class InventoryPagePresenter with ChangeNotifier {
 
   String _userId;
 
-  InventoryPagePresenter() : _userRepo = injector.get<UserRepository>() {
+  final Inventory inventory;
+
+  InventoryPagePresenter(this.inventory) : _userRepo = injector.get<UserRepository>() {
     _userId = _userRepo.currentUser.id;
     notifyListeners();
   }
