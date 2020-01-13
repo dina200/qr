@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/all_inventories_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/users_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admin_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
@@ -62,7 +63,7 @@ class _AdminPageState extends State<AdminPage> {
       ListTile(
         leading: Icon(Icons.assignment),
         title: Text(qrLocale.allInventories),
-        onTap: () {},
+        onTap: () => _navigateTo(AllInventoriesPage.buildPageRoute()),
       ),
       ListTile(
         leading: Icon(Icons.exposure_plus_1),

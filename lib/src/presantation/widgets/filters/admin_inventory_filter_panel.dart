@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 
-class UserInventoryFilterPanel extends StatelessWidget {
-  final UserInventoryFilter selectedFilter;
-  final ValueChanged<UserInventoryFilter> onPressed;
+class AdminInventoryFilterPanel extends StatelessWidget {
+  final AdminInventoryFilter selectedFilter;
+  final ValueChanged<AdminInventoryFilter> onPressed;
 
-  const UserInventoryFilterPanel({
+  const AdminInventoryFilterPanel({
     Key key,
     @required this.selectedFilter,
     @required this.onPressed,
@@ -38,15 +38,27 @@ class UserInventoryFilterPanel extends StatelessWidget {
         child: Row(
           children: <Widget>[
             _ButtonFilter(
-              filter: UserInventoryFilter.taken,
-              title: qrLocale.taken,
-              selected: selectedFilter == UserInventoryFilter.taken,
+              filter: AdminInventoryFilter.all,
+              title: qrLocale.all,
+              selected: selectedFilter == AdminInventoryFilter.all,
               onPressed: onPressed,
             ),
             _ButtonFilter(
-              filter: UserInventoryFilter.history,
-              title: qrLocale.history,
-              selected: selectedFilter == UserInventoryFilter.history,
+              filter: AdminInventoryFilter.free,
+              title: qrLocale.free,
+              selected: selectedFilter == AdminInventoryFilter.free,
+              onPressed: onPressed,
+            ),
+            _ButtonFilter(
+              filter: AdminInventoryFilter.taken,
+              title: qrLocale.taken,
+              selected: selectedFilter == AdminInventoryFilter.taken,
+              onPressed: onPressed,
+            ),
+            _ButtonFilter(
+              filter: AdminInventoryFilter.lost,
+              title: qrLocale.lost,
+              selected: selectedFilter == AdminInventoryFilter.lost,
               onPressed: onPressed,
             ),
           ],
@@ -57,9 +69,9 @@ class UserInventoryFilterPanel extends StatelessWidget {
 }
 
 class _ButtonFilter extends StatelessWidget {
-  final UserInventoryFilter filter;
+  final AdminInventoryFilter filter;
   final String title;
-  final ValueChanged<UserInventoryFilter> onPressed;
+  final ValueChanged<AdminInventoryFilter> onPressed;
   final bool selected;
 
   const _ButtonFilter({
@@ -81,7 +93,9 @@ class _ButtonFilter extends StatelessWidget {
         shape: ContinuousRectangleBorder(
           side: BorderSide(
             width: 2.0,
-            color: selected ? Theme.of(context).primaryColorDark : Colors.transparent,
+            color: selected
+                ? Theme.of(context).primaryColorDark
+                : Colors.transparent,
           ),
         ),
         child: Text(title),

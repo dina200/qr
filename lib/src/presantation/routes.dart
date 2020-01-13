@@ -2,6 +2,7 @@ const auth = '/auth';
 const registration = '/registration';
 const qrReader = '/qrReader';
 const inventories = '/inventories';
+const allInventories = '/allInventories';
 const inventory = '/inventory';
 const userProfile = '/userProfile';
 const adminSettings = '/adminCapabilities';

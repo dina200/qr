@@ -59,8 +59,8 @@ class _UsersPageState extends State<UsersPage> {
     );
   }
 
-  Future<void> _onPressedFilter(UserFilter filter) async {
-    await _presenter.fetchUsers(filter);
+  void _onPressedFilter(UserFilter filter) {
+    _presenter.fetchUsers(filter);
   }
 
   Widget _buildUsersList(List<User> users) {

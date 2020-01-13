@@ -1,9 +1,16 @@
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
-enum InventoryFilter {
+enum UserInventoryFilter {
   history,
   taken,
+}
+
+enum AdminInventoryFilter {
+  all,
+  free,
+  taken,
+  lost,
 }
 
 class Inventory {

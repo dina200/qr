@@ -5,7 +5,7 @@ import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/utils/injector.dart';
 
 class UsersPagePresenter with ChangeNotifier {
-  final AdminRepository _userRepo = injector.get<UserRepository>();
+  final AdminRepository _adminRepo = injector.get<UserRepository>();
 
   List<User> _users;
   List<User> _filteredUsers;
@@ -26,7 +26,7 @@ class UsersPagePresenter with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      _users = await _userRepo.getAllUsers();
+      _users = await _adminRepo.getAllUsers();
       _filteredUsers = _users;
       notifyListeners();
     } catch (e) {

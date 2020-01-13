@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
-import 'package:qr/src/presantation/pages/inventory_page/inventory_page.dart';
+import 'package:qr/src/presantation/presenters/admin_page_presenters/all_inventories_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
-import 'package:qr/src/presantation/presenters/inventories_page_presenter.dart';
-import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
-import 'package:qr/src/presantation/widgets/filters/user_inventory_filter_panel.dart';
+import 'package:qr/src/presantation/widgets/filters/admin_inventory_filter_panel.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
-class InventoriesPage extends StatefulWidget {
-  static const nameRoute = routes.inventories;
+class AllInventoriesPage extends StatefulWidget {
+  static const nameRoute = routes.allInventories;
 
-  static PageRoute<InventoriesPage> buildPageRoute() {
-    return MaterialPageRoute<InventoriesPage>(
+  static PageRoute<AllInventoriesPage> buildPageRoute() {
+    return MaterialPageRoute<AllInventoriesPage>(
       builder: _builder,
       settings: RouteSettings(name: nameRoute),
     );
@@ -22,37 +20,36 @@ class InventoriesPage extends StatefulWidget {
 
   static Widget _builder(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => InventoriesPagePresenter(),
-      child: InventoriesPage(),
+      create: (_) => AllInventoriesPagePresenter(),
+      child: AllInventoriesPage(),
     );
   }
 
   @override
-  _InventoriesState createState() => _InventoriesState();
+  _AllInventoriesState createState() => _AllInventoriesState();
 }
 
-class _InventoriesState extends State<InventoriesPage> {
-  InventoriesPagePresenter _presenter;
+class _AllInventoriesState extends State<AllInventoriesPage> {
+  AllInventoriesPagePresenter _presenter;
 
   @override
   Widget build(BuildContext context) {
-    _presenter = Provider.of<InventoriesPagePresenter>(context);
+    _presenter = Provider.of<AllInventoriesPagePresenter>(context);
     final inventories = _presenter.inventories;
     return Scaffold(
       appBar: AppBar(
-        title: Text(qrLocale.inventories),
+        title: Text(qrLocale.allInventories),
       ),
-      drawer: QrDrawer(),
       body: LoadingLayout(
         isLoading: _presenter.isLoading,
         child: Column(
           children: <Widget>[
-            UserInventoryFilterPanel(
+            AdminInventoryFilterPanel(
               onPressed: _onPressedFilter,
               selectedFilter: _presenter.selectedFilter,
             ),
             if (inventories != null && inventories.isNotEmpty)
-              _buildInventoriesList(inventories),
+              _buildAllInventoriesList(inventories),
             if (inventories?.isEmpty ?? false) _buildInfoWidgetAboutEmptyList(),
           ],
         ),
@@ -60,19 +57,11 @@ class _InventoriesState extends State<InventoriesPage> {
     );
   }
 
-  Widget _buildInfoWidgetAboutEmptyList() {
-    return Expanded(
-      child: Center(
-        child: Text(qrLocale.listIsEmpty),
-      ),
-    );
+ void _onPressedFilter(AdminInventoryFilter filter) {
+    _presenter.fetchInventories(filter);
   }
 
-  Future<void> _onPressedFilter(UserInventoryFilter filter) async {
-    await _presenter.fetchInventories(filter);
-  }
-
-  Widget _buildInventoriesList(List<Inventory> inventories) {
+  Widget _buildAllInventoriesList(List<Inventory> inventories) {
     return Expanded(
       child: ListView.separated(
         itemCount: inventories.length,
@@ -85,15 +74,11 @@ class _InventoriesState extends State<InventoriesPage> {
   }
 
   Widget _buildTile(Inventory inventory) {
-    String whenTaken = '';
-    if (_presenter.selectedFilter == UserInventoryFilter.taken) {
-      whenTaken = '\n${inventory.statistic.last.dateFormatted}';
-    }
     return ListTile(
       title: Text(inventory.name),
       subtitle: Text('${qrLocale.id} : ${inventory.id}'),
       trailing: Text(
-        '${inventory.status.status}$whenTaken',
+        '${inventory.status.status}',
         textAlign: TextAlign.end,
       ),
       onTap: () => _openInventoryPage(inventory),
@@ -101,6 +86,14 @@ class _InventoriesState extends State<InventoriesPage> {
   }
 
   void _openInventoryPage(Inventory inventory) {
-    Navigator.of(context).push(InventoryPage.buildPageRoute(inventory));
+    //todo: open inventory page with all statistic
+  }
+
+  Widget _buildInfoWidgetAboutEmptyList() {
+    return Expanded(
+      child: Center(
+        child: Text(qrLocale.listIsEmpty),
+      ),
+    );
   }
 }

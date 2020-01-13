@@ -6,14 +6,14 @@ import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/utils/injector.dart';
 
 class InventoriesPagePresenter with ChangeNotifier {
-  final UserRepository _userRepo;
+  final UserRepository _userRepo = injector.get<UserRepository>();
 
-  InventoryFilter _selectedFilter = InventoryFilter.taken;
+  UserInventoryFilter _selectedFilter = UserInventoryFilter.taken;
   bool _isLoading = false;
   User _user;
   List<Inventory> _inventories;
 
-  InventoryFilter get selectedFilter => _selectedFilter;
+  UserInventoryFilter get selectedFilter => _selectedFilter;
 
   bool get isLoading => _isLoading;
 
@@ -21,29 +21,29 @@ class InventoriesPagePresenter with ChangeNotifier {
 
   List<Inventory> get inventories => _inventories;
 
-  InventoriesPagePresenter() : _userRepo = injector.get<UserRepository>() {
+  InventoriesPagePresenter() {
     _user = _userRepo.currentUser;
     notifyListeners();
     fetchInventories(_selectedFilter);
   }
 
-  Future<void> fetchInventories(InventoryFilter filter) async {
+  Future<void> fetchInventories(UserInventoryFilter filter) async {
     _selectedFilter = filter;
     _inventories = null;
     notifyListeners();
     switch (filter) {
-      case InventoryFilter.history:
-        await _getCurrentUserHistory();
+      case UserInventoryFilter.history:
+        await _fetchCurrentUserHistory();
         break;
-      case InventoryFilter.taken:
-        await _getCurrentUserTakenInventories();
+      case UserInventoryFilter.taken:
+        await _fetchCurrentUserTakenInventories();
         break;
       default:
         throw ArgumentError();
     }
   }
 
-  Future<void> _getCurrentUserHistory() async {
+  Future<void> _fetchCurrentUserHistory() async {
     _isLoading = true;
     notifyListeners();
     try {
@@ -57,7 +57,7 @@ class InventoriesPagePresenter with ChangeNotifier {
     }
   }
 
-  Future<void> _getCurrentUserTakenInventories() async {
+  Future<void> _fetchCurrentUserTakenInventories() async {
     _isLoading = true;
     notifyListeners();
     try {

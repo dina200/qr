@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:qr/src/domain/entities/inventory.dart';
 
+import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/utils/injector.dart';
 
