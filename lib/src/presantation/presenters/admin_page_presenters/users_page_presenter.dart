@@ -8,32 +8,47 @@ class UsersPagePresenter with ChangeNotifier {
   final AdminRepository _userRepo = injector.get<UserRepository>();
 
   List<User> _users;
+  List<User> _filteredUsers;
   UserFilter _selectedFilter = UserFilter.all;
   bool _isLoading = false;
 
-  List<User> get users => _users;
+  List<User> get users => _filteredUsers;
 
   UserFilter get selectedFilter => _selectedFilter;
 
   bool get isLoading => _isLoading;
 
   UsersPagePresenter() {
-    fetchUsers(_selectedFilter);
+    _init();
   }
 
-  Future<void> fetchUsers(UserFilter filter) async {
+  Future<void> _init() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _users = await _userRepo.getAllUsers();
+      _filteredUsers = _users;
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void fetchUsers(UserFilter filter) {
     _selectedFilter = filter;
-    _users = null;
     notifyListeners();
     switch (filter) {
       case UserFilter.all:
-        await _fetchAllUsers();
+        _fetchAllUsers();
         break;
       case UserFilter.users:
-        await _fetchOnlyUsers();
+        _fetchOnlyUsers();
         break;
       case UserFilter.admins:
-        await _fetchAdmins();
+        _fetchAdmins();
         break;
       default:
         throw ArgumentError();
@@ -41,51 +56,22 @@ class UsersPagePresenter with ChangeNotifier {
   }
 
   Future<void> _fetchAllUsers() async {
-    _isLoading = true;
+    _filteredUsers = _users;
     notifyListeners();
-    try {
-      _users = await _userRepo.getAllUsers();
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
   }
 
   Future<void> _fetchOnlyUsers() async {
-    _isLoading = true;
+    _filteredUsers =
+        _users.where((user) => user.status == UserStatus.user).toList();
     notifyListeners();
-    try {
-      final allUsers = await _userRepo.getAllUsers();
-      _users =
-          allUsers.where((user) => user.status == UserStatus.user).toList();
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
   }
 
   Future<void> _fetchAdmins() async {
-    _isLoading = true;
+    _filteredUsers = _users
+        .where((user) =>
+            user.status == UserStatus.admin ||
+            user.status == UserStatus.superAdmin)
+        .toList();
     notifyListeners();
-    try {
-      final allUsers = await _userRepo.getAllUsers();
-      _users = allUsers
-          .where((user) =>
-              user.status == UserStatus.admin ||
-              user.status == UserStatus.superAdmin)
-          .toList();
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
   }
 }
