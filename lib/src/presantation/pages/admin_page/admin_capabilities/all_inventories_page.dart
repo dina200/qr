@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/admin_inventory_page.dart';
-import 'package:qr/src/presantation/presenters/admin_page_presenters/all_inventories_page_presenter.dart';
+import 'package:qr/src/presantation/presenters/admin_page_presenters/admins_presenters/all_inventories_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/filters/admin_inventory_filter_panel.dart';

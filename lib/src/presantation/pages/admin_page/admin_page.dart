@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/add_new_inventory_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/all_inventories_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/users_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admin_page_presenter.dart';
@@ -10,7 +11,7 @@ import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 import 'package:qr/src/presantation/widgets/title_tile.dart';
 
 class AdminPage extends StatefulWidget {
-  static const nameRoute = routes.adminSettings;
+  static const nameRoute = routes.adminCapabilities;
 
   static PageRoute<AdminPage> buildPageRoute() {
     return MaterialPageRoute<AdminPage>(
@@ -68,7 +69,7 @@ class _AdminPageState extends State<AdminPage> {
       ListTile(
         leading: Icon(Icons.exposure_plus_1),
         title: Text(qrLocale.addNewInventoryToDB),
-        onTap: () {},
+        onTap: () => _navigateTo(AddNewInventoryPage.buildPageRoute()),
       ),
       ListTile(
         leading: Icon(Icons.exposure_neg_1),

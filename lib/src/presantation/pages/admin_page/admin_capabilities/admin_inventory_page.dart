@@ -4,14 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/domain/entities/user.dart';
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
-import 'package:qr/src/presantation/presenters/admin_page_presenters/admin_inventory_page_presenter.dart';
+import 'package:qr/src/presantation/presenters/admin_page_presenters/admins_presenters/admin_inventory_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/inventory_table.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 import 'package:qr/src/presantation/widgets/title_tile.dart';
 
 class AdminInventoryPage extends StatefulWidget {
-  static const nameRoute = routes.inventory;
+  static const nameRoute = routes.adminInventory;
 
   static PageRoute<AdminInventoryPage> buildPageRoute(Inventory inventory) {
     return MaterialPageRoute<AdminInventoryPage>(
