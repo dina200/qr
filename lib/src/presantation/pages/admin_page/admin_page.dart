@@ -68,6 +68,11 @@ class _AdminPageState extends State<AdminPage> {
         title: Text(qrLocale.addNewInventoryToDB),
         onTap: () {},
       ),
+      ListTile(
+        leading: Icon(Icons.exposure_neg_1),
+        title: Text(qrLocale.removeInventoryFromDB),
+        onTap: () {},
+      ),
       if (_presenter.isSuperUser) ..._superUserListTiles
     ];
 

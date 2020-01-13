@@ -83,6 +83,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     _buildPositionFormField(),
                     _buildPhoneFormField(),
                     SizedBox(height: 32.0),
+                    _buildInfoWidget(),
+                    SizedBox(height: 16.0),
                     _buildCreateAccountButton(),
                   ],
                 ),
@@ -194,6 +196,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } else {
       return '';
     }
+  }
+
+  Widget _buildInfoWidget() {
+    return Center(
+      child: Text(
+        qrLocale.checkYourPersonalData,
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
   Widget _buildCreateAccountButton() {

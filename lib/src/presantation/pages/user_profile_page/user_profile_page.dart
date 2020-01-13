@@ -40,15 +40,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return LoadingLayout(
       isLoading: _presenter.isLoading,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(qrLocale.userProfile),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          label: Text(qrLocale.edit.toUpperCase()),
-          onPressed: () {
-            //todo: to turn on editable mode
-          },
-        ),
+        appBar: AppBar(title: Text(qrLocale.userProfile)),
         drawer: QrDrawer(),
         extendBody: true,
         body: Center(
