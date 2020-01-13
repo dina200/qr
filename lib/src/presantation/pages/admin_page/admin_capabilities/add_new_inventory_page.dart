@@ -5,6 +5,7 @@ import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admins_presenters/add_new_inventory_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 
+//todo: AddNewInventoryPage implementation
 class AddNewInventoryPage extends StatefulWidget {
   static const nameRoute = routes.addNewInventory;
 
@@ -27,8 +28,11 @@ class AddNewInventoryPage extends StatefulWidget {
 }
 
 class _AddNewInventoryPageState extends State<AddNewInventoryPage> {
+  AddNewInventoryPagePresenter _presenter;
+
   @override
   Widget build(BuildContext context) {
+    _presenter = Provider.of<AddNewInventoryPagePresenter>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(qrLocale.addNewInventoryToDB),

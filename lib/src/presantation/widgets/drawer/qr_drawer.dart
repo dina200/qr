@@ -71,6 +71,9 @@ class QrDrawer extends StatelessWidget {
 
   Widget _buildDrawerHeader(BuildContext context, User user) {
     return DrawerHeader(
+      decoration: BoxDecoration(
+        color: Theme.of(context).accentColor,
+      ),
       child: Align(
         alignment: Alignment.centerLeft,
         child: RichText(
