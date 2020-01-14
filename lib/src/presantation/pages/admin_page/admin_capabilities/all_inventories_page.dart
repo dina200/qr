@@ -49,17 +49,24 @@ class _AllInventoriesState extends State<AllInventoriesPage> {
               onPressed: _onPressedFilter,
               selectedFilter: _presenter.selectedFilter,
             ),
-            if (inventories != null && inventories.isNotEmpty)
-              _buildAllInventoriesList(inventories),
-            if (inventories?.isEmpty ?? false) _buildInfoWidgetAboutEmptyList(),
+            _buildBody(inventories),
           ],
         ),
       ),
     );
   }
 
- void _onPressedFilter(AdminInventoryFilter filter) {
+  void _onPressedFilter(AdminInventoryFilter filter) {
     _presenter.fetchInventories(filter);
+  }
+
+  Widget _buildBody(List<Inventory> inventories) {
+    if (inventories != null && inventories.isNotEmpty)
+      return _buildAllInventoriesList(inventories);
+    else if (inventories?.isEmpty ?? false)
+      return _buildInfoWidgetAboutEmptyList();
+    else
+      return SizedBox();
   }
 
   Widget _buildAllInventoriesList(List<Inventory> inventories) {

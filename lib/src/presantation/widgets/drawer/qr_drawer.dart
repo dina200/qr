@@ -18,12 +18,12 @@ class QrDrawer extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => QrDrawerPresenter(),
       child: Builder(
-        builder: buildDrawer,
+        builder: _buildDrawer,
       ),
     );
   }
 
-  Widget buildDrawer(BuildContext context) {
+  Widget _buildDrawer(BuildContext context) {
     final presenter = Provider.of<QrDrawerPresenter>(context);
     final user = presenter.user;
     return Drawer(

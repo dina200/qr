@@ -40,17 +40,17 @@ class _AdminPageState extends State<AdminPage> {
     final _superUserListTiles = [
       TitleTile(title: qrLocale.superUserCapabilities),
       ListTile(
-        leading: Icon(Icons.exposure_plus_1),
+        leading: Icon(Icons.person_add),
         title: Text(qrLocale.addUserToAdmins),
         onTap: () {},
       ),
       ListTile(
-        leading: Icon(Icons.exposure_neg_1),
+        leading: Icon(Icons.perm_identity),
         title: Text(qrLocale.removeUserFromAdmins),
         onTap: () {},
       ),
       ListTile(
-        leading: Icon(Icons.remove),
+        leading: Icon(Icons.delete_sweep),
         title: Text(qrLocale.removeInventorStatistic),
         onTap: () {},
       ),
@@ -68,12 +68,12 @@ class _AdminPageState extends State<AdminPage> {
         onTap: () => _navigateTo(AllInventoriesPage.buildPageRoute()),
       ),
       ListTile(
-        leading: Icon(Icons.exposure_plus_1),
+        leading: Icon(Icons.playlist_add),
         title: Text(qrLocale.addNewInventoryToDB),
         onTap: () => _navigateTo(AddNewInventoryPage.buildPageRoute()),
       ),
       ListTile(
-        leading: Icon(Icons.exposure_neg_1),
+        leading: Icon(Icons.delete_forever),
         title: Text(qrLocale.removeInventoriesFromDB),
         onTap: () => _navigateTo(RemoveInventoriesPage.buildPageRoute()),
       ),

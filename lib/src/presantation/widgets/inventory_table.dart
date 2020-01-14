@@ -6,7 +6,9 @@ import 'package:qr/src/domain/entities/inventory.dart';
 class InventoryTable extends StatelessWidget {
   final Inventory inventory;
 
-  const InventoryTable({Key key, @required this.inventory}) : assert (inventory != null),super(key: key);
+  const InventoryTable({Key key, @required this.inventory})
+      : assert (inventory != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
