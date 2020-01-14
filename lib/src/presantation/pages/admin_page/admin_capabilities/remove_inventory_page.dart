@@ -78,7 +78,7 @@ class _RemoveInventoriesPageState extends State<RemoveInventoriesPage> {
       subtitle: Text('${qrLocale.id} : ${inventory.id}'),
       trailing: IconButton(
         icon: Icon(Icons.delete),
-        onPressed: () => _onDeleteInventory(inventory),
+        onPressed: () async => await _onDeleteInventory(inventory),
       ),
     );
   }

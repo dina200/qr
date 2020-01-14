@@ -18,6 +18,7 @@ Future<void> main() async {
   ]);
 
   injector
+    ..register<RouteObserver>(RouteObserver<PageRoute>())
     ..register<AuthRepository>(AuthRepositoryImpl())
     ..register<UserRepositoryFactory>(UserRepositoryFirestoreFactory());
 
@@ -38,7 +39,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,6 +48,7 @@ class _MyAppState extends State<MyApp> {
         primaryColorDark: Colors.deepPurple[800],
       ),
       onGenerateRoute: _onGenerateRoute,
+      navigatorObservers: [injector.get<RouteObserver>()],
     );
   }
 

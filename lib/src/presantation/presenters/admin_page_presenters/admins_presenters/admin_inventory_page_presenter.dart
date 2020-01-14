@@ -8,17 +8,19 @@ import 'package:qr/src/utils/injector.dart';
 
 class AdminInventoryPagePresenter with ChangeNotifier {
   final AdminRepository _adminRepo = injector.get<UserRepository>();
-  final Inventory inventory;
+  Inventory _inventory;
 
   List<User> _users;
   List<UserStatisticPayload> _statistic;
   bool _isLoading = false;
 
+  Inventory get inventory => _inventory;
+
   List<UserStatisticPayload> get statistic => _statistic;
 
   bool get isLoading => _isLoading;
 
-  AdminInventoryPagePresenter(this.inventory) : assert(inventory != null) {
+  AdminInventoryPagePresenter(this._inventory) : assert(_inventory != null) {
     _init();
   }
 
@@ -52,6 +54,23 @@ class AdminInventoryPagePresenter with ChangeNotifier {
       _statistic = payload..sort(UserStatisticPayload.reverseSort);
     } else {
       _statistic = null;
+    }
+  }
+
+  Future<void> changeInventoryStatus(
+    InventoryStatus status,
+  ) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _adminRepo.setInventoryStatus(_inventory.id, status);
+      _inventory = await _adminRepo.getInventoryInfo(_inventory.id);
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }

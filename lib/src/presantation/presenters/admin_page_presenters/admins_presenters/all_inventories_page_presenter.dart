@@ -23,13 +23,15 @@ class AllInventoriesPagePresenter with ChangeNotifier {
   List<Inventory> get inventories => _filteredInventories;
 
   AllInventoriesPagePresenter() {
-    _init();
+    update();
   }
 
-  Future<void> _init() async {
+  Future<void> update() async {
     _isLoading = true;
     notifyListeners();
     try {
+      _filteredInventories = null;
+      notifyListeners();
       _allInventories = await _adminRepo.getAllInventoriesInfo();
       _freeInventories = _allInventories
           .where((inventory) => inventory.status == InventoryStatus.free)
@@ -40,7 +42,7 @@ class AllInventoriesPagePresenter with ChangeNotifier {
       _lostInventories = _allInventories
           .where((inventory) => inventory.status == InventoryStatus.lost)
           .toList();
-      _filteredInventories = _allInventories;
+      fetchInventories(_selectedFilter);
       notifyListeners();
     } catch (e) {
       rethrow;

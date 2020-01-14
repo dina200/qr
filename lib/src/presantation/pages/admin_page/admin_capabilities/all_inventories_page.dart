@@ -8,6 +8,7 @@ import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/filters/admin_inventory_filter_panel.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
+import 'package:qr/src/utils/injector.dart';
 
 class AllInventoriesPage extends StatefulWidget {
   static const nameRoute = routes.allInventories;
@@ -26,12 +27,32 @@ class AllInventoriesPage extends StatefulWidget {
     );
   }
 
+  final RouteObserver<PageRoute> routeObserver = injector.get<RouteObserver>();
+
   @override
   _AllInventoriesState createState() => _AllInventoriesState();
 }
 
-class _AllInventoriesState extends State<AllInventoriesPage> {
+class _AllInventoriesState extends State<AllInventoriesPage> with RouteAware {
   AllInventoriesPagePresenter _presenter;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    widget.routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void didPopNext() {
+    _presenter.update();
+  }
+
+  @override
+  void dispose() {
+    widget.routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {

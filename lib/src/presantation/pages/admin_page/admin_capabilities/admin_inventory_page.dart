@@ -47,12 +47,20 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
         child: CustomScrollView(
           slivers: <Widget>[
             _buildTableSliver(),
+            if (isFreeOrLost()) _buildChangeStatusTileSliver(),
+            if (isFreeOrLost()) _buildChangeStatusButtonSliver(),
             _buildStatisticTileSliver(),
             _buildStatisticSliverList(),
           ],
         ),
       ),
     );
+  }
+
+  bool isFreeOrLost() {
+    final status = _presenter.inventory;
+    return status.status == InventoryStatus.free ||
+        status.status == InventoryStatus.lost;
   }
 
   Widget _buildTableSliver() {
@@ -63,6 +71,77 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildChangeStatusTileSliver() {
+    return SliverToBoxAdapter(
+      child: TitleTile(
+        title: qrLocale.changeStatus,
+      ),
+    );
+  }
+
+  Widget _buildChangeStatusButtonSliver() {
+    final status = _presenter.inventory;
+    String buttonTitle;
+    InventoryStatus newInventoryStatus;
+    if (status.status == InventoryStatus.free) {
+      buttonTitle = qrLocale.isLost;
+      newInventoryStatus = InventoryStatus.lost;
+    } else if (status.status == InventoryStatus.lost) {
+      buttonTitle = qrLocale.isFound;
+      newInventoryStatus = InventoryStatus.free;
+    }
+    return SliverToBoxAdapter(
+      child: ListTile(
+        title: RaisedButton(
+          color: Theme.of(context).accentColor,
+          child: Text(buttonTitle),
+          onPressed: () async =>
+              await _onChangeInventoryStatus(newInventoryStatus),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onChangeInventoryStatus(
+      InventoryStatus newInventoryStatus) async {
+    final isConfirmed = await _showChoiceRemoveDialog(newInventoryStatus);
+
+    if (isConfirmed) {
+      await _presenter.changeInventoryStatus(newInventoryStatus);
+    }
+  }
+
+  Future<bool> _showChoiceRemoveDialog(InventoryStatus newInventoryStatus) async {
+    return await showDialog(
+          context: context,
+          builder: (context) {
+            String title;
+            if (newInventoryStatus == InventoryStatus.lost) {
+              title = qrLocale.areYouSureWantMakeItLost;
+            } else if (newInventoryStatus == InventoryStatus.free) {
+              title = qrLocale.areYouSureWantMakeItFree;
+            }
+            return AlertDialog(
+              title: Text(
+                title,
+                style: Theme.of(context).textTheme.subtitle,
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(qrLocale.cancel),
+                  onPressed: () => Navigator.of(context).pop<bool>(false),
+                ),
+                FlatButton(
+                  child: Text(qrLocale.ok),
+                  onPressed: () => Navigator.of(context).pop<bool>(true),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 
   Widget _buildStatisticTileSliver() {
