@@ -11,7 +11,10 @@ class AdminInventoryPagePresenter with ChangeNotifier {
   final Inventory inventory;
 
   List<User> _users;
+  List<UserStatisticPayload> _statistic;
   bool _isLoading = false;
+
+  List<UserStatisticPayload> get statistic => _statistic;
 
   bool get isLoading => _isLoading;
 
@@ -24,6 +27,7 @@ class AdminInventoryPagePresenter with ChangeNotifier {
     notifyListeners();
     try {
       _users = await _adminRepo.getAllUsers();
+      _fetchUserStatistic();
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -33,7 +37,7 @@ class AdminInventoryPagePresenter with ChangeNotifier {
     }
   }
 
-  List<UserStatisticPayload> getUserStatistic(Inventory inventory) {
+  void _fetchUserStatistic() {
     if (_users != null) {
       final payload = inventory.statistic.map((stat) {
         final user = _users.firstWhere((user) => user.id == stat.userId,
@@ -45,9 +49,10 @@ class AdminInventoryPagePresenter with ChangeNotifier {
         );
       }).toList();
 
-      return payload..sort(UserStatisticPayload.reverseSort);
+      _statistic = payload..sort(UserStatisticPayload.reverseSort);
+    } else {
+      _statistic = null;
     }
-    return null;
   }
 }
 
@@ -68,8 +73,8 @@ class UserStatisticPayload {
     return DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
   }
 
-  static int reverseSort (UserStatisticPayload a, UserStatisticPayload b) {
-    if(a.dateTime.isAfter(b.dateTime)) {
+  static int reverseSort(UserStatisticPayload a, UserStatisticPayload b) {
+    if (a.dateTime.isAfter(b.dateTime)) {
       return -1;
     } else if (a.dateTime.isBefore(b.dateTime)) {
       return 1;

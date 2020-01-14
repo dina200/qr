@@ -74,7 +74,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
   }
 
   Widget _buildStatisticSliverList() {
-    final statistic = _presenter.getUserStatistic(_presenter.inventory);
+    final statistic = _presenter.statistic;
     if (statistic == null) {
       return SliverToBoxAdapter();
     } else if (statistic.isEmpty) {
