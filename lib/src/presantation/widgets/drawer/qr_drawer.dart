@@ -31,7 +31,9 @@ class QrDrawer extends StatelessWidget {
         behavior: NoOverScrollBehavior(),
         child: ListTileTheme(
           dense: true,
+          style: ListTileStyle.drawer,
           child: ListView(
+            padding: const EdgeInsets.all(0.0),
             children: <Widget>[
               _buildDrawerHeader(context, user),
               ListTile(
