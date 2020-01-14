@@ -9,4 +9,21 @@ class AddNewInventoryPagePresenter with ChangeNotifier {
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
+
+  Future<void> addNewInventoryToDatabase({
+    @required String id,
+    @required String name,
+    @required String description,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _adminRepo.addNewInventoryToDatabase(id, name, description);
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

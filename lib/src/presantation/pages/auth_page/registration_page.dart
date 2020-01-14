@@ -9,7 +9,7 @@ import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
 import 'package:qr/src/presantation/presenters/auth_presenters/registration_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
-import 'package:qr/src/presantation/widgets/auth_button.dart';
+import 'package:qr/src/presantation/widgets/confirm_button.dart';
 import 'package:qr/src/presantation/widgets/auth_layout.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/without_error_text_form_field.dart';
@@ -208,7 +208,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget _buildCreateAccountButton() {
-    return AuthButton(
+    return ConfirmButton(
       title: qrLocale.createAccount,
       isButtonActive: _isCreateAccountButtonActive,
       onPressed: _register,
@@ -256,7 +256,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   Future<void> _errorDialog(String info) async {
     await _showErrorDialog(
-      context: context,
       errorMessage: info,
       onPressed: _returnToSignUpScreen,
     );
@@ -268,7 +267,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   Future<void> _userIsExistErrorDialog() async {
     await _showErrorDialog(
-      context: context,
       errorMessage: qrLocale.userAlreadyRegistered,
       onPressed: _returnToLoginScreen,
     );
@@ -282,7 +280,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Future<void> _showErrorDialog({
-    @required BuildContext context,
     @required String errorMessage,
     @required VoidCallback onPressed,
   }) async {
@@ -306,6 +303,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   void dispose() {
     _phoneFieldFocusNode.dispose();
+    _positionFieldFocusNode.dispose();
     super.dispose();
   }
 }

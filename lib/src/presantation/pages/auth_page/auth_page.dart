@@ -111,18 +111,16 @@ class _AuthPageState extends State<AuthPage> {
 
   Future<void> _errorDialog(String info) async {
     await _showErrorDialog(
-      context: context,
       errorMessage: info,
-      onPressed: _returnToSignUpScreen,
+      onPressed: _returnToSignInScreen,
     );
   }
 
   Future<void> _showErrorDialog({
-    @required BuildContext context,
     @required String errorMessage,
     @required VoidCallback onPressed,
   }) async {
-    assert(context != null || errorMessage != null);
+    assert(errorMessage != null);
     await showDialog(
       context: context,
       builder: (context) {
@@ -139,7 +137,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _returnToSignUpScreen() {
+  void _returnToSignInScreen() {
     Navigator.of(context).pop();
   }
 }

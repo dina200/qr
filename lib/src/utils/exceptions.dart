@@ -49,7 +49,9 @@ class InventoryAlreadyExist implements Exception {
 }
 
 class InventoryNotExist implements Exception {
-  InventoryNotExist();
+  String inventoryId;
+
+  InventoryNotExist(this.inventoryId);
 
   @override
   String toString() {

@@ -32,6 +32,7 @@ class QrReaderPagePresenter with ChangeNotifier {
   }
 
   Future<void> getInventoryInfo(String inventoryId) async {
+    _inventory = null;
     _isLoading = true;
     notifyListeners();
     try {

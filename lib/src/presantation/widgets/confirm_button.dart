@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AuthButton extends StatelessWidget {
+class ConfirmButton extends StatelessWidget {
   final String title;
   final bool isButtonActive;
   final VoidCallback onPressed;
 
-  const AuthButton({
+  const ConfirmButton({
     Key key,
     @required this.title,
     @required this.isButtonActive,

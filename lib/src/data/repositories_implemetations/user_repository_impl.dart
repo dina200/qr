@@ -183,7 +183,11 @@ class UserRepositoryFirestoreImpl extends UserRepository {
   }
 
   Inventory _getInventoryFromSnapshot(DocumentSnapshot snapshot) {
-    return InventoryModel.fromJson(_getCleanMap(snapshot.data));
+    if (snapshot.exists) {
+      return InventoryModel.fromJson(_getCleanMap(snapshot.data));
+    } else {
+      return null;
+    }
   }
 
   Map<String, dynamic> _getCleanMap(Map<String, dynamic> dirtyMap) {
@@ -249,7 +253,7 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
       status: InventoryStatus.free,
     );
 
-    if (snapshot.data == null) {
+    if (!snapshot.exists) {
       await _fireStore
           .collection(firebaseEndpoints.inventories)
           .document(inventory.id)
@@ -265,13 +269,13 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
         .document(inventoryId)
         .get();
 
-    if (snapshot.data != null) {
+    if (snapshot.exists) {
       await _fireStore
           .collection(firebaseEndpoints.inventories)
           .document(inventoryId)
           .delete();
     } else {
-      throw InventoryNotExist();
+      throw InventoryNotExist(inventoryId);
     }
   }
 
@@ -284,7 +288,7 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
           .document(inventoryId)
           .updateData({firebaseEndpoints.status: status.value});
     } catch (e) {
-      throw InventoryNotExist();
+      throw InventoryNotExist(inventoryId);
     }
   }
 
@@ -350,13 +354,13 @@ class SuperAdminRepositoryFirestoreImpl extends AdminRepositoryFirestoreImpl
         .document(inventoryId)
         .get();
 
-    if (snapshot.data != null) {
+    if (snapshot.exists) {
       await _fireStore
           .collection(firebaseEndpoints.inventories)
           .document(inventoryId)
           .updateData({firebaseEndpoints.statistic: []});
     } else {
-      throw InventoryNotExist();
+      throw InventoryNotExist(inventoryId);
     }
   }
 }

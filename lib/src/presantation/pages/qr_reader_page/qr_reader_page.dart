@@ -37,44 +37,42 @@ class _QrReaderPageState extends State<QrReaderPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   QrReaderPagePresenter _presenter;
-  String _barcode = '';
 
   @override
   Widget build(BuildContext context) {
     _presenter = Provider.of<QrReaderPagePresenter>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(qrLocale.qrReader),
-      ),
-      drawer: QrDrawer(),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text(qrLocale.scan.toUpperCase()),
-        onPressed: scan,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: LoadingLayout(
-        isLoading: _presenter.isLoading,
-        child: Container(
-          alignment: Alignment.center,
-          child: _presenter.inventory != null
-              ? _buildInventoryInfoTable()
-              : _buildInfoWidget(),
+    return GestureDetector(
+      onTap: _resetFocusNode,
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(qrLocale.qrReader),
+        ),
+        drawer: QrDrawer(),
+        floatingActionButton: FloatingActionButton.extended(
+          label: Text(qrLocale.scan.toUpperCase()),
+          onPressed: scan,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: LoadingLayout(
+          isLoading: _presenter.isLoading,
+          child: Container(
+            alignment: Alignment.center,
+            child: _presenter.inventory != null
+                ? _buildInventoryInfoTable()
+                : _buildInfoWidget(),
+          ),
         ),
       ),
     );
   }
 
+  void _resetFocusNode() => FocusScope.of(context).requestFocus(FocusNode());
+
   Widget _buildInfoWidget() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        if (_barcode.isNotEmpty)
-          Text(
-            '${qrLocale.unknownInfo} :\n $_barcode',
-            textAlign: TextAlign.center,
-          ),
-        if (_barcode.isNotEmpty) SizedBox(height: 16.0),
         Text(
           qrLocale.pressScanButton,
         ),
@@ -121,35 +119,31 @@ class _QrReaderPageState extends State<QrReaderPage> {
     if (inventory != null) {
       if (inventory.status == InventoryStatus.taken) {
         _showChoiceDialog(
-          context: context,
           message: qrLocale.returnInventory,
           onOk: () async => await _return(),
-          onCancel: _returnToSignUpScreen,
+          onCancel: _returnToQrScreen,
         );
       } else if (inventory.status == InventoryStatus.free) {
         _showChoiceDialog(
-          context: context,
           message: qrLocale.takeInventory,
           onOk: () async => await _take(),
-          onCancel: _returnToSignUpScreen,
+          onCancel: _returnToQrScreen,
         );
       } else if (inventory.status == InventoryStatus.lost) {
         _showErrorDialog(
-          context: context,
           errorMessage: qrLocale.lostInventory,
-          onPressed: _returnToSignUpScreen,
+          onPressed: _returnToQrScreen,
         );
       }
     }
   }
 
   Future<bool> _showChoiceDialog({
-    @required BuildContext context,
     @required String message,
     @required VoidCallback onOk,
     @required VoidCallback onCancel,
   }) async {
-    assert(context != null || message != null);
+    assert(message != null);
     return await showDialog(
           context: context,
           builder: (context) {
@@ -172,7 +166,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
   }
 
   Future<void> _take() async {
-    _returnToSignUpScreen();
+    _returnToQrScreen();
     try {
       await _presenter.takeInventory();
       _presenter.clearInventoryInfo();
@@ -191,7 +185,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
   }
 
   Future<void> _return() async {
-    _returnToSignUpScreen();
+    _returnToQrScreen();
     try {
       await _presenter.returnInventory();
       _presenter.clearInventoryInfo();
@@ -207,27 +201,18 @@ class _QrReaderPageState extends State<QrReaderPage> {
     }
   }
 
-  void _returnToSignUpScreen() {
-    Navigator.of(context).pop();
-  }
-
   Future scan() async {
     try {
       String barcode = await BarcodeScanner.scan();
-
       await _presenter.getInventoryInfo(barcode.trim());
-
-      if (_barcode.isNotEmpty) {
-        setState(() {
-          _barcode = _presenter.inventory == null ? barcode : '';
-        });
+      if (_presenter.inventory == null) {
+        _showInventoryNotExistErrorDialog(barcode);
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         _showErrorDialog(
-          context: context,
           errorMessage: qrLocale.notGrantCameraPermission,
-          onPressed: _returnToSignUpScreen,
+          onPressed: _returnToQrScreen,
         );
       } else {
         throw e;
@@ -239,12 +224,15 @@ class _QrReaderPageState extends State<QrReaderPage> {
     }
   }
 
+  void _returnToQrScreen() {
+    Navigator.of(context).pop();
+  }
+
   Future<void> _showErrorDialog({
-    @required BuildContext context,
     @required String errorMessage,
     @required VoidCallback onPressed,
   }) async {
-    assert(context != null || errorMessage != null);
+    assert(errorMessage != null);
     await showDialog(
       context: context,
       builder: (context) {
@@ -261,32 +249,47 @@ class _QrReaderPageState extends State<QrReaderPage> {
     );
   }
 
+  Future<void> _showInventoryNotExistErrorDialog(String scanInfo) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Column(
+            children: <Widget>[
+              Text(
+                '${qrLocale.unknownInfo} :',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.subtitle,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                ),
+                controller: TextEditingController(text: scanInfo),
+                readOnly: true,
+                style: Theme.of(context).textTheme.body1,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.0),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(qrLocale.ok),
+              onPressed: _returnToQrScreen,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 //  Future<void> scanTest() async {
-//    try {
-//      String inventoryId = 'DqXZhRKV1fPhMkBoA9qO';//
-//      await _presenter.getInventoryInfo(inventoryId);
-//    } on PlatformException catch (e) {
-//      if (e.code == BarcodeScanner.CameraAccessDenied) {
-//        _showErrorDialog(
-//          context: context,
-//          errorMessage: 'The user did not grant the camera permission!',
-//          onPressed: _returnToSignUpScreen,
-//        );
-//      } else {
-//        throw e;
-//      }
-//    } on FormatException catch (e) {
-//      _showErrorDialog(
-//        context: context,
-//        errorMessage: '$e',
-//        onPressed: _returnToSignUpScreen,
-//      );
-//    } catch (e) {
-//      _showErrorDialog(
-//        context: context,
-//        errorMessage: 'Unknown error: $e',
-//        onPressed: _returnToSignUpScreen,
-//      );
+//    String inventoryId = 'DqXZhRKVsdfs1fPhMkBoA9qO';
+//    await _presenter.getInventoryInfo(inventoryId);
+//    if (_presenter.inventory == null) {
+//      _showInventoryNotExistErrorDialog(inventoryId);
 //    }
 //  }
 }
