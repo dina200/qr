@@ -7,8 +7,11 @@ import 'package:qr/src/utils/injector.dart';
 class UsersPagePresenter with ChangeNotifier {
   final AdminRepository _adminRepo = injector.get<UserRepository>();
 
-  List<User> _users;
+  List<User> _allUsers;
+  List<User> _onlyUsers;
+  List<User> _admins;
   List<User> _filteredUsers;
+
   UserFilter _selectedFilter = UserFilter.all;
   bool _isLoading = false;
 
@@ -26,8 +29,16 @@ class UsersPagePresenter with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      _users = await _adminRepo.getAllUsers();
-      _filteredUsers = _users;
+      _allUsers = await _adminRepo.getAllUsers();
+      _onlyUsers = _allUsers
+          .where((user) => user.status == UserStatus.user)
+          .toList();
+      _admins = _allUsers
+          .where((user) =>
+              user.status == UserStatus.admin ||
+              user.status == UserStatus.superAdmin)
+          .toList();
+      _filteredUsers = _allUsers;
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -55,23 +66,19 @@ class UsersPagePresenter with ChangeNotifier {
     }
   }
 
-  Future<void> _fetchAllUsers() async {
-    _filteredUsers = _users;
+  void _fetchAllUsers() {
+    _filteredUsers = _allUsers;
     notifyListeners();
   }
 
-  Future<void> _fetchOnlyUsers() async {
-    _filteredUsers =
-        _users.where((user) => user.status == UserStatus.user).toList();
+  void _fetchOnlyUsers() {
+    _filteredUsers = _onlyUsers;
+
     notifyListeners();
   }
 
-  Future<void> _fetchAdmins() async {
-    _filteredUsers = _users
-        .where((user) =>
-            user.status == UserStatus.admin ||
-            user.status == UserStatus.superAdmin)
-        .toList();
+  void _fetchAdmins() {
+    _filteredUsers = _admins;
     notifyListeners();
   }
 }

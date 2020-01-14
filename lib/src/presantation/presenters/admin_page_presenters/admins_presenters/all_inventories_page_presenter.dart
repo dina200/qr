@@ -7,10 +7,14 @@ import 'package:qr/src/utils/injector.dart';
 class AllInventoriesPagePresenter with ChangeNotifier {
   final AdminRepository _adminRepo = injector.get<UserRepository>();
 
+  List<Inventory> _allInventories;
+  List<Inventory> _freeInventories;
+  List<Inventory> _takenInventories;
+  List<Inventory> _lostInventories;
+  List<Inventory> _filteredInventories;
+
   AdminInventoryFilter _selectedFilter = AdminInventoryFilter.all;
   bool _isLoading = false;
-  List<Inventory> _inventories;
-  List<Inventory> _filteredInventories;
 
   AdminInventoryFilter get selectedFilter => _selectedFilter;
 
@@ -26,8 +30,17 @@ class AllInventoriesPagePresenter with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      _inventories = await _adminRepo.getAllInventoriesInfo();
-      _filteredInventories = _inventories;
+      _allInventories = await _adminRepo.getAllInventoriesInfo();
+      _freeInventories = _allInventories
+          .where((inventory) => inventory.status == InventoryStatus.free)
+          .toList();
+      _takenInventories = _allInventories
+          .where((inventory) => inventory.status == InventoryStatus.taken)
+          .toList();
+      _lostInventories = _allInventories
+          .where((inventory) => inventory.status == InventoryStatus.lost)
+          .toList();
+      _filteredInventories = _allInventories;
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -59,25 +72,22 @@ class AllInventoriesPagePresenter with ChangeNotifier {
   }
 
   void _fetchAll() {
-    _filteredInventories = _inventories;
+    _filteredInventories = _allInventories;
     notifyListeners();
   }
 
   void _fetchFree() {
-    _filteredInventories = _inventories
-        .where((inventory) => inventory.status == InventoryStatus.free).toList();
+    _filteredInventories = _freeInventories;
     notifyListeners();
   }
 
   void _fetchTaken() {
-    _filteredInventories = _inventories
-        .where((inventory) => inventory.status == InventoryStatus.taken).toList();
+    _filteredInventories = _takenInventories;
     notifyListeners();
   }
 
   void _fetchLost() {
-    _filteredInventories = _inventories
-        .where((inventory) => inventory.status == InventoryStatus.lost).toList();
+    _filteredInventories = _lostInventories;
     notifyListeners();
   }
 }
