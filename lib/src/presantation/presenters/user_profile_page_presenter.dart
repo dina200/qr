@@ -5,7 +5,7 @@ import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/utils/injector.dart';
 
 class UserProfilePagePresenter with ChangeNotifier {
-  final UserRepository _userRepo;
+  final UserRepository _userRepo = injector.get<UserRepository>();
 
   User _user;
   bool _isLoading = false;
@@ -17,8 +17,7 @@ class UserProfilePagePresenter with ChangeNotifier {
 
   bool get isCurrentUser => _isCurrentUser;
 
-  UserProfilePagePresenter(User user)
-      : _userRepo = injector.get<UserRepository>() {
+  UserProfilePagePresenter(User user) {
     _isCurrentUser = user == null;
     _user = user ?? _userRepo.currentUser;
   }

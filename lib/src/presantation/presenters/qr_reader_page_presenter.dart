@@ -6,7 +6,7 @@ import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/utils/injector.dart';
 
 class QrReaderPagePresenter with ChangeNotifier {
-  final UserRepository _userRepo;
+  final UserRepository  _userRepo = injector.get<UserRepository>();
 
   User _user;
   Inventory _inventory;
@@ -18,7 +18,7 @@ class QrReaderPagePresenter with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  QrReaderPagePresenter() : _userRepo = injector.get<UserRepository>() {
+  QrReaderPagePresenter() {
     _getCurrentUser();
   }
 

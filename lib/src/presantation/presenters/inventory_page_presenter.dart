@@ -5,13 +5,13 @@ import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
 import 'package:qr/src/utils/injector.dart';
 
 class InventoryPagePresenter with ChangeNotifier {
-  final UserRepository _userRepo;
+  final UserRepository _userRepo = injector.get<UserRepository>();
 
   String _userId;
 
   final Inventory inventory;
 
-  InventoryPagePresenter(this.inventory) : _userRepo = injector.get<UserRepository>() {
+  InventoryPagePresenter(this.inventory) {
     _userId = _userRepo.currentUser.id;
     notifyListeners();
   }
