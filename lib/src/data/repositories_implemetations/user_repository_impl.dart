@@ -157,6 +157,18 @@ class UserRepositoryFirestoreImpl extends UserRepository {
     }
   }
 
+  @override
+  Future<void> setInventoryStatus(String inventoryId, InventoryStatus status) async {
+    try {
+      await _fireStore
+          .collection(firebaseEndpoints.inventories)
+          .document(inventoryId)
+          .updateData({firebaseEndpoints.status: status.value});
+    } catch (e) {
+      throw InventoryNotExist(inventoryId);
+    }
+  }
+
   User _getUserFromSnapshot(DocumentSnapshot snapshot) {
     if (snapshot.exists) {
       return UserModel.fromJson(snapshot.data);
@@ -275,19 +287,6 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
           .document(inventoryId)
           .delete();
     } else {
-      throw InventoryNotExist(inventoryId);
-    }
-  }
-
-  @override
-  Future<void> setInventoryStatus(
-      String inventoryId, InventoryStatus status) async {
-    try {
-      await _fireStore
-          .collection(firebaseEndpoints.inventories)
-          .document(inventoryId)
-          .updateData({firebaseEndpoints.status: status.value});
-    } catch (e) {
       throw InventoryNotExist(inventoryId);
     }
   }

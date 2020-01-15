@@ -9,6 +9,7 @@ import 'package:qr/src/presantation/presenters/inventories_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 import 'package:qr/src/presantation/widgets/filters/user_inventory_filter_panel.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
+import 'package:qr/src/utils/injector.dart';
 
 class InventoriesPage extends StatefulWidget {
   static const nameRoute = routes.inventories;
@@ -27,12 +28,32 @@ class InventoriesPage extends StatefulWidget {
     );
   }
 
+  final RouteObserver<PageRoute> routeObserver = injector.get<RouteObserver>();
+
   @override
   _InventoriesState createState() => _InventoriesState();
 }
 
-class _InventoriesState extends State<InventoriesPage> {
+class _InventoriesState extends State<InventoriesPage> with RouteAware {
   InventoriesPagePresenter _presenter;
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    widget.routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void didPopNext() {
+    _presenter.update();
+  }
+
+  @override
+  void dispose() {
+    widget.routeObserver.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

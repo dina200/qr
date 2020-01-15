@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 enum UserInventoryFilter {
-  history,
+  lost,
   taken,
 }
 

@@ -38,17 +38,17 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
   Widget build(BuildContext context) {
     _presenter = Provider.of<AdminInventoryPagePresenter>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_presenter.inventory.name),
-      ),
-      body: LoadingLayout(
-        isLoading: _presenter.isLoading,
-        child: CustomScrollView(
+    return LoadingLayout(
+      isLoading: _presenter.isLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_presenter.inventory.name),
+        ),
+        body: CustomScrollView(
           slivers: <Widget>[
             _buildTableSliver(),
-            if (isFreeOrLost()) _buildChangeStatusTileSliver(),
-            if (isFreeOrLost()) _buildChangeStatusButtonSliver(),
+            if (_isFreeOrLost()) _buildChangeStatusTileSliver(),
+            if (_isFreeOrLost()) _buildChangeStatusButtonSliver(),
             _buildStatisticTileSliver(),
             _buildStatisticSliverList(),
           ],
@@ -57,7 +57,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
     );
   }
 
-  bool isFreeOrLost() {
+  bool _isFreeOrLost() {
     final status = _presenter.inventory;
     return status.status == InventoryStatus.free ||
         status.status == InventoryStatus.lost;
@@ -106,14 +106,15 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
 
   Future<void> _onChangeInventoryStatus(
       InventoryStatus newInventoryStatus) async {
-    final isConfirmed = await _showChoiceRemoveDialog(newInventoryStatus);
+    final isConfirmed = await _showChangeStatusDialog(newInventoryStatus);
 
     if (isConfirmed) {
       await _presenter.changeInventoryStatus(newInventoryStatus);
     }
   }
 
-  Future<bool> _showChoiceRemoveDialog(InventoryStatus newInventoryStatus) async {
+  Future<bool> _showChangeStatusDialog(
+      InventoryStatus newInventoryStatus) async {
     return await showDialog(
           context: context,
           builder: (context) {
@@ -121,7 +122,7 @@ class _AdminInventoryPageState extends State<AdminInventoryPage> {
             if (newInventoryStatus == InventoryStatus.lost) {
               title = qrLocale.areYouSureWantMakeItLost;
             } else if (newInventoryStatus == InventoryStatus.free) {
-              title = qrLocale.areYouSureWantMakeItFree;
+              title = qrLocale.areYouSureWantMakeItFound;
             }
             return AlertDialog(
               title: Text(

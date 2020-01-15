@@ -70,7 +70,7 @@ class _AddNewInventoryPageState extends State<AddNewInventoryPage> {
                     maxHeight: 500.0,
                   ),
                   margin: EdgeInsets.symmetric(vertical: 42.0),
-                  padding: EdgeInsets.symmetric(horizontal: 42.0),
+                  padding: EdgeInsets.symmetric(horizontal: 32.0),
                   child: Form(
                     key: _formStateKey,
                     onChanged: _onFormChanged,
@@ -107,14 +107,25 @@ class _AddNewInventoryPageState extends State<AddNewInventoryPage> {
     }
   }
 
+  final _charCount = 20;
+
   Widget _buildIdFormField() {
     return WithoutErrorTextFormField(
       decoration: InputDecoration(labelText: qrLocale.id),
-      validator: _validateIsEmpty,
+      maxLength: _charCount,
+      validator: _validateId,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: _onIdSubmitted,
       onSaved: _onSavedId,
     );
+  }
+
+  String _validateId(String value) {
+    if (value.length < _charCount) {
+      return '';
+    } else {
+      return null;
+    }
   }
 
   void _onIdSubmitted(_) {

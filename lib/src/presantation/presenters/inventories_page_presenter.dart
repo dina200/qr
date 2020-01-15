@@ -12,7 +12,7 @@ class InventoriesPagePresenter with ChangeNotifier {
 
   List<Inventory> _inventories;
   List<Inventory> _inventoriesTaken;
-  List<Inventory> _inventoriesHistory;
+  List<Inventory> _inventoriesLost;
 
   UserInventoryFilter get selectedFilter => _selectedFilter;
 
@@ -21,16 +21,21 @@ class InventoriesPagePresenter with ChangeNotifier {
   List<Inventory> get inventories => _inventories;
 
   InventoriesPagePresenter() {
-    _init();
+    update();
   }
 
-  Future<void> _init() async {
+  Future<void> update() async {
     _isLoading = true;
     notifyListeners();
     try {
+      _inventories = null;
+      notifyListeners();
       _inventoriesTaken = await _userRepo.getCurrentUserTakenInventories();
-      _inventoriesHistory = await _userRepo.getCurrentUserHistory();
-      _inventories = _inventoriesTaken;
+      final userHistory = await _userRepo.getCurrentUserHistory();
+      _inventoriesLost = userHistory
+          .where((inventory) => inventory.status == InventoryStatus.lost)
+          .toList();
+      fetchInventories(_selectedFilter);
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -47,8 +52,8 @@ class InventoriesPagePresenter with ChangeNotifier {
       case UserInventoryFilter.taken:
         _fetchCurrentUserTakenInventories();
         break;
-      case UserInventoryFilter.history:
-        _fetchCurrentUserHistory();
+      case UserInventoryFilter.lost:
+        _fetchCurrentUserLostInventories();
         break;
       default:
         throw ArgumentError();
@@ -60,8 +65,8 @@ class InventoriesPagePresenter with ChangeNotifier {
     notifyListeners();
   }
 
-  void _fetchCurrentUserHistory() {
-    _inventories = _inventoriesHistory;
+  void _fetchCurrentUserLostInventories() {
+    _inventories = _inventoriesLost;
     notifyListeners();
   }
 }

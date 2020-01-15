@@ -17,6 +17,8 @@ abstract class UserRepository {
   Future<void> takeInventory(String inventoryId);
 
   Future<void> returnInventory(String inventoryId);
+
+  Future<void> setInventoryStatus(String inventoryId, InventoryStatus status);
 }
 
 abstract class AdminRepository extends UserRepository {
@@ -33,8 +35,6 @@ abstract class AdminRepository extends UserRepository {
   Future<void> addNewInventoryToDatabase(String id, String name, String info);
 
   Future<void> removeInventoryFromDatabase(String inventoryId);
-
-  Future<void> setInventoryStatus(String inventoryId, InventoryStatus status);
 }
 
 ///Only for SuperAdmin

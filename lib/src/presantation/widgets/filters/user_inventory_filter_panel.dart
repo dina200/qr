@@ -29,9 +29,9 @@ class UserInventoryFilterPanel extends StatelessWidget {
           onPressed: onPressed,
         ),
         ButtonFilter<UserInventoryFilter>(
-          filter: UserInventoryFilter.history,
-          title: qrLocale.history,
-          selected: selectedFilter == UserInventoryFilter.history,
+          filter: UserInventoryFilter.lost,
+          title: qrLocale.lost,
+          selected: selectedFilter == UserInventoryFilter.lost,
           onPressed: onPressed,
         ),
       ],

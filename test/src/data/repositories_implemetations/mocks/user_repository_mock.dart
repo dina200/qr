@@ -50,6 +50,12 @@ class UserRepositoryMock implements UserRepository {
     // TODO: implement takeInventory
     return null;
   }
+
+  @override
+  Future<void> setInventoryStatus(String inventoryId, InventoryStatus status) {
+    // TODO: implement setInventoryStatus
+    return null;
+  }
 }
 
 class AdminRepositoryMock extends UserRepositoryMock
