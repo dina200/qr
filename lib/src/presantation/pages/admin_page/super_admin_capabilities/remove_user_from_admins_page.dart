@@ -67,6 +67,7 @@ class _RemoveUserFromAdminsPageState extends State<RemoveUserFromAdminsPage> {
 
   Widget _buildUsersList(List<User> users) {
     return ListView.separated(
+      padding: EdgeInsets.only(top: 16.0),
       itemCount: users.length,
       itemBuilder: (context, index) {
         return _buildTile(users[index]);

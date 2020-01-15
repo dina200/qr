@@ -78,14 +78,39 @@ class _UsersPageState extends State<UsersPage> {
 
   Widget _buildUserTile(User user) {
     return ListTile(
-      trailing: Text(user.status.status),
-      title: Text(user.name),
-      onTap: () => _navigateToUserProfile(user),
+      title: Text(
+        user.status.status,
+        textAlign: TextAlign.end,
+        style: Theme.of(context).textTheme.body1,
+      ),
+      leading: Container(
+          alignment: Alignment.centerLeft,
+          width: 150.0,
+          child: Text(user.name, style: Theme.of(context).textTheme.subhead,)),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () => _navigateToUserProfile(user),
+            tooltip: qrLocale.getUserInfo,
+          ),
+          IconButton(
+            icon: Icon(Icons.assignment),
+            onPressed: () => _navigateToTakenInventoriesByUser(user),
+            tooltip: qrLocale.getTakenInventoryByUser,
+          ),
+        ],
+      ),
     );
   }
 
   Future<void> _navigateToUserProfile(User user) async {
     await Navigator.of(context).push(UserProfilePage.buildPageRoute(user));
+  }
+
+  Future<void> _navigateToTakenInventoriesByUser(User user) async {
+   //todo: navigate to taken_inventory_by_user_page
   }
 
   Widget _buildInfoWidgetAboutEmptyList() {

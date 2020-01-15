@@ -64,6 +64,7 @@ class _RemoveInventoriesStatisticPageState extends State<RemoveInventoriesStatis
 
   Widget _buildFreeInventoriesList(List<Inventory> inventories) {
     return ListView.separated(
+      padding: EdgeInsets.only(top: 16.0),
       itemCount: inventories.length,
       itemBuilder: (context, index) {
         return _buildTile(inventories[index]);
