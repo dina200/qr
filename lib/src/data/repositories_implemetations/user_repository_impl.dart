@@ -237,7 +237,6 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
     return _getInventoriesHistoryByUserIdFromSnapshot(snapshot, userId);
   }
 
-  ///are not used anywhere
   @override
   Future<List<Inventory>> getTakenInventoriesByUser(String userId) async {
     final snapshot = await _fireStore

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/user.dart';
+import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/taken_inventory_by_user_page.dart';
 import 'package:qr/src/presantation/pages/user_profile_page/user_profile_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admins_presenters/users_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
@@ -110,7 +111,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> _navigateToTakenInventoriesByUser(User user) async {
-   //todo: navigate to taken_inventory_by_user_page
+    await Navigator.of(context).push(TakenInventoriesPage.buildPageRoute(user));
   }
 
   Widget _buildInfoWidgetAboutEmptyList() {

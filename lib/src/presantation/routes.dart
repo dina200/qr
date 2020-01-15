@@ -13,3 +13,4 @@ const removeInventory = '/removeInventory';
 const removeUserFromAdmins = '/removeUserFromAdmins';
 const addUserToAdmins = '/addUserToAdmins';
 const removeInventoriesStatistic = '/removeInventoriesStatistic';
+const takenInventories = '/takenInventories';

@@ -81,3 +81,4 @@ const areYouSureWantToAddUserToAdmins = 'Are you sure you want to add the user t
 const areYouSureWantToRemoveUserFromAdmins = 'Are you sure you want to remove the user from admins?';
 const noAnyInventoryForRemovingStatistic = 'There is no any free inventory for removing statistic';
 const areYouSureWantToRemoveInventoryStatistic = 'Are you sure you want to remove the inventorie\'s statistic?';
+const takenInventoryByUser = 'Taken inventories by the user';
