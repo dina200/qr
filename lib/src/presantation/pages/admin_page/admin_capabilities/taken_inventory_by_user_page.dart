@@ -67,6 +67,7 @@ class _InventoriesState extends State<TakenInventoriesPage> {
   Widget _buildInventoriesList(List<Inventory> inventories) {
     return Expanded(
       child: ListView.separated(
+        padding: EdgeInsets.only(top: 8.0),
         itemCount: inventories.length,
         itemBuilder: (context, index) {
           return _buildTile(inventories[index]);

@@ -209,7 +209,13 @@ class _QrReaderPageState extends State<QrReaderPage> {
         _showInventoryNotExistErrorDialog(barcode);
       }
     } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
+      if (e.code == 'error') {
+        _showErrorDialog(
+          errorMessage: qrLocale.invalidData,
+          onPressed: _returnToQrScreen,
+        );
+      }
+      else if (e.code == BarcodeScanner.CameraAccessDenied) {
         _showErrorDialog(
           errorMessage: qrLocale.notGrantCameraPermission,
           onPressed: _returnToQrScreen,

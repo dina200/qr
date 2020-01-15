@@ -82,3 +82,4 @@ const areYouSureWantToRemoveUserFromAdmins = 'Are you sure you want to remove th
 const noAnyInventoryForRemovingStatistic = 'There is no any free inventory for removing statistic';
 const areYouSureWantToRemoveInventoryStatistic = 'Are you sure you want to remove the inventorie\'s statistic?';
 const takenInventoryByUser = 'Taken inventories by the user';
+const invalidData = 'Invalid data. It could be a reference';
