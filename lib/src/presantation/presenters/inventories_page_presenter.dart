@@ -33,7 +33,14 @@ class InventoriesPagePresenter with ChangeNotifier {
       _inventoriesTaken = await _userRepo.getCurrentUserTakenInventories();
       final userHistory = await _userRepo.getCurrentUserHistory();
       _inventoriesLost = userHistory
-          .where((inventory) => inventory.status == InventoryStatus.lost)
+          .where((inventory) {
+            final isLost = inventory.status == InventoryStatus.lost;
+            bool isLostByCurrentUser = false;
+            if(inventory.statistic.isNotEmpty) {
+              isLostByCurrentUser = inventory.statistic.last.userId == _userRepo.currentUser.id;
+            }
+            return isLost && isLostByCurrentUser;
+      })
           .toList();
       fetchInventories(_selectedFilter);
       notifyListeners();
