@@ -6,6 +6,8 @@ import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/all_inve
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/remove_inventory_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/users_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/super_admin_capabilities/add_user_to_admins_page.dart';
+import 'package:qr/src/presantation/pages/admin_page/super_admin_capabilities/remove_an_inventory_statistic_page.dart';
+import 'package:qr/src/presantation/pages/admin_page/super_admin_capabilities/remove_user_from_admins_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admin_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
@@ -48,12 +50,12 @@ class _AdminPageState extends State<AdminPage> {
       ListTile(
         leading: Icon(Icons.perm_identity),
         title: Text(qrLocale.removeUserFromAdmins),
-        onTap: () {},
+        onTap: () => _navigateTo(RemoveUserFromAdminsPage.buildPageRoute()),
       ),
       ListTile(
         leading: Icon(Icons.delete_sweep),
-        title: Text(qrLocale.removeInventorStatistic),
-        onTap: () {},
+        title: Text(qrLocale.removeInventoryStatistic),
+        onTap: () => _navigateTo(RemoveInventoriesStatisticPage.buildPageRoute()),
       ),
     ];
 

@@ -8,7 +8,7 @@ import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
 class AddUserToAdminsPage extends StatefulWidget {
-  static const nameRoute = routes.addNewInventory;
+  static const nameRoute = routes.addUserToAdmins;
 
   static PageRoute<AddUserToAdminsPage> buildPageRoute() {
     return MaterialPageRoute<AddUserToAdminsPage>(
@@ -61,7 +61,7 @@ class _AddUserToAdminsPageState extends State<AddUserToAdminsPage> {
 
   Widget _buildInfoWidgetAboutEmptyList() {
     return Center(
-      child: Text(qrLocale.thereIsNoAnySimpleUsers),
+      child: Text(qrLocale.thereIsNoAnySimpleUser),
     );
   }
 

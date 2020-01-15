@@ -9,3 +9,7 @@ const allInventories = '/allInventories';
 const adminInventory = '/adminInventory';
 const users = '/users';
 const addNewInventory = '/addNewInventory';
+const removeInventory = '/removeInventory';
+const removeUserFromAdmins = '/removeUserFromAdmins';
+const addUserToAdmins = '/addUserToAdmins';
+const removeInventoriesStatistic = '/removeInventoriesStatistic';

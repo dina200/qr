@@ -8,7 +8,7 @@ import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
 class RemoveInventoriesPage extends StatefulWidget {
-  static const nameRoute = routes.addNewInventory;
+  static const nameRoute = routes.removeInventory;
 
   static PageRoute<RemoveInventoriesPage> buildPageRoute() {
     return MaterialPageRoute<RemoveInventoriesPage>(
