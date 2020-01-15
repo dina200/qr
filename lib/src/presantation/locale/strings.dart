@@ -80,6 +80,6 @@ const thereIsNoAnyAdmin = 'There is no any admin';
 const areYouSureWantToAddUserToAdmins = 'Are you sure you want to add the user to admins?';
 const areYouSureWantToRemoveUserFromAdmins = 'Are you sure you want to remove the user from admins?';
 const noAnyInventoryForRemovingStatistic = 'There is no any free inventory for removing statistic';
-const areYouSureWantToRemoveInventoryStatistic = 'Are you sure you want to remove the inventorie\'s statistic?';
+const areYouSureWantToRemoveInventoryStatistic = 'Are you sure you want to remove the statistic of the inventory?';
 const takenInventoryByUser = 'Taken inventories by the user';
 const invalidData = 'Invalid data. It could be a reference';
