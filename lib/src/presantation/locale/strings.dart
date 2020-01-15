@@ -1,4 +1,4 @@
-const appName = 'QR Helper';
+const appName = 'Qr Reader';
 const ok = 'Ok';
 const loginWithGoogle = 'Login with Google';
 const signUpViaGoogle = 'Sign up via Google';

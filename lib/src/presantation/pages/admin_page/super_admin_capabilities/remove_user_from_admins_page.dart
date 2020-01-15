@@ -78,7 +78,7 @@ class _RemoveUserFromAdminsPageState extends State<RemoveUserFromAdminsPage> {
   Widget _buildTile(User user) {
     return ListTile(
       leading: Container(
-        width: 150.0,
+        width: 80.0,
         alignment: Alignment.centerLeft,
         child: Text(
           '${user.name}',
