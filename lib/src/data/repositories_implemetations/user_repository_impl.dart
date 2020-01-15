@@ -188,8 +188,10 @@ class UserRepositoryFirestoreImpl extends UserRepository {
   List<Inventory> _getTakenInventoriesByUserIdFromSnapshot(
       QuerySnapshot snapshot, String userId) {
     return snapshot.documents
-        .where((document) => document.data['status'] == 1)
-        .where((document) => jsonEncode(document.data).contains(userId))
+        .where((document) => document.data[firebaseEndpoints.status] == 1)
+        .where((document) =>
+          jsonEncode(document.data[firebaseEndpoints.statistic].last)
+          .contains(userId))
         .map(_getInventoryFromSnapshot)
         .toList();
   }
@@ -235,6 +237,7 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
     return _getInventoriesHistoryByUserIdFromSnapshot(snapshot, userId);
   }
 
+  ///are not used anywhere
   @override
   Future<List<Inventory>> getTakenInventoriesByUser(String userId) async {
     final snapshot = await _fireStore
