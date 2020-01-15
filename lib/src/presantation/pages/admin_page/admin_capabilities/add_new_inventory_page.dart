@@ -55,38 +55,42 @@ class _AddNewInventoryPageState extends State<AddNewInventoryPage> {
       onTap: _resetFocusNode,
       child: LoadingLayout(
         isLoading: _presenter.isLoading,
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(qrLocale.addNewInventoryToDB),
-          ),
-          body: Center(
-            child: ScrollConfiguration(
-              behavior: NoOverScrollBehavior(),
-              child: SingleChildScrollView(
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 480.0,
-                    maxHeight: 500.0,
-                  ),
-                  margin: EdgeInsets.symmetric(vertical: 42.0),
-                  padding: EdgeInsets.symmetric(horizontal: 32.0),
-                  child: Form(
-                    key: _formStateKey,
-                    onChanged: _onFormChanged,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        _buildIdFormField(),
-                        _buildNameFormField(),
-                        _buildDescriptionFormField(),
-                        SizedBox(height: 32.0),
-                        _buildInfoWidget(),
-                        SizedBox(height: 16.0),
-                        _buildAddNewInventoryButton()
-                      ],
-                    ),
-                  ),
+        child: _buildBody(),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    return  Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(qrLocale.addNewInventoryToDB),
+      ),
+      body: Center(
+        child: ScrollConfiguration(
+          behavior: NoOverScrollBehavior(),
+          child: SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: 480.0,
+                maxHeight: 500.0,
+              ),
+              margin: EdgeInsets.symmetric(vertical: 42.0),
+              padding: EdgeInsets.symmetric(horizontal: 32.0),
+              child: Form(
+                key: _formStateKey,
+                onChanged: _onFormChanged,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _buildIdFormField(),
+                    _buildNameFormField(),
+                    _buildDescriptionFormField(),
+                    SizedBox(height: 32.0),
+                    _buildInfoWidget(),
+                    SizedBox(height: 16.0),
+                    _buildAddNewInventoryButton()
+                  ],
                 ),
               ),
             ),
@@ -209,7 +213,7 @@ class _AddNewInventoryPageState extends State<AddNewInventoryPage> {
         _resetFocusNode();
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(
-            content: Text(qrLocale.successfullyAdded),
+            content: Text(qrLocale.successfullyInventoryAdded),
           ),
         );
       } on InventoryAlreadyExist {

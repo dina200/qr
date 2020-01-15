@@ -5,6 +5,7 @@ import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/add_new_
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/all_inventories_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/remove_inventory_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/users_page.dart';
+import 'package:qr/src/presantation/pages/admin_page/super_admin_capabilities/add_user_to_admins_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admin_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
@@ -42,7 +43,7 @@ class _AdminPageState extends State<AdminPage> {
       ListTile(
         leading: Icon(Icons.person_add),
         title: Text(qrLocale.addUserToAdmins),
-        onTap: () {},
+        onTap: () => _navigateTo(AddUserToAdminsPage.buildPageRoute()),
       ),
       ListTile(
         leading: Icon(Icons.perm_identity),
