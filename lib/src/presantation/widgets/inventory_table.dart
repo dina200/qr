@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/domain/entities/inventory.dart';
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 
 class InventoryTable extends StatelessWidget {
   final Inventory inventory;
@@ -12,6 +12,7 @@ class InventoryTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final qrLocale = QrLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Table(

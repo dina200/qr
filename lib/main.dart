@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:qr/src/data/repositories_implemetations/auth_repository_impl.dart';
 import 'package:qr/src/data/repositories_implemetations/user_repository_impl.dart';
 import 'package:qr/src/domain/repositories_contracts/auth_repository.dart';
 import 'package:qr/src/domain/repositories_contracts/user_repository.dart';
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
 import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
 import 'package:qr/src/utils/injector.dart';
@@ -49,6 +51,25 @@ class _MyAppState extends State<MyApp> {
       ),
       onGenerateRoute: _onGenerateRoute,
       navigatorObservers: [injector.get<RouteObserver>()],
+      localizationsDelegates: [
+        QrLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'),
+        Locale('ru'),
+        Locale('uk'),
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if(supportedLocale.languageCode == locale.languageCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
     );
   }
 

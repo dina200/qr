@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/qr_reader_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/info_dialog.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
@@ -38,6 +38,8 @@ class _QrReaderPageState extends State<QrReaderPage> {
 
   QrReaderPagePresenter _presenter;
 
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
+
   @override
   Widget build(BuildContext context) {
     _presenter = Provider.of<QrReaderPagePresenter>(context);
@@ -46,7 +48,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text(qrLocale.qrReader),
+          title: Text(qrLocale.qrHelper),
         ),
         drawer: QrDrawer(),
         floatingActionButton: FloatingActionButton.extended(
@@ -75,6 +77,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
       children: <Widget>[
         Text(
           qrLocale.pressScanButton,
+          textAlign: TextAlign.center,
         ),
       ],
     );

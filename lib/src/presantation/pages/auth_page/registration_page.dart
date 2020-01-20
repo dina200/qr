@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
 import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
 import 'package:qr/src/presantation/presenters/auth_presenters/auth_payload.dart';
@@ -54,6 +54,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String _name;
   String _position;
   String _phone;
+
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
 
   @override
   Widget build(BuildContext context) {

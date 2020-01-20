@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/user.dart';
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/taken_inventory_by_user_page.dart';
 import 'package:qr/src/presantation/pages/user_profile_page/user_profile_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admins_presenters/users_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/filters/users_filter_panel.dart';
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
 
@@ -33,6 +33,8 @@ class UsersPage extends StatefulWidget {
 
 class _UsersPageState extends State<UsersPage> {
   UsersPagePresenter _presenter;
+
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
 
   @override
   Widget build(BuildContext context) {

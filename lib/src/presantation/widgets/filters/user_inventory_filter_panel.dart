@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/widgets/filters/filter_panel.dart';
 
 class UserInventoryFilterPanel extends StatelessWidget {
@@ -18,6 +18,7 @@ class UserInventoryFilterPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final qrLocale = QrLocalizations.of(context);
     return FilterPanel<UserInventoryFilter>(
       selectedFilter: selectedFilter,
       onPressed: onPressed,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/user.dart';
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/presenters/user_profile_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
@@ -34,6 +34,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
   final _formStateKey = GlobalKey<FormState>();
 
   UserProfilePagePresenter _presenter;
+
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
 
   @override
   Widget build(BuildContext context) {

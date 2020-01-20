@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/super_admins_presenters/remove_an_inventory_statistic_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
@@ -31,6 +31,8 @@ class RemoveInventoriesStatisticPage extends StatefulWidget {
 class _RemoveInventoriesStatisticPageState extends State<RemoveInventoriesStatisticPage> {
   RemoveInventoriesStatisticPagePresenter _presenter;
 
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
+
   @override
   Widget build(BuildContext context) {
     _presenter = Provider.of<RemoveInventoriesStatisticPagePresenter>(context);
@@ -58,7 +60,10 @@ class _RemoveInventoriesStatisticPageState extends State<RemoveInventoriesStatis
 
   Widget _buildInfoWidgetAboutEmptyList() {
     return Center(
-      child: Text(qrLocale.noAnyInventoryForRemovingStatistic),
+      child: Text(
+        qrLocale.noAnyInventoryForRemovingStatistic,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -109,8 +114,7 @@ class _RemoveInventoriesStatisticPageState extends State<RemoveInventoriesStatis
           ],
         );
       },
-    ) ??
-        false;
+    ) ?? false;
   }
 
   Widget _buildDialogTitle(Inventory inventory) {

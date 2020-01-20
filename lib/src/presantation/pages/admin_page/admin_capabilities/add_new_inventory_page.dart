@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admins_presenters/add_new_inventory_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/confirm_button.dart';
@@ -47,6 +47,8 @@ class _AddNewInventoryPageState extends State<AddNewInventoryPage> {
   String _id;
   String _name;
   String _description;
+
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/add_new_inventory_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/all_inventories_page.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_capabilities/remove_inventory_page.dart';
@@ -10,7 +11,6 @@ import 'package:qr/src/presantation/pages/admin_page/super_admin_capabilities/re
 import 'package:qr/src/presantation/pages/admin_page/super_admin_capabilities/remove_user_from_admins_page.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admin_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 import 'package:qr/src/presantation/widgets/title_tile.dart';
 
@@ -36,6 +36,9 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
+
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
+
   @override
   Widget build(BuildContext context) {
     final _presenter = Provider.of<AdminPagePresenter>(context);

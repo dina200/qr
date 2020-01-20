@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
 import 'package:qr/src/domain/entities/user.dart';
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/admins_presenters/admin_inventory_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/inventory_table.dart';
@@ -33,6 +33,8 @@ class AdminInventoryPage extends StatefulWidget {
 
 class _AdminInventoryPageState extends State<AdminInventoryPage> {
   AdminInventoryPagePresenter _presenter;
+
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
 
   @override
   Widget build(BuildContext context) {

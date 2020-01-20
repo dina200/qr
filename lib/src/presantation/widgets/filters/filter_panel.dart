@@ -73,7 +73,11 @@ class ButtonFilter<T> extends StatelessWidget {
                 : Colors.transparent,
           ),
         ),
-        child: Text(title),
+        child: Text(
+          title,
+          softWrap: false,
+          overflow: TextOverflow.fade,
+        ),
         onPressed: () => onPressed(filter),
       ),
     );

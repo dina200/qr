@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/inventory.dart';
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/pages/inventory_page/inventory_page.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
 import 'package:qr/src/presantation/presenters/inventories_page_presenter.dart';
 import 'package:qr/src/presantation/widgets/drawer/qr_drawer.dart';
 import 'package:qr/src/presantation/widgets/filters/user_inventory_filter_panel.dart';
@@ -37,6 +37,7 @@ class InventoriesPage extends StatefulWidget {
 class _InventoriesState extends State<InventoriesPage> with RouteAware {
   InventoriesPagePresenter _presenter;
 
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
 
   @override
   void didChangeDependencies() {

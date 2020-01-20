@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/user.dart';
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/pages/admin_page/admin_page.dart';
 import 'package:qr/src/presantation/pages/auth_page/auth_page.dart';
 import 'package:qr/src/presantation/pages/inventories_page/inventories_page.dart';
@@ -24,6 +24,7 @@ class QrDrawer extends StatelessWidget {
   }
 
   Widget _buildDrawer(BuildContext context) {
+    final qrLocale = QrLocalizations.of(context);
     final presenter = Provider.of<QrDrawerPresenter>(context);
     final user = presenter.user;
     return Drawer(
@@ -43,7 +44,7 @@ class QrDrawer extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.center_focus_strong),
-                title: Text(qrLocale.qrReader),
+                title: Text(qrLocale.qrHelper),
                 onTap: () => _navigateTo(context, QrReaderPage.buildPageRoute()),
               ),
               ListTile(
@@ -72,6 +73,7 @@ class QrDrawer extends StatelessWidget {
   }
 
   Widget _buildDrawerHeader(BuildContext context, User user) {
+    final qrLocale = QrLocalizations.of(context);
     return DrawerHeader(
       decoration: BoxDecoration(
         color: Theme.of(context).accentColor,
@@ -98,6 +100,7 @@ class QrDrawer extends StatelessWidget {
     BuildContext context,
     QrDrawerPresenter presenter,
   ) async {
+    final qrLocale = QrLocalizations.of(context);
     final isLogout = await _showChoiceDialog(
       context: context,
       message: qrLocale.areYouSureWantToLogout,
@@ -129,6 +132,7 @@ class QrDrawer extends StatelessWidget {
     @required VoidCallback onCancel,
   }) async {
     assert(context != null || message != null);
+    final qrLocale = QrLocalizations.of(context);
     return await showDialog(
           context: context,
           builder: (context) {

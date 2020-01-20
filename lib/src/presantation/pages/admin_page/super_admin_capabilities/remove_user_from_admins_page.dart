@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:qr/src/domain/entities/user.dart';
-import 'package:qr/src/presantation/locale/strings.dart' as qrLocale;
+import 'package:qr/src/presantation/locale/qr_localizations.dart';
 import 'package:qr/src/presantation/presenters/admin_page_presenters/super_admins_presenters/remove_user_from_admins_page_presenter.dart';
 import 'package:qr/src/presantation/routes.dart' as routes;
 import 'package:qr/src/presantation/widgets/loading_layout.dart';
@@ -32,6 +32,8 @@ class _RemoveUserFromAdminsPageState extends State<RemoveUserFromAdminsPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   RemoveUserFromAdminsPagePresenter _presenter;
+
+  QrLocalizations get qrLocale => QrLocalizations.of(context);
 
   @override
   Widget build(BuildContext context) {
