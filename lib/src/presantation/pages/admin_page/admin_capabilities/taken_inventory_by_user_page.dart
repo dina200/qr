@@ -61,7 +61,10 @@ class _InventoriesState extends State<TakenInventoriesPage> {
   Widget _buildInfoWidgetAboutEmptyList() {
     return Expanded(
       child: Center(
-        child: Text(qrLocale.listIsEmpty),
+        child: Text(
+          qrLocale.listIsEmpty,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

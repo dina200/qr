@@ -81,6 +81,6 @@
   "areYouSureWantToRemoveUserFromAdmins" : "Вы уверены что хотите удалить этого пользователя из администраторов?",
   "noAnyInventoryForRemovingStatistic" : "Нет ни одного свободного инвентаря для удаления статистики",
   "areYouSureWantToRemoveInventoryStatistic" : "Вы уверены что хотите удалить статистику этого инвентаря?",
-  "takenInventoryByUser" : "Взятый пользователем инвентарь",
+  "takenInventoryByUser" : "Взятый инвентарь",
   "invalidData" : "Неверные данные. Возможно это ссылка"
 }

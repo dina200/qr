@@ -63,7 +63,10 @@ class _AddUserToAdminsPageState extends State<AddUserToAdminsPage> {
 
   Widget _buildInfoWidgetAboutEmptyList() {
     return Center(
-      child: Text(qrLocale.thereIsNoAnySimpleUser),
+      child: Text(
+        qrLocale.thereIsNoAnySimpleUser,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

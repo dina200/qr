@@ -119,7 +119,10 @@ class _UsersPageState extends State<UsersPage> {
   Widget _buildInfoWidgetAboutEmptyList() {
     return Expanded(
       child: Center(
-        child: Text(qrLocale.listIsEmpty),
+        child: Text(
+          qrLocale.listIsEmpty,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

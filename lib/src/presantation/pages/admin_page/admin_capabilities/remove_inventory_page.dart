@@ -60,7 +60,10 @@ class _RemoveInventoriesPageState extends State<RemoveInventoriesPage> {
 
   Widget _buildInfoWidgetAboutEmptyList() {
     return Center(
-      child: Text(qrLocale.noAnyInventoryForRemove),
+      child: Text(
+        qrLocale.noAnyInventoryForRemove,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

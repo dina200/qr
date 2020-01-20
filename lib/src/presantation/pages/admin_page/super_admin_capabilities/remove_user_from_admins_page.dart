@@ -63,7 +63,10 @@ class _RemoveUserFromAdminsPageState extends State<RemoveUserFromAdminsPage> {
 
   Widget _buildInfoWidgetAboutEmptyList() {
     return Center(
-      child: Text(qrLocale.thereIsNoAnyAdmin),
+      child: Text(
+        qrLocale.thereIsNoAnyAdmin,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

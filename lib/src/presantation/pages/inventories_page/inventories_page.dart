@@ -85,7 +85,10 @@ class _InventoriesState extends State<InventoriesPage> with RouteAware {
   Widget _buildInfoWidgetAboutEmptyList() {
     return Expanded(
       child: Center(
-        child: Text(qrLocale.listIsEmpty),
+        child: Text(
+          qrLocale.listIsEmpty,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
