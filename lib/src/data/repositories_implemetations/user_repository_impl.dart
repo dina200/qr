@@ -92,6 +92,7 @@ class UserRepositoryFirestoreImpl extends UserRepository {
   Future<List<Inventory>> getCurrentUserTakenInventories() async {
     final snapshot = await _fireStore
         .collection(firebaseEndpoints.inventories)
+        .where(firebaseEndpoints.status, isEqualTo: InventoryStatus.taken.value)
         .getDocuments();
     return _getTakenInventoriesByUserIdFromSnapshot(snapshot, _user.id);
   }
@@ -188,7 +189,6 @@ class UserRepositoryFirestoreImpl extends UserRepository {
   List<Inventory> _getTakenInventoriesByUserIdFromSnapshot(
       QuerySnapshot snapshot, String userId) {
     return snapshot.documents
-        .where((document) => document.data[firebaseEndpoints.status] == 1)
         .where((document) =>
           jsonEncode(document.data[firebaseEndpoints.statistic].last)
           .contains(userId))
@@ -241,6 +241,7 @@ class AdminRepositoryFirestoreImpl extends UserRepositoryFirestoreImpl
   Future<List<Inventory>> getTakenInventoriesByUser(String userId) async {
     final snapshot = await _fireStore
         .collection(firebaseEndpoints.inventories)
+        .where(firebaseEndpoints.status, isEqualTo: InventoryStatus.taken.value)
         .getDocuments();
     return _getTakenInventoriesByUserIdFromSnapshot(snapshot, userId);
   }
