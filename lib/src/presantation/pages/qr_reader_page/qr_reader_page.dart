@@ -84,13 +84,14 @@ class _QrReaderPageState extends State<QrReaderPage> {
   }
 
   Widget _buildInventoryInfoTable() {
-    return Wrap(
-      direction: Axis.vertical,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 16.0,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         InventoryTable(inventory: _presenter.inventory),
-        _buildActionButton(),
+        Padding(
+          padding: EdgeInsets.all(16.0),
+          child: _buildActionButton(),
+        ),
       ],
     );
   }
@@ -98,10 +99,16 @@ class _QrReaderPageState extends State<QrReaderPage> {
   Widget _buildActionButton() {
     final inventory = _presenter.inventory;
     if (inventory.status == InventoryStatus.lost) {
-      return Text(qrLocale.lostInventory);
+      return Text(
+        qrLocale.lostInventory,
+        textAlign: TextAlign.center,
+      );
     } else if (inventory.status == InventoryStatus.taken &&
         inventory.statistic.last.userId != _presenter.user.id) {
-      return Text(qrLocale.takenInventory);
+      return Text(
+        qrLocale.takenInventory,
+        textAlign: TextAlign.center,
+      );
     }
 
     String nameButton = '';
@@ -112,7 +119,10 @@ class _QrReaderPageState extends State<QrReaderPage> {
     }
     return RaisedButton(
       onPressed: _takeOrReturnInventory,
-      child: Text(nameButton),
+      child: Text(
+        nameButton,
+        style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),
+      ),
     );
   }
 
@@ -295,7 +305,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
   }
 
 //  Future<void> scanTest() async {
-//    String inventoryId = 'DqXZhRKVsdfs1fPhMkBoA9qO';
+//    String inventoryId = 'RcaTvGhyHhvh6bbhYgh8';
 //    await _presenter.getInventoryInfo(inventoryId);
 //    if (_presenter.inventory == null) {
 //      _showInventoryNotExistErrorDialog(inventoryId);

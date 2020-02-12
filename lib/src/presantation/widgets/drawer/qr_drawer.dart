@@ -27,45 +27,51 @@ class QrDrawer extends StatelessWidget {
     final qrLocale = QrLocalizations.of(context);
     final presenter = Provider.of<QrDrawerPresenter>(context);
     final user = presenter.user;
-    return Drawer(
-      child: ScrollConfiguration(
-        behavior: NoOverScrollBehavior(),
-        child: ListTileTheme(
-          dense: true,
-          style: ListTileStyle.drawer,
-          child: ListView(
-            padding: const EdgeInsets.all(0.0),
-            children: <Widget>[
-              _buildDrawerHeader(context, user),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text(qrLocale.userProfile),
-                onTap: () => _navigateTo(context, UserProfilePage.buildPageRoute()),
-              ),
-              ListTile(
-                leading: Icon(Icons.center_focus_strong),
-                title: Text(qrLocale.qrHelper),
-                onTap: () => _navigateTo(context, QrReaderPage.buildPageRoute()),
-              ),
-              ListTile(
-                leading: Icon(Icons.assignment),
-                title: Text(qrLocale.inventories),
-                onTap: () => _navigateTo(context, InventoriesPage.buildPageRoute()),
-              ),
-              if (!presenter.isSimpleUser) Divider(),
-              if (!presenter.isSimpleUser)
+    return ClipPath(
+      clipper: ClipHalfPath(MediaQuery
+          .of(context)
+          .size
+          .height),
+      child: Drawer(
+        child: ScrollConfiguration(
+          behavior: NoOverScrollBehavior(),
+          child: ListTileTheme(
+            dense: true,
+            style: ListTileStyle.drawer,
+            child: ListView(
+              padding: const EdgeInsets.all(0.0),
+              children: <Widget>[
+                _buildDrawerHeader(context, user),
                 ListTile(
-                  leading: Icon(Icons.supervisor_account),
-                  title: Text(qrLocale.adminCapabilities),
-                  onTap: () => _navigateTo(context, AdminPage.buildPageRoute()),
+                  leading: Icon(Icons.account_circle),
+                  title: Text(qrLocale.userProfile),
+                  onTap: () => _navigateTo(context, UserProfilePage.buildPageRoute()),
                 ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.exit_to_app),
-                title: Text(qrLocale.quit),
-                onTap: () async => await _logOut(context, presenter),
-              ),
-            ],
+                ListTile(
+                  leading: Icon(Icons.center_focus_strong),
+                  title: Text(qrLocale.qrHelper),
+                  onTap: () => _navigateTo(context, QrReaderPage.buildPageRoute()),
+                ),
+                ListTile(
+                  leading: Icon(Icons.assignment),
+                  title: Text(qrLocale.inventories),
+                  onTap: () => _navigateTo(context, InventoriesPage.buildPageRoute()),
+                ),
+                if (!presenter.isSimpleUser) Divider(),
+                if (!presenter.isSimpleUser)
+                  ListTile(
+                    leading: Icon(Icons.supervisor_account),
+                    title: Text(qrLocale.adminCapabilities),
+                    onTap: () => _navigateTo(context, AdminPage.buildPageRoute()),
+                  ),
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.exit_to_app),
+                  title: Text(qrLocale.quit),
+                  onTap: () async => await _logOut(context, presenter),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -76,16 +82,24 @@ class QrDrawer extends StatelessWidget {
     final qrLocale = QrLocalizations.of(context);
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: Theme.of(context).accentColor,
+        color: Theme
+          .of(context)
+          .accentColor,
       ),
       child: Align(
         alignment: Alignment.centerLeft,
         child: RichText(
           text: TextSpan(
-            style: DefaultTextStyle.of(context).style,
+            style: DefaultTextStyle
+              .of(context)
+              .style,
             children: [
               TextSpan(
-                  text: user.name, style: Theme.of(context).textTheme.subtitle),
+                text: user.name, style: Theme
+                .of(context)
+                .textTheme
+                .subtitle,
+              ),
               TextSpan(text: '\n\n'),
               TextSpan(
                   text: '${qrLocale.position.toLowerCase()}: ${user.position}'),
@@ -152,5 +166,36 @@ class QrDrawer extends StatelessWidget {
           },
         ) ??
         false;
+  }
+}
+
+class ClipHalfPath extends CustomClipper<Path> {
+  final height;
+
+  ClipHalfPath(this.height);
+
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    final firstStartPoint = Offset(304.0, height / 4);
+    final firstEndPoint = Offset(304.0, height / 2);
+
+    final secondStartPoint = Offset(304.0, height * 3 / 4);
+    final secondEndPoint = Offset(250.0, height);
+
+    path
+      ..lineTo(250.0, 0.0)
+      ..quadraticBezierTo(firstStartPoint.dx, firstStartPoint.dy, firstEndPoint.dx, firstEndPoint.dy)
+      ..quadraticBezierTo(secondStartPoint.dx, secondStartPoint.dy, secondEndPoint.dx, secondEndPoint.dy)
+      ..lineTo(0.0, height)
+      ..close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
   }
 }

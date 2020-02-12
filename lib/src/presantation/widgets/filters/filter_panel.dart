@@ -30,6 +30,7 @@ class FilterPanel<T> extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.0),
           border: Border.all(
             color: theme.dividerColor,
             width: 1.0,
@@ -65,7 +66,8 @@ class ButtonFilter<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: MaterialButton(
-        shape: ContinuousRectangleBorder(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
           side: BorderSide(
             width: 2.0,
             color: selected

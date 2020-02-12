@@ -48,6 +48,13 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.deepPurpleAccent[100],
         primaryColorDark: Colors.deepPurple[800],
+        buttonTheme: ButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(16.0),
+            ),
+          ),
+        ),
       ),
       onGenerateRoute: _onGenerateRoute,
       navigatorObservers: [injector.get<RouteObserver>()],

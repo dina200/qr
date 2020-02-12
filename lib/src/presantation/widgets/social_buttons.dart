@@ -41,7 +41,7 @@ class SocialButton extends StatelessWidget {
     return RawMaterialButton(
       padding: EdgeInsets.symmetric(horizontal: 4.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+        borderRadius: BorderRadius.all(Radius.circular(48.0)),
       ),
       fillColor: backgroundColor,
       constraints: BoxConstraints(
