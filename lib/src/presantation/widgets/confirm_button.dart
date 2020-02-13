@@ -26,7 +26,7 @@ class ConfirmButton extends StatelessWidget {
         side: isButtonActive
             ? BorderSide.none
             : BorderSide(color: theme.primaryColorDark),
-        borderRadius: BorderRadius.circular(6.0),
+        borderRadius: BorderRadius.circular(48.0),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 14.0),
