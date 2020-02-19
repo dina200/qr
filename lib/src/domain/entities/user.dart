@@ -63,6 +63,8 @@ class UserStatus {
         return admin;
       case 3:
         return user;
+      case -1:
+        return user;
     }
     throw ArgumentError();
   }
@@ -77,6 +79,10 @@ class UserStatus {
 
   static UserStatus get user {
     return UserStatus._(3, 'User');
+  }
+
+  static UserStatus get removedUser {
+    return UserStatus._(-1, 'Removed User');
   }
 
   @override

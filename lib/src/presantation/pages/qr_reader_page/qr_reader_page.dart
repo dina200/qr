@@ -305,7 +305,7 @@ class _QrReaderPageState extends State<QrReaderPage> {
   }
 
 //  Future<void> scanTest() async {
-//    String inventoryId = 'RcaTvGhyHhvh6bbhYgh8';
+//    String inventoryId = 'SAjksHgKds3HJksdHJHK';
 //    await _presenter.getInventoryInfo(inventoryId);
 //    if (_presenter.inventory == null) {
 //      _showInventoryNotExistErrorDialog(inventoryId);

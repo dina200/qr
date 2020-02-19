@@ -81,10 +81,18 @@ class UserStatisticPayload {
   final DateTime dateTime;
 
   UserStatisticPayload({
-    @required this.user,
+    @required User user,
     @required this.status,
     @required this.dateTime,
-  })  : assert(user != null),
+  })  : user = user ??
+            User(
+              id: '',
+              phone: '',
+              name: 'removed user',
+              status: UserStatus.removedUser,
+              email: '',
+              position: '',
+            ),
         assert(status != null),
         assert(dateTime != null);
 
