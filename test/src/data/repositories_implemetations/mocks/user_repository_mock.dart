@@ -14,6 +14,13 @@ class UserRepositoryMock implements UserRepository {
     _listJson = json.decode(fixture('all_inventories.json'));
   }
 
+   @override
+  Future<Inventory> getInventoryInfo(String inventoryId) async {
+    final inventoryJson = _listJson
+        .firstWhere((obj) => obj['id'] == inventoryId, orElse: () => null);
+    return InventoryModel.fromJson(inventoryJson);
+  }
+  
   @override
   User get currentUser {
     // TODO: implement getCurrentUser
@@ -30,13 +37,6 @@ class UserRepositoryMock implements UserRepository {
   Future<List<Inventory>> getCurrentUserTakenInventories() {
     // TODO: implement getCurrentUserTakenInventories
     return null;
-  }
-
-  @override
-  Future<Inventory> getInventoryInfo(String inventoryId) async {
-    final inventoryJson = _listJson
-        .firstWhere((obj) => obj['id'] == inventoryId, orElse: () => null);
-    return InventoryModel.fromJson(inventoryJson);
   }
 
   @override
