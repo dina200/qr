@@ -9,11 +9,9 @@ import '../../../../fixtures/fixture_reader.dart';
 
 class UserRepositoryMock implements UserRepository {
   List<dynamic> _listJson;
-
   UserRepositoryMock() {
     _listJson = json.decode(fixture('all_inventories.json'));
   }
-
    @override
   Future<Inventory> getInventoryInfo(String inventoryId) async {
     final inventoryJson = _listJson
