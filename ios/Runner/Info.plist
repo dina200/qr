@@ -43,5 +43,18 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
     <string>Camera permission is required for barcode scanning.</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleTypeRole</key>
+    		<string>Editor</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+    			<string>com.googleusercontent.apps.63780789355-d5cf8a4u0bfrffdt0igbs1vjg0nkmu9r</string>
+    		</array>
+    	</dict>
+    </array>
+    <key>NSCameraUsageDescription</key>
+    <string>Camera permission is required for barcode scanning.</string>
 </dict>
 </plist>
